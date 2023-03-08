@@ -6,25 +6,28 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 public class Category {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
 
-    @ManyToOne
+    @ManyToOne // MEMBER n:1 양방향
     @JoinColumn(name = "MEMBER_ID")
     private Long memberId;
     private String name;
+
+    @Column(name = "BUDGET", nullable = false)
     private int budget = 0;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "CATEGORY_STATUS", nullable = false)
     private CategoryStatus categoryStatus;
+
     public enum CategoryStatus {
         CATEGORY_ACTIVE("활성화"),
         CATEGORY_INACTIVE("비활성화");
