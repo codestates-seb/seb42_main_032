@@ -2,7 +2,7 @@
 name: 'Add Feature '
 about: 'Suggest '
 title: "[FE] feat: 기능명"
-labels: ''
+labels: feat
 assignees: ''
 
 ---
