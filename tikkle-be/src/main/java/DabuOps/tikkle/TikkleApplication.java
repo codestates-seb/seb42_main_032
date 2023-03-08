@@ -9,5 +9,4 @@ public class TikkleApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TikkleApplication.class, args);
 	}
-
 }
