@@ -57,14 +57,10 @@ public class Member {
     @Column
     private Integer initDate;
 
-    @Column
-    private List<Detail> details;
-
     @Builder
     public Member(Long memberId, String email, String name, String location, LocalDateTime createdAt,
         LocalDateTime modifiedAt, MemberState state, boolean gender, Integer payDay,
-        Integer initDate,
-        List<Detail> details) {
+        Integer initDate) {
         this.memberId = memberId;
         this.email = email;
         this.name = name;
@@ -75,7 +71,6 @@ public class Member {
         this.gender = gender;
         this.payDay = payDay;
         this.initDate = initDate;
-        this.details = details;
     }
 
     public static enum MemberState {

@@ -15,8 +15,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
 
-    @ManyToOne // MEMBER n:1 양방향
-    @JoinColumn(name = "MEMBER_ID")
+//    @ManyToOne // MEMBER n:1 양방향
+//    @JoinColumn(name = "MEMBER_ID")
     private Long memberId;
     private String name;
 
