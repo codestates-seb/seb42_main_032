@@ -29,6 +29,9 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String name;
+
     @Column(length = 210)
     private String location;
 
@@ -58,12 +61,13 @@ public class Member {
     private List<Detail> details;
 
     @Builder
-    public Member(Long memberId, String email, String location, LocalDateTime createdAt,
+    public Member(Long memberId, String email, String name, String location, LocalDateTime createdAt,
         LocalDateTime modifiedAt, MemberState state, boolean gender, Integer payDay,
         Integer initDate,
         List<Detail> details) {
         this.memberId = memberId;
         this.email = email;
+        this.name = name;
         this.location = location;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
