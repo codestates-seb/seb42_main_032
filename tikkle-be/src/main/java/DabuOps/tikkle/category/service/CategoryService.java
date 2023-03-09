@@ -2,8 +2,8 @@ package DabuOps.tikkle.category.service;
 
 import DabuOps.tikkle.category.entity.Category;
 import DabuOps.tikkle.category.repogitory.CategoryRepository;
-import DabuOps.tikkle.exception.BusinessLogicException;
-import DabuOps.tikkle.exception.ExceptionCode;
+import DabuOps.tikkle.global.exception.BusinessLogicException;
+import DabuOps.tikkle.global.exception.ExceptionCode;
 import DabuOps.tikkle.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
