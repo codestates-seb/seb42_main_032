@@ -1,4 +1,4 @@
-package DabuOps.tikkle.exception;
+package DabuOps.tikkle.global.exception;
 
 import lombok.Getter;
 

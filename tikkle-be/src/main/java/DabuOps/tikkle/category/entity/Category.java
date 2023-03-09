@@ -1,9 +1,8 @@
 package DabuOps.tikkle.category.entity;
 
-import DabuOps.tikkle.exception.BusinessLogicException;
-import DabuOps.tikkle.exception.ExceptionCode;
+import DabuOps.tikkle.global.exception.BusinessLogicException;
+import DabuOps.tikkle.global.exception.ExceptionCode;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
@@ -19,8 +18,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
 
-    @ManyToOne // MEMBER n:1 양방향
-    @JoinColumn(name = "MEMBER_ID")
+//    @ManyToOne // MEMBER n:1 양방향
+//    @JoinColumn(name = "MEMBER_ID")
     private Long memberId;
 
     @Column(name = "NAME", nullable = false)
