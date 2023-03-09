@@ -5,12 +5,15 @@ import DabuOps.tikkle.exception.ExceptionCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +22,8 @@ public class Category {
     @ManyToOne // MEMBER n:1 양방향
     @JoinColumn(name = "MEMBER_ID")
     private Long memberId;
+
+    @Column(name = "NAME", nullable = false)
     private String name;
 
     @Column(name = "BUDGET", nullable = false)
@@ -26,7 +31,7 @@ public class Category {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "CATEGORY_STATUS", nullable = false)
-    private CategoryStatus categoryStatus;
+    private CategoryStatus categoryStatus = CategoryStatus.CATEGORY_ACTIVE;
 
     public enum CategoryStatus {
         CATEGORY_ACTIVE("활성화"),
