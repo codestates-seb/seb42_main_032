@@ -1,5 +1,5 @@
 //TODO 캘린더 구현
-import { useState } from "react"
+import { useState } from "react";
 import {
   Table,
   Thead,
@@ -7,8 +7,12 @@ import {
   Tr,
   Th,
   Td,
-  TableContainer,
-} from '@chakra-ui/react'
+  TableContainer
+} from '@chakra-ui/react';
+import { Text } from "@chakra-ui/react";
+
+// 각 칸의 스타일링을 자유롭게 하기 위해 Box 컴포넌트 사용
+import { Box } from "@chakra-ui/react";
 
 /**
  * day: 요일, date: 일자 의미로 주석을 작성했습니다.
@@ -16,11 +20,14 @@ import {
 
 // 요일을 어떤 형태로 표시할지 저장
 // ToDo: (향후 언어 변경 기능을 지원한다면) 언어별 요일 데이터 지정
-const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
 function Calendar() {
   // 현재 날짜를 불러올 수 있도록 Date 타입의 상태로 생성하고, 초기값을 Date 객체로 설정
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
+
+  // 선택한 날짜를 활성화해주기 위한 상태
+  const [isSelected, setIsSelected] = useState<Boolean>(false);
 
   // 현재 날짜 상태를 기준으로 첫 날(현재 연도, 현재 월, 1일)을 변수로 저장
   const firstDateOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -39,7 +46,7 @@ function Calendar() {
 
   // 요일 표시 칸 렌더링
   const renderDaysOfWeek = daysOfWeek.map((day) => (
-    <Th key={day}>{day}</Th>
+    <Box key={day} as="th">{day}</Box>
   ));
 
   // 달력 시작일 전까지 빈 칸 렌더링
@@ -47,7 +54,7 @@ function Calendar() {
   const renderBlank = [];
   for (let i = 0; i < dayOfFirstDate; i++) {
     renderBlank.push(
-      <Td key={`blank-${i}`}></Td>
+      <Box key={`blank-${i}`} as="td" w={52} h={24} />
     )
   }
 
@@ -60,13 +67,22 @@ function Calendar() {
   // 일자를 나타내는 칸 렌더링
   const renderDate = dateArr.map((date) => {
     return (
-      <Td key={date}>
-        <div className="dateLabel">{date}</div>
-        <ul className="transactionLabelList">
-          {/* 지출, 예산 레이블을 표시하는 목록 */}
-          {/* ToDo: 받아온 데이터를 해당 ul 안에 li로 표시할 방법을 고민해야 함 */}
-        </ul>
-      </Td>
+      // <Td key={date}>
+      //   <div className="dateLabel">{date}</div>
+      //   <ul className="transactionLabelList">
+      //     {/* 지출, 예산 레이블을 표시하는 목록 */}
+      //     {/* ToDo: 받아온 데이터를 해당 ul 안에 li로 표시할 방법을 고민해야 함 */}
+      //   </ul>
+      // </Td>
+      // w-52 === 13rem
+      // h-24 === 6rem
+      <Box key={date} as="td" w={52} h={24}>
+        <Box fontSize={[12, 16, 18]} h='50%' display="flex" justifyContent="center" alignItems="center">{date}</Box>
+        <Box fontSize={[8, 10, 12]}>
+          <Text>1</Text>
+          <Text>2</Text>
+        </Box>
+      </Box>
     )
   });
 
@@ -85,8 +101,8 @@ function Calendar() {
   }
 
   return (
-    <TableContainer>
-      <Table variant='simple'>
+    <TableContainer maxH="550px">
+      <Table>
         <Thead>
           <Tr>
             {renderDaysOfWeek}
@@ -96,7 +112,7 @@ function Calendar() {
           {renderRow}
         </Tbody>
       </Table>
-    </TableContainer>
+    </TableContainer >
   )
 }
 
