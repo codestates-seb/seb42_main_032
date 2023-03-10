@@ -40,10 +40,6 @@ function Calendar() {
   // firstDateOfMonth를 기준으로 첫 날이 무슨 요일인지 저장
   const dayOfFirstDate = firstDateOfMonth.getDay();
 
-  console.log(`firstDateOfMonth: ${firstDateOfMonth}`);
-  console.log(`lastDateOfMonth: ${lastDateOfMonth}`);
-  console.log(`dayOfFirstDate: ${dayOfFirstDate}`);
-
   // 요일 표시 칸 렌더링
   const renderDaysOfWeek = daysOfWeek.map((day) => (
     <Box key={day} as="th">{day}</Box>
@@ -71,7 +67,7 @@ function Calendar() {
       //   <div className="dateLabel">{date}</div>
       //   <ul className="transactionLabelList">
       //     {/* 지출, 예산 레이블을 표시하는 목록 */}
-      //     {/* ToDo: 받아온 데이터를 해당 ul 안에 li로 표시할 방법을 고민해야 함 */}
+      //     
       //   </ul>
       // </Td>
       // w-52 === 13rem
@@ -79,8 +75,10 @@ function Calendar() {
       <Box key={date} as="td" w={52} h={24}>
         <Box fontSize={[12, 16, 18]} h='50%' display="flex" justifyContent="center" alignItems="center">{date}</Box>
         <Box fontSize={[8, 10, 12]}>
-          <Text>1</Text>
-          <Text>2</Text>
+          {/* ToDo: 받아온 데이터로 지출 레이블 표시 */}
+          <Text color={"blue"}>-10,000</Text>
+          {/* ToDo: 받아온 데이터로 예산 레이블 표시 */}
+          <Text>💡20,000</Text>
         </Box>
       </Box>
     )
