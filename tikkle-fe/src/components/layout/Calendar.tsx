@@ -4,13 +4,15 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
 } from '@chakra-ui/react'
+
+/**
+ * day: 요일, date: 일자 의미로 주석을 작성했습니다.
+ */
 
 // 요일을 어떤 형태로 표시할지 저장
 // ToDo: (향후 언어 변경 기능을 지원한다면) 언어별 요일 데이터 지정
@@ -35,10 +37,66 @@ function Calendar() {
   console.log(`lastDateOfMonth: ${lastDateOfMonth}`);
   console.log(`dayOfFirstDate: ${dayOfFirstDate}`);
 
+  // 요일 표시 칸 렌더링
+  const renderDaysOfWeek = daysOfWeek.map((day) => (
+    <Th key={day}>{day}</Th>
+  ));
+
+  // 달력 시작일 전까지 빈 칸 렌더링
+  // 0부터 날짜가 시작되는 요일까지 빈 칸을 렌더링한 배열
+  const renderBlank = [];
+  for (let i = 0; i < dayOfFirstDate; i++) {
+    renderBlank.push(
+      <Td key={`blank-${i}`}></Td>
+    )
+  }
+
+  // 1일부터 마지막 날짜까지 일자별로 담긴 배열 생성
+  const dateArr = [];
+  for (let i = 1; i <= lastDateOfMonth.getDate(); i++) {
+    dateArr.push(i);
+  }
+
+  // 일자를 나타내는 칸 렌더링
+  const renderDate = dateArr.map((date) => {
+    return (
+      <Td key={date}>
+        <div className="dateLabel">{date}</div>
+        <ul className="transactionLabelList">
+          {/* 지출, 예산 레이블을 표시하는 목록 */}
+          {/* ToDo: 받아온 데이터를 해당 ul 안에 li로 표시할 방법을 고민해야 함 */}
+        </ul>
+      </Td>
+    )
+  });
+
+  // 최종적으로 빈 칸과 일자 칸을 합쳐 렌더링할 칸을 한 배열로 합침
+  let renderCell = [...renderBlank, ...renderDate];
+
+  // 렌더링할 칸을 7칸 단위로 끊으면서 splice를 통해 모든 칸이 제거될 때까지 행 생성
+  const renderRow = [];
+  while (renderCell.length > 0) {
+    renderRow.push(
+      <Tr key={renderRow.length}>
+        {/* 첫번째부터 일곱번째 칸(Td)를 한 행(Tr)으로 묶기 */}
+        {renderCell.splice(0, 7)}
+      </Tr>
+    )
+  }
+
   return (
-    <div>
-      Implementing...
-    </div>
+    <TableContainer>
+      <Table variant='simple'>
+        <Thead>
+          <Tr>
+            {renderDaysOfWeek}
+          </Tr>
+        </Thead>
+        <Tbody>
+          {renderRow}
+        </Tbody>
+      </Table>
+    </TableContainer>
   )
 }
 
