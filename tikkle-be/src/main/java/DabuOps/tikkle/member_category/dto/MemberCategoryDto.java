@@ -1,6 +1,4 @@
-package DabuOps.tikkle.category.dto;
-
-import DabuOps.tikkle.category.entity.Category;
+package DabuOps.tikkle.member_category.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,15 +6,15 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-public class CategoryDto {
+public class MemberCategoryDto {
     @Getter
     @AllArgsConstructor
     public static class Post {
         @NotBlank
         private String name;
-        @NotBlank
-        private int budget;
     }
 
     @Getter
@@ -25,17 +23,15 @@ public class CategoryDto {
     public static class Patch {
         @Pattern(regexp = ".*\\S.*")
         private String name;
-        @Pattern(regexp = ".*\\S.*")
-        private int budget;
     }
 
     @Getter
     @AllArgsConstructor
     public static class Response {
-        private long categoryId;
-        private long memberId;
+        private long memberCategoryId;
         private String name;
-        private int budget;
-        private Category.CategoryStatus categoryStatus;
+        private long memberId;
+        private long categoryId;
+        private LocalDateTime createdAt;
     }
 }
