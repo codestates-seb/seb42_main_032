@@ -24,7 +24,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -49,7 +49,7 @@ public class Member {
     private MemberState state = MemberState.ACTIVE;
 
     @Column
-    private boolean gender;
+    private Gender gender;
 
     @Column
     private Integer payDay;
@@ -58,10 +58,10 @@ public class Member {
     private Integer initDate;
 
     @Builder
-    public Member(Long memberId, String email, String name, String location, LocalDateTime createdAt,
-        LocalDateTime modifiedAt, MemberState state, boolean gender, Integer payDay,
+    public Member(Long id, String email, String name, String location, LocalDateTime createdAt,
+        LocalDateTime modifiedAt, MemberState state, Gender gender, Integer payDay,
         Integer initDate) {
-        this.memberId = memberId;
+        this.id = id;
         this.email = email;
         this.name = name;
         this.location = location;
@@ -71,6 +71,18 @@ public class Member {
         this.gender = gender;
         this.payDay = payDay;
         this.initDate = initDate;
+    }
+    public static enum Gender{
+        male("남성"),
+        female("여성");
+
+        @Getter
+        private String gender;
+
+        Gender(String gender){
+            this.gender = gender;
+        }
+
     }
 
     public static enum MemberState {
