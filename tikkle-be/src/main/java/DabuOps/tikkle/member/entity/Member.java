@@ -1,5 +1,6 @@
 package DabuOps.tikkle.member.entity;
 
+import DabuOps.tikkle.global.audit.Auditable;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
@@ -21,7 +22,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Member {
+public class Member extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,14 +35,6 @@ public class Member {
 
     @Column(length = 210)
     private String location;
-
-    @CreationTimestamp
-    @Column(name = "CREATED_AT", updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "MODIFIED_AT")
-    private LocalDateTime modifiedAt;
 
     @Column
     @Builder.Default
@@ -58,15 +51,12 @@ public class Member {
     private Integer initDate;
 
     @Builder
-    public Member(Long id, String email, String name, String location, LocalDateTime createdAt,
-        LocalDateTime modifiedAt, MemberState state, Gender gender, Integer payDay,
+    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay,
         Integer initDate) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.location = location;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
         this.state = state;
         this.gender = gender;
         this.payDay = payDay;
