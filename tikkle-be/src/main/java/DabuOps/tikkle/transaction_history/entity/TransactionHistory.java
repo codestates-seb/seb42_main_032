@@ -31,7 +31,7 @@ public class TransactionHistory {
     private InoutType inoutType;
 
     @Column(name = "CONTENT")
-    private String content;
+    private String memo;
 
     @Column(name = "AMOUNT")
     private int amount;
@@ -51,12 +51,13 @@ public class TransactionHistory {
     }
 
     @Builder
-    public TransactionHistory(long transactionHistoryId, LocalDate date, LocalTime time, InoutType inoutType, String content, int amount, String branch_name) {
+    public TransactionHistory(long transactionHistoryId, long memberCategoryId, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branch_name) {
         this.transactionHistoryId = transactionHistoryId;
+        this.memberCategoryId = memberCategoryId;
         this.date = date;
         this.time = time;
         this.inoutType = inoutType;
-        this.content = content;
+        this.memo = memo;
         this.amount = amount;
         this.branch_name = branch_name;
     }
