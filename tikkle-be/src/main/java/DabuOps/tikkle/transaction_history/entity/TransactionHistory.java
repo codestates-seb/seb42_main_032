@@ -1,9 +1,6 @@
 package DabuOps.tikkle.transaction_history.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,15 +10,14 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class TransactionHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long transactionHistoryId;
 
-//    @ManyToOne
-//    @JoinColumn(name = "MEMBER_CATEGORY_ID")
-//    private long memberCategoryId;
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_CATEGORY_ID")
+    private long memberCategoryId;
 
     @Column(name = "DATE")
     private LocalDate date;
@@ -29,7 +25,9 @@ public class TransactionHistory {
     @Column(name = "TIME")
     private LocalTime time;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "INOUT_TYPE")
+    @Builder.Default
     private InoutType inoutType;
 
     @Column(name = "CONTENT")
@@ -50,5 +48,16 @@ public class TransactionHistory {
         InoutType(String string) {
             this.string = string;
         }
+    }
+
+    @Builder
+    public TransactionHistory(long transactionHistoryId, LocalDate date, LocalTime time, InoutType inoutType, String content, int amount, String branch_name) {
+        this.transactionHistoryId = transactionHistoryId;
+        this.date = date;
+        this.time = time;
+        this.inoutType = inoutType;
+        this.content = content;
+        this.amount = amount;
+        this.branch_name = branch_name;
     }
 }
