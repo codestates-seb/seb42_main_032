@@ -9,7 +9,6 @@ import java.time.LocalTime;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class TransactionHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
