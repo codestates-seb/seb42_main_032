@@ -16,6 +16,12 @@ public class MemberDto {
     public static class Post{
         private String email;
         private String name;
+
+        @Builder
+        public Post(String email, String name) {
+            this.email = email;
+            this.name = name;
+        }
     }
     public static class Patch{
         private String name;
@@ -23,6 +29,16 @@ public class MemberDto {
         private Integer payDay;
         private Integer initdate;
         private Boolean gender;
+
+        @Builder
+        public Patch(String name, String location, Integer payDay, Integer initdate,
+            Boolean gender) {
+            this.name = name;
+            this.location = location;
+            this.payDay = payDay;
+            this.initdate = initdate;
+            this.gender = gender;
+        }
     }
     @Getter
     @Setter
