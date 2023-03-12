@@ -1,12 +1,14 @@
 package DabuOps.tikkle.member_category.service;
 
 import DabuOps.tikkle.member_category.entity.MemberCategory;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 
+@Service
 public class MemberCategoryServiceStub implements MemberCategoryService {
     private MemberCategory stubMemberCategory1;
     private MemberCategory stubMemberCategory2;

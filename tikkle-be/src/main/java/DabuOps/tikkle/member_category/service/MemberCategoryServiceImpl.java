@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+//@Service
 @RequiredArgsConstructor
-public class MemberCategoryServiceImpl implements MemberCategoryService{
+public class MemberCategoryServiceImpl /*implements MemberCategoryService*/{
 //    private final MemberService memberService;
     private final MemberCategoryRepository memberCategoryRepository;
     private final static long etcCategoryId = 1L; // 사용자 설정 멤버 카테고리가 갖다 쓸 카테고리 ID
 
 
-    @Override
+    //@Override
     public MemberCategory createMemberCategory(MemberCategory memberCategory, Long memberId) {
         //Member member = memberService.findMember(memberId);
         memberCategory.setCategoryId(etcCategoryId);
