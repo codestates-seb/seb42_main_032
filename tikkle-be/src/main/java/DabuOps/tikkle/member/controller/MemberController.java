@@ -30,7 +30,7 @@ public class MemberController {
     @PostMapping
     public ResponseEntity postMember(@RequestBody MemberDto.Post post){
         Member member = memberService.createMember(mapper.postDtoToMember(post));
-        URI location = UriCreator.createURI("/members", member.getId());
+        URI location = UriCreator.createURI("/members", 1L);
         return ResponseEntity.created(location).build();
     }
 
