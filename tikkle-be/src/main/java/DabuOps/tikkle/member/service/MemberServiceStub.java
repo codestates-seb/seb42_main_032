@@ -23,7 +23,7 @@ public class MemberServiceStub implements MemberService{
             .build();
     }
     @Override
-    public Member createMember(Member member) { return null; }
+    public Member createMember(Member member) { return null;}
 
     @Override
     public Member createMemberByOauth2(Member member) { return null; }
