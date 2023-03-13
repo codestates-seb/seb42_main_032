@@ -5,7 +5,9 @@ import DabuOps.tikkle.member.entity.Member.Gender;
 import DabuOps.tikkle.member.entity.Member.MemberState;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class MemberServiceStub implements MemberService{
     private Member stubMember;

@@ -22,4 +22,23 @@ include::{snippets}/Post-Member/http-response.adoc[]
 .response-header
 include::{snippets}/Post-Member/response-headers.adoc[]
 
+=== 회원 수정
+.curl-request
+include::{snippets}/Patch-Member/curl-request.adoc[]
+
+.http-request
+include::{snippets}/Patch-Member/http-request.adoc[]
+
+.request-headers
+include::{snippets}/Patch-Member/request-headers.adoc[]
+
+.request-path-parameters
+include::{snippets}/Patch-Member/path-parameters.adoc[]
+
+.request-fields
+include::{snippets}/Patch-Member/request-fields.adoc[]
+
+.http-response
+include::{snippets}/Patch-Member/http-response.adoc[]
+
 
