@@ -20,7 +20,7 @@ import { Box } from "@chakra-ui/react";
 // ToDo: (향후 언어 변경 기능을 지원한다면) 언어별 요일 데이터 지정
 const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
-const Calendar = (date: Date) => {
+const Calendar = ({ date }: { date: Date }) => {
   // 현재 날짜를 불러올 수 있도록 Date 타입의 상태로 생성하고, 초기값을 Date 객체로 설정
   const [currentDate, setCurrentDate] = useState<Date>(date);
 
