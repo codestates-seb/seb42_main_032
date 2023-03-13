@@ -1,5 +1,5 @@
-//TODO 거래내역 박스
-//TODO 무한 스크롤 구현하기
+// TODO 거래내역 박스
+// TODO 무한 스크롤 구현하기
 import { FC } from 'react';
 import styled from 'styled-components';
 import { MdFastfood } from 'react-icons/md';

@@ -1,9 +1,14 @@
 //@ts-ignore
 
 //TODO 헤더 구현
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
-import { BellIcon, ChevronDownIcon } from '@chakra-ui/icons';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  BellIcon,
+  ChevronDownIcon,
+} from '@chakra-ui/icons';
 import {
   Menu,
   MenuButton,
@@ -14,8 +19,10 @@ import {
   MenuOptionGroup,
   MenuDivider,
 } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 
 const HeaderContainer = styled.header`
+  background-color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -46,6 +53,7 @@ const HeaderContainer = styled.header`
     background-color: white;
     border: 1px solid gray;
     border-radius: 7px;
+    font-size: 20px;
   }
   .header-menubutton {
     cursor: pointer;
@@ -63,13 +71,14 @@ const LoginButton = styled.button`
   border: 1px solid #6b46c1;
   border-radius: 6px;
   font-size: 15px;
+  margin-left: 20px;
   :hover {
-    background-color: #b794f4;
+    background-color: #6b46c1;
     color: white;
     border-color: transparent;
   }
   :active {
-    background-color: #6b46c1;
+    background-color: #b794f4;
     color: white;
     border-color: transparent;
   }
@@ -81,27 +90,21 @@ const HeaderContentWrap = styled.div`
 `;
 const BeforeLogin = styled.div`
   margin-right: 15px;
+  gap: 20px;
 `;
 const AfterLogin = styled.div`
   margin-right: 15px;
-  .header-userinfo__div {
-    padding: 15px;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    width: 100%;
-    :hover {
-      background-color: #6b46c1;
-      color: white;
-      transition: 0.2s all;
-    }
-  }
+  display: flex;
+  align-items: center;
+  gap: 20px;
   .header-menulistbutton {
     padding: 15px;
     width: 100%;
     :hover {
-      background-color: #6b46c1;
-      color: white;
-      transition: 0.2s all;
+      border-left: 5px solid #6b46c1;
+      /* background-color: #6b46c1; */
+      color: #6b46c1;
+      transition: 0.15s all;
     }
   }
   .header-logoutbutton {
@@ -109,7 +112,8 @@ const AfterLogin = styled.div`
     width: 100%;
     :hover {
       color: red;
-      transition: 0.2s all;
+      transition: 0.15s all;
+      border-left: 5px solid red;
     }
   }
 `;
@@ -119,19 +123,68 @@ const UserButton = styled.button`
   background-color: transparent;
 `;
 
+const SelectMonthContainer = styled.div`
+  .header-monthbutton {
+    cursor: pointer;
+  }
+`;
+
 const Button = styled.div`
   cursor: pointer;
 `;
-function Header() {
+
+// TypeScript에서 상태변경 props 받아올때 아래처럼 interface 작성해줘야 함.
+interface HeaderProps {
+  selectedDate: Date;
+  setSelectedDate: Dispatch<SetStateAction<Date>>;
+}
+
+// interface 작성하고 아래와같이 props 받아오기
+const Header: React.FunctionComponent<HeaderProps> = ({
+  selectedDate,
+  setSelectedDate,
+}) => {
+  const handlePrevMonth = () => {
+    const prevDate = new Date(selectedDate);
+    prevDate.setMonth(prevDate.getMonth() - 1);
+    setSelectedDate(prevDate);
+  };
+  const handleNextMonth = () => {
+    const nextDate = new Date(selectedDate);
+    nextDate.setMonth(nextDate.getMonth() + 1);
+    setSelectedDate(nextDate);
+  };
+
   return (
     <HeaderContainer>
-      <img className="header-logo__img" src="tikkle-logo.svg" alt="logo"></img>
+      <Link to="/">
+        <img className="header-logo__img" src="tikkle-logo.svg" alt="logo" />{' '}
+      </Link>
+
+      <SelectMonthContainer>
+        <ChevronLeftIcon
+          className="header-monthbutton"
+          boxSize={30}
+          onClick={handlePrevMonth}
+        />
+        <span>
+          {selectedDate.getFullYear()} 년 {selectedDate.getMonth() + 1} 월
+        </span>
+        <ChevronRightIcon
+          className="header-monthbutton"
+          boxSize={30}
+          onClick={handleNextMonth}
+        />
+      </SelectMonthContainer>
       <HeaderContentWrap>
-        <BellIcon boxSize={25} />
         <BeforeLogin>
-          <LoginButton>Log In</LoginButton>
+          <BellIcon boxSize={25} />
+          <Link to="/login">
+            <LoginButton>Log In</LoginButton>
+          </Link>
         </BeforeLogin>
         <AfterLogin>
+          <BellIcon boxSize={25} />
           <Menu>
             <MenuButton className="header-menubutton" as={UserButton}>
               <img className="header-user__img" src="user.png" alt="user" />
@@ -139,7 +192,7 @@ function Header() {
             </MenuButton>
             <MenuList className="header-menulist">
               <MenuItem as={Button}>
-                <div className="header-userinfo__div">회원정보</div>
+                <div className="header-menulistbutton">회원정보</div>
               </MenuItem>
               <MenuItem as={Button}>
                 <div className="header-menulistbutton">예산 설정</div>
@@ -162,6 +215,6 @@ function Header() {
       </HeaderContentWrap>
     </HeaderContainer>
   );
-}
+};
 
 export default Header;
