@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
+@Service
 public class MemberServiceStub {
     private Member stubMember;
 

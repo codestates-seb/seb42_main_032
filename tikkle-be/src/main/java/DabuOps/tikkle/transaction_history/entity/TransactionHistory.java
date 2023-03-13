@@ -14,7 +14,7 @@ public class TransactionHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long transactionHistoryId;
 
-    @ManyToOne
+//    @ManyToOne
     @JoinColumn(name = "MEMBER_CATEGORY_ID")
     private long memberCategoryId;
 
