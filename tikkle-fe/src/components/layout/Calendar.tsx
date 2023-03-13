@@ -5,8 +5,6 @@ import {
   Thead,
   Tbody,
   Tr,
-  Th,
-  Td,
   TableContainer
 } from '@chakra-ui/react';
 import { Text } from "@chakra-ui/react";
@@ -22,9 +20,9 @@ import { Box } from "@chakra-ui/react";
 // ToDo: (향후 언어 변경 기능을 지원한다면) 언어별 요일 데이터 지정
 const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
-function Calendar() {
+const Calendar = (date: Date) => {
   // 현재 날짜를 불러올 수 있도록 Date 타입의 상태로 생성하고, 초기값을 Date 객체로 설정
-  const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const [currentDate, setCurrentDate] = useState<Date>(date);
 
   // 선택한 날짜를 활성화해주기 위한 상태
   const [isSelected, setIsSelected] = useState<Boolean>(false);
@@ -63,13 +61,6 @@ function Calendar() {
   // 일자를 나타내는 칸 렌더링
   const renderDate = dateArr.map((date) => {
     return (
-      // <Td key={date}>
-      //   <div className="dateLabel">{date}</div>
-      //   <ul className="transactionLabelList">
-      //     {/* 지출, 예산 레이블을 표시하는 목록 */}
-      //     
-      //   </ul>
-      // </Td>
       // w-52 === 13rem
       // h-24 === 6rem
       <Box key={date} as="td" w={52} h={24}>
@@ -77,8 +68,8 @@ function Calendar() {
         <Box fontSize={[8, 10, 12]}>
           {/* ToDo: 받아온 데이터로 지출 레이블 표시 */}
           <Text color={"blue"}>-10,000</Text>
-          {/* ToDo: 받아온 데이터로 예산 레이블 표시 */}
-          <Text>💡20,000</Text>
+          {/* ToDo: 받아온 데이터로 수입 레이블 표시 */}
+          <Text color={"red"}>20,000</Text>
         </Box>
       </Box>
     )
