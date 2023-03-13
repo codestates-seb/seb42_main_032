@@ -16,7 +16,7 @@ public class TransactionHistoryDto {
         private LocalDate date;
         private LocalTime time;
         private TransactionHistory.InoutType inoutType;
-        private String content;
+        private String memo;
         private int amount;
         private String branchName;
     }
@@ -28,7 +28,7 @@ public class TransactionHistoryDto {
         private long memberCategoryId;
         private LocalDate date;
         private LocalTime time;
-        private String content;
+        private String memo;
         private int amount;
         private String branchName;
     }
@@ -36,12 +36,12 @@ public class TransactionHistoryDto {
     @Getter
     @AllArgsConstructor
     public static class Response {
-        private long transactionHistoryId;
+        private long id;
         private long memberCategoryId;
         private LocalDate date;
         private LocalTime time;
         private TransactionHistory.InoutType inoutType;
-        private String content;
+        private String memo;
         private int amount;
         private String branchName;
     }

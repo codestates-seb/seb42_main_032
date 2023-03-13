@@ -6,13 +6,16 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Entity
+
+@NoArgsConstructor
+@Builder
 @Getter
 @Setter
+@Entity
 public class TransactionHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long transactionHistoryId;
+    private long id;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_CATEGORY_ID")
@@ -24,13 +27,12 @@ public class TransactionHistory {
     @Column(name = "TIME")
     private LocalTime time;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "INOUT_TYPE")
-    @Builder.Default
+    @Enumerated(EnumType.STRING)
     private InoutType inoutType;
 
     @Column(name = "CONTENT")
-    private String content;
+    private String memo;
 
     @Column(name = "AMOUNT")
     private int amount;
@@ -50,12 +52,14 @@ public class TransactionHistory {
     }
 
     @Builder
-    public TransactionHistory(long transactionHistoryId, LocalDate date, LocalTime time, InoutType inoutType, String content, int amount, String branch_name) {
-        this.transactionHistoryId = transactionHistoryId;
+
+    public TransactionHistory(long id, long memberCategoryId, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branch_name) {
+        this.id = id;
+        this.memberCategoryId = memberCategoryId;
         this.date = date;
         this.time = time;
         this.inoutType = inoutType;
-        this.content = content;
+        this.memo = memo;
         this.amount = amount;
         this.branch_name = branch_name;
     }

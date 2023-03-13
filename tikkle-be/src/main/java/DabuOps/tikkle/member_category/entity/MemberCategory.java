@@ -1,5 +1,6 @@
 package DabuOps.tikkle.member_category.entity;
 
+import DabuOps.tikkle.global.audit.Auditable;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
 import lombok.*;
@@ -11,15 +12,17 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Builder
-public class MemberCategory {
+public class MemberCategory extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberCategoryId;
+    private Long id;
 
-//    @ManyToOne // MEMBER n:1 양방향
-//    @JoinColumn(name = "MEMBER_ID")
+    @ManyToOne // MEMBER n:1 단방향
+    @JoinColumn(name = "MEMBER_ID")
     private Long memberId;
 
+    @ManyToOne // CATEGORY n:1 단방향 // MEMBER : CATEGORY (n:m) 매핑
+    @JoinColumn(name = "CATEGORY_ID")
     private Long categoryId;
 
     @Column(name = "NAME", nullable = false)
@@ -39,8 +42,9 @@ public class MemberCategory {
     }
 
     @Builder
-    public MemberCategory(Long memberCategoryId, Long memberId, Long categoryId, String name, Status status) {
-        this.memberCategoryId = memberCategoryId;
+
+    public MemberCategory(Long id, Long memberId, Long categoryId, String name, Status status) {
+        this.id = id;
         this.memberId = memberId;
         this.categoryId = categoryId;
         this.name = name;

@@ -1,12 +1,14 @@
 package DabuOps.tikkle.member_category.service;
 
 import DabuOps.tikkle.member_category.entity.MemberCategory;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 
+@Service
 public class MemberCategoryServiceStub implements MemberCategoryService {
     private MemberCategory stubMemberCategory1;
     private MemberCategory stubMemberCategory2;
@@ -14,22 +16,24 @@ public class MemberCategoryServiceStub implements MemberCategoryService {
     @PostConstruct
     public void init() {
         stubMemberCategory1 = MemberCategory.builder()
-                .memberCategoryId(1L)
+                .id(1L)
                 .name("술")
                 .categoryId(1L)
+                .memberId(1L)
                 .build();
 
         stubMemberCategory2 = MemberCategory.builder()
-                .memberCategoryId(2L)
+                .id(2L)
                 .name("배달")
                 .categoryId(1L)
+                .memberId(1L)
                 .build();
     }
 
     public MemberCategory createMemberCategory(MemberCategory memberCategory, Long memberId) {
         return null;
     }
-    public MemberCategory updateMemberCategory(MemberCategory memberCategory) {
+    public MemberCategory updateMemberCategory(MemberCategory memberCategory, Long memberCategoryId) {
         return null;
     }
 
