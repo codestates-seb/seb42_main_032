@@ -1,5 +1,6 @@
 package DabuOps.tikkle.transaction_history.entity;
 
+import DabuOps.tikkle.member_category.entity.MemberCategory;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,7 +20,7 @@ public class TransactionHistory {
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_CATEGORY_ID")
-    private long memberCategoryId;
+    private MemberCategory memberCategory;
 
     @Column(name = "DATE")
     private LocalDate date;
@@ -53,9 +54,9 @@ public class TransactionHistory {
 
     @Builder
 
-    public TransactionHistory(long id, long memberCategoryId, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branch_name) {
+    public TransactionHistory(long id, MemberCategory memberCategory, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branch_name) {
         this.id = id;
-        this.memberCategoryId = memberCategoryId;
+        this.memberCategory = memberCategory;
         this.date = date;
         this.time = time;
         this.inoutType = inoutType;

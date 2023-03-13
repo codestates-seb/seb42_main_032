@@ -65,16 +65,16 @@ public class MemberCategoryControllerTest {
             .build();
     MemberCategory memberCategory1 = MemberCategory.builder()
             .id(1L)
-            .memberId(1L)
-            .categoryId(1L)
+            .member(member)
+            .category(category)
             .name("배달")
             .status(MemberCategory.Status.ACTIVE)
             .build();
 
     MemberCategory memberCategory2 = MemberCategory.builder()
             .id(2L)
-            .memberId(1L)
-            .categoryId(1L)
+            .member(member)
+            .category(category)
             .name("편의점")
             .status(MemberCategory.Status.ACTIVE)
             .build();
@@ -90,16 +90,16 @@ public class MemberCategoryControllerTest {
     MemberCategoryDto.Response response1 = MemberCategoryDto.Response.builder()
             .id(memberCategory1.getId())
             .name(memberCategory1.getName())
-            .memberId(memberCategory1.getMemberId())
-            .categoryId(memberCategory1.getCategoryId())
+            .memberId(memberCategory1.getMember().getId())
+            .categoryId(memberCategory1.getCategory().getId())
             .createdAt(memberCategory1.getCreatedAt())
             .build();
 
     MemberCategoryDto.Response response2 = MemberCategoryDto.Response.builder()
             .id(memberCategory2.getId())
             .name(memberCategory2.getName())
-            .memberId(memberCategory2.getMemberId())
-            .categoryId(memberCategory2.getCategoryId())
+            .memberId(memberCategory2.getMember().getId())
+            .categoryId(memberCategory2.getCategory().getId())
             .createdAt(memberCategory2.getCreatedAt())
             .build();
 
@@ -122,7 +122,7 @@ public class MemberCategoryControllerTest {
     @Test
     void postCategoryTest() throws Exception {
         String content = gson.toJson(post);
-        memberCategory1.setMemberId(member.getId());
+        memberCategory1.setMember(member);
         given(mapper.memberCategoryPostDtoToMemberCategory(post)).willReturn(new MemberCategory());
         given(memberCategoryService.createMemberCategory(Mockito.any(MemberCategory.class), Mockito.anyLong())).willReturn(memberCategory1);
 
