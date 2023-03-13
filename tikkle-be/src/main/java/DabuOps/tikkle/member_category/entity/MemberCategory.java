@@ -42,6 +42,7 @@ public class MemberCategory extends Auditable {
     }
 
     @Builder
+
     public MemberCategory(Long id, Long memberId, Long categoryId, String name, Status status) {
         this.id = id;
         this.memberId = memberId;

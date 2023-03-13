@@ -1,5 +1,6 @@
 package DabuOps.tikkle.member_category.controller;
 
+import DabuOps.tikkle.global.utils.MultiResponseDto;
 import DabuOps.tikkle.global.utils.SingleResponseDto;
 import DabuOps.tikkle.global.utils.UriCreator;
 import DabuOps.tikkle.member_category.dto.MemberCategoryDto;
@@ -29,7 +30,7 @@ public class MemberCategoryController {
     private final MemberCategoryMapper mapper;
 
     @PostMapping("/{member_id}")
-    public ResponseEntity postMemberCategory(@PathVariable("member_id") @Positive long memberId,
+    public ResponseEntity postMemberCategory(@PathVariable("member_id") @Positive Long memberId,
                                              @Valid @RequestBody MemberCategoryDto.Post requestBody) {
         MemberCategory memberCategory = mapper.memberCategoryPostDtoToMemberCategory(requestBody);
         memberCategoryService.createMemberCategory(memberCategory, memberId);
@@ -40,7 +41,7 @@ public class MemberCategoryController {
     }
 
     @PatchMapping("/{member_category_id}")
-    public ResponseEntity patchMemberCategory(@PathVariable("member_category_id") long memberCategoryId,
+    public ResponseEntity patchMemberCategory(@PathVariable("member_category_id") Long memberCategoryId,
                                               @Valid @RequestBody MemberCategoryDto.Patch requestBody) {
         MemberCategory memberCategory = mapper.memberCategoryPatchDtoToMemberCategory(requestBody);
 //        memberCategory.setId(memberCategoryId);
@@ -49,25 +50,25 @@ public class MemberCategoryController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{member_category_id}")
+    @GetMapping("/members/{member_category_id}")
     public ResponseEntity getMemberCategory(//@PathVariable("member_id") long memberId,
-                                            @PathVariable("member_category_id") long memberCategoryId) {
+                                            @PathVariable("member_category_id") Long memberCategoryId) {
         MemberCategory memberCategory = memberCategoryService.findMemberCategory(memberCategoryId);
         MemberCategoryDto.Response response = mapper.memberCategoryToMemberCategoryResponseDto(memberCategory);
 
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-//    @GetMapping("/{member_id}")
-//    public ResponseEntity getAllMemberCategories() {
-//        List<MemberCategory> memberCategories = memberCategoryService.findAllMemberCategories(memberId);
-//        List<MemberCategoryDto.Response> responses = mapper.memberCategoriesToMemberCategoryResponseDto(memberCategories);
-//
-//        return new ResponseEntity<>(responses, HttpStatus.OK);
-//    }
+    @GetMapping("/{member_id}")
+    public ResponseEntity getAllMemberCategories(@PathVariable("member_id") Long memberId) {
+        List<MemberCategory> memberCategories = memberCategoryService.findAllMemberCategories(memberId);
+        List<MemberCategoryDto.Response> responses = mapper.memberCategoriesToMemberCategoryResponseDto(memberCategories);
+
+        return new ResponseEntity(new MultiResponseDto<>(responses), HttpStatus.OK);
+    }
 
     @DeleteMapping("/{member_category_id}")
-    public ResponseEntity deleteMemberCategory(@PathVariable("member_category_id") long memberCategoryId) {
+    public ResponseEntity deleteMemberCategory(@PathVariable("member_category_id") Long memberCategoryId) {
         memberCategoryService.deleteMemberCategory(memberCategoryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

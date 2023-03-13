@@ -87,6 +87,17 @@ include::{snippets}/Get-Category/request-fields.adoc[]
 .http-response
 include::{snippets}/Get-Category/http-response.adoc[]
 
+=== 카테고리 리스트 조회
+.curl-request
+include::{snippets}/Get-Categories/curl-request.adoc[]
+
+.http-request
+include::{snippets}/Get-Categories/http-request.adoc[]
+
+.http-response
+include::{snippets}/Get-Categories/http-response.adoc[]
+
+
 === 카테고리 삭제
 .curl-request
 include::{snippets}/Delete-Category/curl-request.adoc[]
