@@ -31,9 +31,7 @@ public class MemberCategoryServiceStub implements MemberCategoryService {
     }
 
     public MemberCategory createMemberCategory(MemberCategory memberCategory, Long memberId) {
-        memberCategory.setMemberId(1L);
-        memberCategory.setCategoryId(1L);
-        return stubMemberCategory1;
+        return null;
     }
     public MemberCategory updateMemberCategory(MemberCategory memberCategory, Long memberCategoryId) {
         return null;
