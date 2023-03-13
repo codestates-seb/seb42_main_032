@@ -30,6 +30,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -188,71 +189,93 @@ public class MemberControllerTest {
 
     }
 
-//    @DisplayName("회원 조회")
-//    @Test
-//    @WithMockCustomMember
-//    void getMember() throws Exception {
-//
-//        given(memberService.getMember(Mockito.anyLong())).willReturn(member);
-//        given(mapper.memberToResponseDto(Mockito.any(Member.class))).willReturn(response);
-//
-//
-//        ResultActions actions = mockMvc.perform(
-//            get(BASE_URL + "/{member-id}", member.getId())
-//                .with(csrf())
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON));
-//
-//        actions
-//            .andExpect(status().isOk())
-//            .andExpect(jsonPath("$.data.memberId").value(member.getId()))
-//            .andExpect(jsonPath("$.data.location").value(member.getLocation()))
-//            .andDo(document("Get-Member",
-//                preprocessRequest(prettyPrint()),
-//                preprocessResponse(prettyPrint()),
-//                requestHeaders(
-//                    attributes(key("title")
-//                        .value("Headers for user revision"))),
-//                pathParameters( // path parameter
-//                    parameterWithName("member-id") // parameter 이름
-//                        .description("회원 아이디")), // parameter 설명
-//                responseFields( // 응답 필드
-//                    fieldWithPath("data") // 필드 이름
-//                        .type(JsonFieldType.OBJECT) // 필드 타입
-//                        .description("조회 데이터"), // 필드 설명
-//                    fieldWithPath("data.memberId")
-//                        .type(JsonFieldType.NUMBER)
-//                        .description("회원 아이디"),
-//                    fieldWithPath("data.email")
-//                        .type(JsonFieldType.STRING)
-//                        .description("회원 이메일"),
-//                    fieldWithPath("data.name")
-//                        .type(JsonFieldType.STRING)
-//                        .description("회원 이름"),
-//                    fieldWithPath("data.picture")
-//                        .type(JsonFieldType.STRING)
-//                        .description("회원 사진"),
-//                    fieldWithPath("data.location")
-//                        .type(JsonFieldType.STRING)
-//                        .description("회원 활동 지역"),
-//                    fieldWithPath("data.about")
-//                        .type(JsonFieldType.STRING)
-//                        .description("회원 소개"),
-//                    fieldWithPath("data.state")
-//                        .type(JsonFieldType.STRING)
-//                        .description("회원 상태"),
-//                    fieldWithPath("data.isMine")
-//                        .type(JsonFieldType.BOOLEAN)
-//                        .description("본인 확인"),
-//                    fieldWithPath("data.createdAt")
-//                        .type(JsonFieldType.NULL)
-//                        .description("가입일"),
-//                    fieldWithPath("data.modifiedAt")
-//                        .type(JsonFieldType.NULL)
-//                        .description("최근 수정일"),
-//                    fieldWithPath("data.lastLoginTime")
-//                        .type(JsonFieldType.NULL)
-//                        .description("마지막 접속일"))));
-//    }
+    @DisplayName("회원 조회")
+    @Test
+    @WithMockCustomMember
+    void getMember() throws Exception {
+
+        given(memberService.getMember(Mockito.anyLong())).willReturn(member);
+        given(mapper.memberToResponseDto(Mockito.any(Member.class))).willReturn(response);
+
+
+        ResultActions actions = mockMvc.perform(
+            get(BASE_URL + "/{member-id}", member.getId())
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        actions
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.memberId").value(member.getId()))
+            .andExpect(jsonPath("$.data.location").value(member.getLocation()))
+            .andDo(document("Get-Member",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    attributes(key("title")
+                        .value("Headers for user revision"))),
+                pathParameters( // path parameter
+                    parameterWithName("member-id") // parameter 이름
+                        .description("회원 아이디")), // parameter 설명
+                responseFields( // 응답 필드
+                    fieldWithPath("data") // 필드 이름
+                        .type(JsonFieldType.OBJECT) // 필드 타입
+                        .description("조회 데이터"), // 필드 설명
+                    fieldWithPath("data.memberId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("회원 아이디"),
+                    fieldWithPath("data.email")
+                        .type(JsonFieldType.STRING)
+                        .description("회원 이메일"),
+                    fieldWithPath("data.name")
+                        .type(JsonFieldType.STRING)
+                        .description("회원 이름"),
+                    fieldWithPath("data.location")
+                        .type(JsonFieldType.STRING)
+                        .description("회원 활동 지역"),
+                    fieldWithPath("data.gender")
+                        .type(JsonFieldType.STRING)
+                        .description("회원 성별"),
+                    fieldWithPath("data.state")
+                        .type(JsonFieldType.STRING)
+                        .description("회원 상태"),
+                    fieldWithPath("data.payDay")
+                        .type(JsonFieldType.NUMBER)
+                        .description("급여일"),
+                    fieldWithPath("data.initDate")
+                        .type(JsonFieldType.NUMBER)
+                        .description("예산 갱신일"),
+                    fieldWithPath("data.createdAt")
+                        .type(JsonFieldType.NULL)
+                        .description("가입일"),
+                    fieldWithPath("data.modifiedAt")
+                        .type(JsonFieldType.NULL)
+                        .description("최근 수정일"))));
+    }
+    @DisplayName("회원 삭제")
+    @Test
+    @WithMockCustomMember
+    void deleteMember() throws Exception {
+        doNothing().when(memberService).deleteMember(member.getId());
+
+        ResultActions actions = mockMvc.perform(
+            delete(BASE_URL + "/{member-id}", member.getId())
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON));
+
+
+        actions
+            .andExpect(status().isNoContent())
+            .andExpect(jsonPath("$.data").doesNotExist()) // json 응답이 없음.
+            .andDo(document("Delete-Member",
+                preprocessRequest(prettyPrint()),
+                requestHeaders(
+                    attributes(key("title")
+                        .value("Headers for user revision"))
+                ),
+                pathParameters( // path parameter
+                    parameterWithName("member-id").description("회원 아이디")
+                )));
+    }
 
 }

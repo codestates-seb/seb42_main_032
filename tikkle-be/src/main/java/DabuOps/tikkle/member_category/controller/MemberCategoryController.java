@@ -1,6 +1,7 @@
 package DabuOps.tikkle.member_category.controller;
 
 import DabuOps.tikkle.global.utils.MultiResponseDto;
+import DabuOps.tikkle.global.utils.ResponseListDto;
 import DabuOps.tikkle.global.utils.SingleResponseDto;
 import DabuOps.tikkle.global.utils.UriCreator;
 import DabuOps.tikkle.member_category.dto.MemberCategoryDto;
@@ -64,7 +65,7 @@ public class MemberCategoryController {
         List<MemberCategory> memberCategories = memberCategoryService.findAllMemberCategories(memberId);
         List<MemberCategoryDto.Response> responses = mapper.memberCategoriesToMemberCategoryResponseDto(memberCategories);
 
-        return new ResponseEntity(new MultiResponseDto<>(responses), HttpStatus.OK);
+        return new ResponseEntity(new ResponseListDto<>(responses), HttpStatus.OK);
     }
 
     @DeleteMapping("/{member_category_id}")
