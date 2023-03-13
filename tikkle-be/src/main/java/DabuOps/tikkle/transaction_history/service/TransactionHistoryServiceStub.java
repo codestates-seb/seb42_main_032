@@ -1,5 +1,10 @@
 package DabuOps.tikkle.transaction_history.service;
 
+import DabuOps.tikkle.category.entity.Category;
+import DabuOps.tikkle.member.entity.Member;
+import DabuOps.tikkle.member.entity.Member.Gender;
+import DabuOps.tikkle.member.entity.Member.MemberState;
+import DabuOps.tikkle.member_category.entity.MemberCategory;
 import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +18,37 @@ public class TransactionHistoryServiceStub implements TransactionHistoryService{
     private TransactionHistory stubTransactionHistory1;
     private TransactionHistory stubTransactionHistory2;
 
+    private MemberCategory stubMemberCategory;
+    private Member stubMember;
+
+    private Category category;
     @PostConstruct
     public void init() {
+        category = Category.builder()
+            .id(1L)
+            .name("식비")
+            .build();
+
+        stubMember = Member.builder()
+            .id(1L)
+            .state(MemberState.ACTIVE)
+            .name("홍길동")
+            .initDate(25)
+            .payDay(25)
+            .email("test123@gmail.com")
+            .gender(Gender.male)
+            .build();
+
+        stubMemberCategory = MemberCategory.builder()
+            .id(1L)
+            .name("술")
+            .category(category)
+            .member(stubMember)
+            .build();
+
         stubTransactionHistory1 = TransactionHistory.builder()
                 .id(1L)
-                .memberCategoryId(1L)
+                .memberCategory(stubMemberCategory)
                 .date(LocalDate.now())
                 .time(LocalTime.now())
                 .inoutType(TransactionHistory.InoutType.SPEND)
@@ -28,7 +59,7 @@ public class TransactionHistoryServiceStub implements TransactionHistoryService{
 
         stubTransactionHistory2 = TransactionHistory.builder()
                 .id(2L)
-                .memberCategoryId(1L)
+                .memberCategory(stubMemberCategory)
                 .date(LocalDate.now())
                 .time(LocalTime.now())
                 .inoutType(TransactionHistory.InoutType.SPEND)

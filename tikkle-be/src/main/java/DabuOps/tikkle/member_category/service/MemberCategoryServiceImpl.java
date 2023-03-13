@@ -1,7 +1,10 @@
 package DabuOps.tikkle.member_category.service;
 
+import DabuOps.tikkle.category.entity.Category;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
+import DabuOps.tikkle.member.repository.MemberRepository;
+import DabuOps.tikkle.member.service.MemberService;
 import DabuOps.tikkle.member_category.entity.MemberCategory;
 import DabuOps.tikkle.member_category.repository.MemberCategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,16 +15,21 @@ import java.util.Optional;
 //@Service
 @RequiredArgsConstructor
 public class MemberCategoryServiceImpl /*implements MemberCategoryService*/{
-//    private final MemberService memberService;
+    private final MemberService memberService;
     private final MemberCategoryRepository memberCategoryRepository;
-    private final static long etcCategoryId = 1L; // 사용자 설정 멤버 카테고리가 갖다 쓸 카테고리 ID
+
+    private final Category category = Category.builder()
+        .id(1L)
+        .name("식비")
+        .build();
+     // 사용자 설정 멤버 카테고리가 갖다 쓸 카테고리 ID
 
 
     //@Override
     public MemberCategory createMemberCategory(MemberCategory memberCategory, Long memberId) {
         //Member member = memberService.findMember(memberId);
-        memberCategory.setCategoryId(etcCategoryId);
-        memberCategory.setMemberId(memberId);
+        memberCategory.setCategory(category);
+        memberCategory.setMember(memberService.findExistMemberById(memberId));
 
         return memberCategoryRepository.save(memberCategory);
     }
