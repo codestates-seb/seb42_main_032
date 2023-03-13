@@ -2,7 +2,7 @@ import './App.css';
 import Calendar from './components/layout/Calendar';
 import Transaction from './components/layout/Transaction';
 
-// Transaction 컴포넌트용 거래내역 dummydata
+// Transaction 컴포넌트용 거래내역 dummy data
 const transactions: Transaction[] = [
   {
     date: new Date('2023-03-01'),
