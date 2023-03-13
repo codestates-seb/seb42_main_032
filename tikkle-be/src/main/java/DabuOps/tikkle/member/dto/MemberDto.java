@@ -1,12 +1,8 @@
 package DabuOps.tikkle.member.dto;
 
 import DabuOps.tikkle.global.audit.Auditable;
-import DabuOps.tikkle.member.entity.Detail;
 import DabuOps.tikkle.member.entity.Member.Gender;
 import DabuOps.tikkle.member.entity.Member.MemberState;
-import java.time.LocalDateTime;
-import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
