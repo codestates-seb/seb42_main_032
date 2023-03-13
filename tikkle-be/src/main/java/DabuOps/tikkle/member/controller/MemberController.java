@@ -67,5 +67,4 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-
 }
