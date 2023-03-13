@@ -25,18 +25,20 @@ public class MemberDto {
             this.name = name;
         }
     }
+    @Getter
+    @NoArgsConstructor
     public static class Patch{
         private String name;
         private String location;
         private Integer payDay;
-        private Integer initdate;
+        private Integer initDate;
 
         @Builder
-        public Patch(String name, String location, Integer payDay, Integer initdate) {
+        public Patch(String name, String location, Integer payDay, Integer initDate) {
             this.name = name;
             this.location = location;
             this.payDay = payDay;
-            this.initdate = initdate;
+            this.initDate = initDate;
         }
     }
     @Getter

@@ -5,9 +5,10 @@ import DabuOps.tikkle.member.entity.Member.Gender;
 import DabuOps.tikkle.member.entity.Member.MemberState;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
-public class MemberServiceStub implements MemberService{
+
+public class MemberServiceStub {
     private Member stubMember;
 
     @PostConstruct
@@ -22,31 +23,31 @@ public class MemberServiceStub implements MemberService{
             .gender(Gender.male)
             .build();
     }
-    @Override
+   // @Override
     public Member createMember(Member member) { return null;}
 
-    @Override
+    //@Override
     public Member createMemberByOauth2(Member member) { return null; }
 
-    @Override
+    //@Override
     public Member updateMember(Member member) { return null; }
 
-    @Override
+    //@Override
     public Member getMember(Long memberId) {
         return stubMember;}
 
-    @Override
+    //@Override
     public Member getMember(String email) {
         return stubMember;
     }
 
-    @Override
+    //@Override
     public void deleteMember(Long memberId) {}
 
-    @Override
+    //@Override
     public void verifyExistEmail(String email) {}
 
-    @Override
+    //@Override
     public Member findExistMemberByEmail(String email) { return null; }
 
 }
