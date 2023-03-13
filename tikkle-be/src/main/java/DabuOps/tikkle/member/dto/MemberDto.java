@@ -67,23 +67,18 @@ public class MemberDto {
         private String name;
         private String location;
         private MemberState state;
-        private LocalDateTime createAt;
-        private LocalDateTime modifiedAt;
         private Gender gender;
         private Integer payDay;
         private Integer initDate;
         @Builder
         public Response(Long memberId, String email, String name, String location,
-            MemberState state,
-            LocalDateTime createAt, LocalDateTime modifiedAt, Gender gender, Integer payDay,
+            MemberState state, Gender gender, Integer payDay,
             Integer initDate) {
             this.memberId = memberId;
             this.email = email;
             this.name = name;
             this.location = location;
             this.state = state;
-            this.createAt = createAt;
-            this.modifiedAt = modifiedAt;
             this.gender = gender;
             this.payDay = payDay;
             this.initDate = initDate;
