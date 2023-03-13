@@ -123,7 +123,7 @@ public class MemberControllerTest {
                     headerWithName(HttpHeaders.LOCATION)
                         .description("Header Location, 리소스의 URL")
                 )
-                ));
+            ));
     }
 
 }

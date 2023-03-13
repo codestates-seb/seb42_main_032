@@ -36,7 +36,7 @@ public class TransactionHistoryDto {
     @Getter
     @AllArgsConstructor
     public static class Response {
-        private long transactionHistoryId;
+        private long id;
         private long memberCategoryId;
         private LocalDate date;
         private LocalTime time;

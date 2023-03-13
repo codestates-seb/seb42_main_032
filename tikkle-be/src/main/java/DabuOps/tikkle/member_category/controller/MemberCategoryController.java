@@ -1,9 +1,11 @@
 package DabuOps.tikkle.member_category.controller;
 
+import DabuOps.tikkle.global.utils.SingleResponseDto;
+import DabuOps.tikkle.global.utils.UriCreator;
 import DabuOps.tikkle.member_category.dto.MemberCategoryDto;
 import DabuOps.tikkle.member_category.entity.MemberCategory;
 import DabuOps.tikkle.member_category.mapper.MemberCategoryMapper;
-import DabuOps.tikkle.member_category.repogitory.MemberCategoryRepository;
+import DabuOps.tikkle.member_category.repository.MemberCategoryRepository;
 import DabuOps.tikkle.member_category.service.MemberCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,13 +15,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/api/memberCategories")
+@RequestMapping("/categories")
 public class MemberCategoryController {
+    private final String DEFAULT_URL = "/categories";
     private final MemberCategoryRepository memberCategoryRepository;
     private final MemberCategoryService memberCategoryService;
     private final MemberCategoryMapper mapper;
@@ -30,34 +34,37 @@ public class MemberCategoryController {
         MemberCategory memberCategory = mapper.memberCategoryPostDtoToMemberCategory(requestBody);
         memberCategoryService.createMemberCategory(memberCategory, memberId);
 
-        return new ResponseEntity<>(memberCategory, HttpStatus.CREATED);
+        URI location = UriCreator.createURI(DEFAULT_URL + "/1", 1L);
+
+        return ResponseEntity.created(location).build();
     }
 
     @PatchMapping("/{member_category_id}")
     public ResponseEntity patchMemberCategory(@PathVariable("member_category_id") long memberCategoryId,
                                               @Valid @RequestBody MemberCategoryDto.Patch requestBody) {
         MemberCategory memberCategory = mapper.memberCategoryPatchDtoToMemberCategory(requestBody);
-        memberCategory.setMemberCategoryId(memberCategoryId);
-        MemberCategory updatedMemberCategory = memberCategoryService.updateMemberCategory(memberCategory);
+//        memberCategory.setId(memberCategoryId);
+        MemberCategory updatedMemberCategory = memberCategoryService.updateMemberCategory(memberCategory, memberCategoryId);
 
-        return new ResponseEntity<>(updatedMemberCategory, HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{member_category_id}")
-    public ResponseEntity getMemberCategory(@PathVariable("member_category_id") long memberCategoryId) {
+    public ResponseEntity getMemberCategory(//@PathVariable("member_id") long memberId,
+                                            @PathVariable("member_category_id") long memberCategoryId) {
         MemberCategory memberCategory = memberCategoryService.findMemberCategory(memberCategoryId);
         MemberCategoryDto.Response response = mapper.memberCategoryToMemberCategoryResponseDto(memberCategory);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @GetMapping("/{member_id}")
-    public ResponseEntity getAllMemberCategories(@PathVariable("member_id") long memberId) {
-        List<MemberCategory> memberCategories = memberCategoryService.findAllMemberCategories(memberId);
-        List<MemberCategoryDto.Response> responses = mapper.memberCategoriesToMemberCategoryResponseDto(memberCategories);
-
-        return new ResponseEntity<>(responses, HttpStatus.OK);
-    }
+//    @GetMapping("/{member_id}")
+//    public ResponseEntity getAllMemberCategories() {
+//        List<MemberCategory> memberCategories = memberCategoryService.findAllMemberCategories(memberId);
+//        List<MemberCategoryDto.Response> responses = mapper.memberCategoriesToMemberCategoryResponseDto(memberCategories);
+//
+//        return new ResponseEntity<>(responses, HttpStatus.OK);
+//    }
 
     @DeleteMapping("/{member_category_id}")
     public ResponseEntity deleteMemberCategory(@PathVariable("member_category_id") long memberCategoryId) {

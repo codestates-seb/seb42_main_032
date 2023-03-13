@@ -16,22 +16,26 @@ public class MemberCategoryServiceStub implements MemberCategoryService {
     @PostConstruct
     public void init() {
         stubMemberCategory1 = MemberCategory.builder()
-                .memberCategoryId(1L)
+                .id(1L)
                 .name("술")
                 .categoryId(1L)
+                .memberId(1L)
                 .build();
 
         stubMemberCategory2 = MemberCategory.builder()
-                .memberCategoryId(2L)
+                .id(2L)
                 .name("배달")
                 .categoryId(1L)
+                .memberId(1L)
                 .build();
     }
 
     public MemberCategory createMemberCategory(MemberCategory memberCategory, Long memberId) {
-        return null;
+        memberCategory.setMemberId(1L);
+        memberCategory.setCategoryId(1L);
+        return stubMemberCategory1;
     }
-    public MemberCategory updateMemberCategory(MemberCategory memberCategory) {
+    public MemberCategory updateMemberCategory(MemberCategory memberCategory, Long memberCategoryId) {
         return null;
     }
 

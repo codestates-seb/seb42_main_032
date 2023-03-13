@@ -7,7 +7,7 @@ import java.util.List;
 public interface MemberCategoryService {
     MemberCategory createMemberCategory(MemberCategory memberCategory, Long memberId);
 
-    MemberCategory updateMemberCategory(MemberCategory memberCategory);
+    MemberCategory updateMemberCategory(MemberCategory memberCategory, Long memberCategoryId);
 
     MemberCategory findMemberCategory(Long memberCategoryId);
 

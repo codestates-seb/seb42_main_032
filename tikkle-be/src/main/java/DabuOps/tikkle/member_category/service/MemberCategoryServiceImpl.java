@@ -2,13 +2,9 @@ package DabuOps.tikkle.member_category.service;
 
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
-import DabuOps.tikkle.member.entity.Member;
-import DabuOps.tikkle.member.repository.MemberRepository;
-import DabuOps.tikkle.member.service.MemberService;
 import DabuOps.tikkle.member_category.entity.MemberCategory;
-import DabuOps.tikkle.member_category.repogitory.MemberCategoryRepository;
+import DabuOps.tikkle.member_category.repository.MemberCategoryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,8 +25,8 @@ public class MemberCategoryServiceImpl /*implements MemberCategoryService*/{
 
         return memberCategoryRepository.save(memberCategory);
     }
-    public MemberCategory updateMemberCategory(MemberCategory memberCategory) {
-        MemberCategory updatedMemberCategory = findMemberCategory(memberCategory.getMemberCategoryId());
+    public MemberCategory updateMemberCategory(MemberCategory memberCategory, long memberCategoryId) {
+        MemberCategory updatedMemberCategory = findMemberCategory(memberCategoryId);
 
         Optional.ofNullable(memberCategory.getName())
                 .ifPresent(name -> updatedMemberCategory.setName(name));

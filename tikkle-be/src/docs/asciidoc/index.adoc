@@ -22,4 +22,60 @@ include::{snippets}/Post-Member/http-response.adoc[]
 .response-header
 include::{snippets}/Post-Member/response-headers.adoc[]
 
+== 카테고리
+=== 카테고리 등록
+.curl-request
+include::{snippets}/Post-Category/curl-request.adoc[]
+
+.http-request
+include::{snippets}/Post-Category/http-request.adoc[]
+
+.request-fields
+include::{snippets}/Post-Category/request-fields.adoc[]
+
+.http-response
+include::{snippets}/Post-Category/http-response.adoc[]
+
+.response-header
+include::{snippets}/Post-Category/response-headers.adoc[]
+
+=== 카테고리 수정
+.curl-request
+include::{snippets}/Patch-Category/curl-request.adoc[]
+
+.http-request
+include::{snippets}/Patch-Category/http-request.adoc[]
+
+.request-fields
+include::{snippets}/Patch-Category/request-fields.adoc[]
+
+.http-response
+include::{snippets}/Patch-Category/http-response.adoc[]
+
+.response-header
+include::{snippets}/Patch-Category/response-headers.adoc[]
+
+=== 카테고리 상세 조회
+.curl-request
+include::{snippets}/Get-Category/curl-request.adoc[]
+
+.http-request
+include::{snippets}/Get-Category/http-request.adoc[]
+
+.request-fields
+include::{snippets}/Get-Category/request-fields.adoc[]
+
+.http-response
+include::{snippets}/Get-Category/http-response.adoc[]
+
+=== 카테고리 삭제
+.curl-request
+include::{snippets}/Delete-Category/curl-request.adoc[]
+
+.http-request
+include::{snippets}/Delete-Category/http-request.adoc[]
+
+.http-response
+include::{snippets}/Delete-Category/http-response.adoc[]
+
 
