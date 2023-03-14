@@ -27,7 +27,7 @@ const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   left: 0;
   width: 100%;
@@ -205,7 +205,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
               <MenuItem as={Button}>
                 <div className="header-menulistbutton">회원정보</div>
               </MenuItem>
-              <MenuItem as={Button}>
+              <MenuItem as={Link} to={"/budget-setting"}>
                 <div className="header-menulistbutton">예산 설정</div>
               </MenuItem>
               <MenuItem as={Button}>
