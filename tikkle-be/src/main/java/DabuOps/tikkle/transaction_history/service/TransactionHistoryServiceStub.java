@@ -81,7 +81,7 @@ public class TransactionHistoryServiceStub implements TransactionHistoryService{
         return stubTransactionHistory1;
     }
 
-    public List<TransactionHistory> findAllTransactionHistories(int month) {
+    public List<TransactionHistory> findMonthlyTransactionHistories(int date, Long memberId) {
         return List.of(stubTransactionHistory1, stubTransactionHistory2);
     }
 

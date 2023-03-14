@@ -53,7 +53,6 @@ public class TransactionHistory {
     }
 
     @Builder
-
     public TransactionHistory(long id, MemberCategory memberCategory, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branch_name) {
         this.id = id;
         this.memberCategory = memberCategory;

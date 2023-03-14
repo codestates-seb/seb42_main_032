@@ -11,7 +11,7 @@ public interface TransactionHistoryService {
 
     TransactionHistory findTransactionHistory(Long transactionHistoryId);
 
-    List<TransactionHistory> findAllTransactionHistories(int month);
+    List<TransactionHistory> findMonthlyTransactionHistories(int date, Long memberId);
 
     void deleteTransactionHistory(Long transactionHistoryId);
 }
