@@ -12,4 +12,6 @@ public class Account extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+
 }
