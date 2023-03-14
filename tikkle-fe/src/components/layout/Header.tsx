@@ -1,7 +1,7 @@
 //@ts-ignore
 
 //TODO 헤더 구현
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   ChevronLeftIcon,
@@ -19,9 +19,10 @@ import {
   MenuOptionGroup,
   MenuDivider,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const HeaderContainer = styled.header`
+  z-index: 100;
   background-color: white;
   display: flex;
   align-items: center;
@@ -155,27 +156,37 @@ const Header: React.FunctionComponent<HeaderProps> = ({
     setSelectedDate(nextDate);
   };
 
+  const location = useLocation();
+  const [selectedPath, setSeletctedPath] = useState<String>('');
+
+  useEffect(() => {
+    setSeletctedPath(location.pathname.split('/')[1]);
+  }, [location.pathname.split('/')[1]]);
+
   return (
     <HeaderContainer>
-      <Link to="/">
+      <Link to="/home">
         <img className="header-logo__img" src="tikkle-logo.svg" alt="logo" />{' '}
       </Link>
-
-      <SelectMonthContainer>
-        <ChevronLeftIcon
-          className="header-monthbutton"
-          boxSize={30}
-          onClick={handlePrevMonth}
-        />
-        <span>
-          {selectedDate.getFullYear()} 년 {selectedDate.getMonth() + 1} 월
-        </span>
-        <ChevronRightIcon
-          className="header-monthbutton"
-          boxSize={30}
-          onClick={handleNextMonth}
-        />
-      </SelectMonthContainer>
+      {selectedPath === 'home' ? (
+        <SelectMonthContainer>
+          <ChevronLeftIcon
+            className="header-monthbutton"
+            boxSize={30}
+            onClick={handlePrevMonth}
+          />
+          <span>
+            {selectedDate.getFullYear()} 년 {selectedDate.getMonth() + 1} 월
+          </span>
+          <ChevronRightIcon
+            className="header-monthbutton"
+            boxSize={30}
+            onClick={handleNextMonth}
+          />
+        </SelectMonthContainer>
+      ) : (
+        ''
+      )}
       <HeaderContentWrap>
         <BeforeLogin>
           <BellIcon boxSize={25} />

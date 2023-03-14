@@ -1,9 +1,12 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Calendar from './components/layout/Calendar';
 import Transaction from './components/layout/Transaction';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
 
 // Transaction 컴포넌트용 거래내역 dummydata
 const transactions: Transaction[] = [
@@ -30,14 +33,17 @@ const transactions: Transaction[] = [
   },
 ];
 function App() {
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   return (
     <div className="App">
+      <Header selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home selectedDate={selectedDate} />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-      <Calendar date={new Date()} />
-      <Transaction transactions={transactions} />
+      <Footer />
+      {/* <Calendar date={new Date()} />
+      <Transaction transactions={transactions} /> */}
     </div>
   );
 }
