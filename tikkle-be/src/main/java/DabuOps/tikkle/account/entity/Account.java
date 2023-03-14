@@ -13,8 +13,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@Getter
+@Setter
 public class Account extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +47,9 @@ public class Account extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    public void setMember(Member member) {
+        this.member = member;
+    }
     public enum AccountState {
         ACTIVE("활성화"),
         INACTIVE("비활성화");
@@ -50,4 +59,15 @@ public class Account extends Auditable {
         AccountState(String string) { this.string = string; }
     }
 
+    @Builder
+    public Account(Long id, String name, String number, String bankName, Long balance,
+        AccountState state, Member member) {
+        this.id = id;
+        this.name = name;
+        this.number = number;
+        this.bankName = bankName;
+        this.balance = balance;
+        this.state = state;
+        this.member = member;
+    }
 }
