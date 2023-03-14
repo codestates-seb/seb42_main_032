@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import { RecoilRoot } from 'recoil';
+import BudgetSetting from './pages/BudgetSetting';
 
 function App() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -15,9 +16,11 @@ function App() {
       <div className="App">
         <Header selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
         <Routes>
-          <Route path="/home" element={<Home selectedDate={selectedDate} />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
+            <Route path="/" element={<Home selectedDate={selectedDate} />} />
+            <Route path="/home" element={<Home selectedDate={selectedDate} />} />
+            <Route path="/login" element={<Login />} />
+            <Route path='/budget-setting' element={<BudgetSetting />} />
+          </Routes>
         <Footer />
       </div>
     </RecoilRoot>

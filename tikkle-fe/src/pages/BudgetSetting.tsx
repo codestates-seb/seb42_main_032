@@ -1,11 +1,10 @@
-//TODO BUDGET_001 예산 설정 페이지 구현
-import React from 'react'
+import MonthlyBudget from "../components/budget_setting/MonthlyBudget";
 
-function BudgetSetting() {
+const BudgetSetting = () => {
   return (
-    <div>
-      
-    </div>
+    <>
+      <MonthlyBudget />
+    </>
   )
 }
 
