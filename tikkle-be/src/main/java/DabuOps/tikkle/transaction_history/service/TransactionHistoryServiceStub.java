@@ -1,0 +1,91 @@
+package DabuOps.tikkle.transaction_history.service;
+
+import DabuOps.tikkle.category.entity.Category;
+import DabuOps.tikkle.member.entity.Member;
+import DabuOps.tikkle.member.entity.Member.Gender;
+import DabuOps.tikkle.member.entity.Member.MemberState;
+import DabuOps.tikkle.member_category.entity.MemberCategory;
+import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+@Service
+public class TransactionHistoryServiceStub implements TransactionHistoryService{
+    private TransactionHistory stubTransactionHistory1;
+    private TransactionHistory stubTransactionHistory2;
+
+    private MemberCategory stubMemberCategory;
+    private Member stubMember;
+
+    private Category category;
+    @PostConstruct
+    public void init() {
+        category = Category.builder()
+            .id(1L)
+            .name("식비")
+            .build();
+
+        stubMember = Member.builder()
+            .id(1L)
+            .state(MemberState.ACTIVE)
+            .name("홍길동")
+            .initDate(25)
+            .payDay(25)
+            .email("test123@gmail.com")
+            .gender(Gender.male)
+            .build();
+
+        stubMemberCategory = MemberCategory.builder()
+            .id(1L)
+            .name("술")
+            .category(category)
+            .member(stubMember)
+            .build();
+
+        stubTransactionHistory1 = TransactionHistory.builder()
+                .id(1L)
+                .memberCategory(stubMemberCategory)
+                .date(LocalDate.now())
+                .time(LocalTime.now())
+                .inoutType(TransactionHistory.InoutType.SPEND)
+                .memo("메모1")
+                .amount(10000)
+                .branch_name("GS25")
+                .build();
+
+        stubTransactionHistory2 = TransactionHistory.builder()
+                .id(2L)
+                .memberCategory(stubMemberCategory)
+                .date(LocalDate.now())
+                .time(LocalTime.now())
+                .inoutType(TransactionHistory.InoutType.SPEND)
+                .memo("메모2")
+                .amount(20000)
+                .branch_name("CU")
+                .build();
+    }
+
+    public TransactionHistory createTransactionHistory(TransactionHistory transactionHistory, Long memberCategoryId) {
+        return null;
+    }
+
+    public TransactionHistory updateTransactionHistory(TransactionHistory transactionHistory, Long transactionHistoryId) {
+        return null;
+    }
+
+    public TransactionHistory findTransactionHistory(Long transactionHistoryId) {
+        return stubTransactionHistory1;
+    }
+
+    public List<TransactionHistory> findAllTransactionHistories(int month) {
+        return List.of(stubTransactionHistory1, stubTransactionHistory2);
+    }
+
+    public void deleteTransactionHistory(Long transactionHistoryId) {
+
+    }
+}

@@ -1,35 +1,58 @@
 package DabuOps.tikkle.member_category.service;
 
+import DabuOps.tikkle.category.entity.Category;
+import DabuOps.tikkle.member.entity.Member;
+import DabuOps.tikkle.member.entity.Member.Gender;
+import DabuOps.tikkle.member.entity.Member.MemberState;
 import DabuOps.tikkle.member_category.entity.MemberCategory;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 
+@Service
 public class MemberCategoryServiceStub implements MemberCategoryService {
     private MemberCategory stubMemberCategory1;
     private MemberCategory stubMemberCategory2;
+    private Member stubMember;
 
+    private Category category;
     @PostConstruct
     public void init() {
+        category = Category.builder()
+            .id(1L)
+            .name("식비")
+            .build();
+        stubMember = Member.builder()
+            .id(1L)
+            .state(MemberState.ACTIVE)
+            .name("홍길동")
+            .initDate(25)
+            .payDay(25)
+            .email("test123@gmail.com")
+            .gender(Gender.male)
+            .build();
         stubMemberCategory1 = MemberCategory.builder()
-                .memberCategoryId(1L)
+                .id(1L)
                 .name("술")
-                .categoryId(1L)
+                .category(category)
+                .member(stubMember)
                 .build();
 
         stubMemberCategory2 = MemberCategory.builder()
-                .memberCategoryId(2L)
+                .id(2L)
                 .name("배달")
-                .categoryId(1L)
+                .category(category)
+                .member(stubMember)
                 .build();
     }
 
     public MemberCategory createMemberCategory(MemberCategory memberCategory, Long memberId) {
         return null;
     }
-    public MemberCategory updateMemberCategory(MemberCategory memberCategory) {
+    public MemberCategory updateMemberCategory(MemberCategory memberCategory, Long memberCategoryId) {
         return null;
     }
 

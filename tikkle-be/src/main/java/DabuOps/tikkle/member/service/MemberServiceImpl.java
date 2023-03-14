@@ -3,11 +3,9 @@ package DabuOps.tikkle.member.service;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
 import DabuOps.tikkle.member.entity.Member;
-import DabuOps.tikkle.member.entity.Member.Gender;
 import DabuOps.tikkle.member.entity.Member.MemberState;
 import DabuOps.tikkle.member.repository.MemberRepository;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -87,7 +85,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member findExistMemberById(Long memberId) {
-        Optional<Member> optionalMember = memberRepository.findByMemberIdAndStateIs(memberId, MemberState.ACTIVE);
+        Optional<Member> optionalMember = memberRepository.findByIdAndStateIs(memberId, MemberState.ACTIVE);
 
         // Optional Member에 값이 존재하지 않다면 예외 발생.
         Member obtainedMember = optionalMember
