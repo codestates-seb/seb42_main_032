@@ -27,7 +27,10 @@ const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  /* position을 fixed로 설정하면 헤더 외 요소의 상단부를 가리게 되므로 주석 처리  */
   /* position: fixed; */
+
   top: 0;
   left: 0;
   width: 100%;
