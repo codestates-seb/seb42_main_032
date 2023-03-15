@@ -11,4 +11,11 @@ public class UriCreator {
             .buildAndExpand(resourceId)
             .toUri();
     }
+    public static URI createURIWithoutResourceId(String url) {
+        return UriComponentsBuilder
+                .newInstance()
+                .path(url)
+                .buildAndExpand()
+                .toUri();
+    }
 }

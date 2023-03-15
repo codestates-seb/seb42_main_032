@@ -20,22 +20,22 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/transactionhistories")
 @RequiredArgsConstructor
 @Validated
+@RequestMapping("/transaction_histories")
 public class TransactionHistoryController {
-    private final String DEFAULT_URL = "/transactionhistories";
+    private final String DEFAULT_URL = "/transaction_histories";
     private final TransactionHistoryService transactionHistoryService;
     private final TransactionHistoryRepository transactionHistoryRepository;
     private final TransactionHistoryMapper mapper;
 
-    @PostMapping
-    public ResponseEntity postTransactionHistory(@Valid @RequestBody TransactionHistoryDto.Post requestBody) {
-        Long memberCategoryId = requestBody.getMemberCategoryId();
+    @PostMapping("/{member_category_id}")
+    public ResponseEntity postTransactionHistory(@PathVariable("member_category_id")Long memberCategoryId,
+                                                 @Valid @RequestBody TransactionHistoryDto.Post requestBody) {
         TransactionHistory transactionHistory = mapper.transactionHistoryPostDtoToTransactionHistory(requestBody);
         TransactionHistory createdTransactionHistory = transactionHistoryService.createTransactionHistory(transactionHistory, memberCategoryId);
 
-        URI location = UriCreator.createURI(DEFAULT_URL, 1L);
+        URI location = UriCreator.createURI(DEFAULT_URL + "/1", 1L);
 
         return ResponseEntity.created(location).build();
     }

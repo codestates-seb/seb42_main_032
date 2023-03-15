@@ -1,6 +1,7 @@
 //@ts-ignore
 
 //TODO 헤더 구현
+
 import React, { Dispatch, SetStateAction, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
@@ -19,6 +20,7 @@ import {
   MenuOptionGroup,
   MenuDivider,
 } from '@chakra-ui/react';
+
 import { Link, useLocation } from 'react-router-dom';
 
 const HeaderContainer = styled.header`
@@ -156,6 +158,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
     setSelectedDate(nextDate);
   };
 
+
   const location = useLocation();
   const [selectedPath, setSeletctedPath] = useState<String>('');
 
@@ -187,6 +190,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
       ) : (
         ''
       )}
+
       <HeaderContentWrap>
         <BeforeLogin>
           <BellIcon boxSize={25} />
