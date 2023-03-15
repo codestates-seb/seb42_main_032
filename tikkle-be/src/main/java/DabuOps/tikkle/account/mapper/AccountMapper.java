@@ -10,13 +10,13 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
-    @Mapping(source = "member.memberId", target = "memberId")
+
     Account postDtoToAccount(AccountDto.Post post);
 
     Account patchDtoToAccount(AccountDto.Patch patch);
 
     @Named("ATR")
-    @Mapping(source = "member.memberId", target = "memberId")
+    @Mapping(source = "member.id", target = "memberId")
     AccountDto.Response accountToResponseDto(Account account);
 
     @IterableMapping(qualifiedByName = "ATR")

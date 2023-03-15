@@ -28,15 +28,13 @@ public class AccountDto {
 
         private Long balance;
 
-        private Long memberId;
 
         @Builder
-        public Post(String name, String number, String bankName, Long balance, Long memberId) {
+        public Post(String name, String number, String bankName, Long balance) {
             this.name = name;
             this.number = number;
             this.bankName = bankName;
             this.balance = balance;
-            this.memberId = memberId;
         }
     }
 

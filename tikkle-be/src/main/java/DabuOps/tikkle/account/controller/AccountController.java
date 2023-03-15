@@ -37,7 +37,7 @@ public class AccountController {
     @PostMapping
     public ResponseEntity postAccount(@Valid @RequestBody AccountDto.Post post) {
         Account account = accountService.createAccount(mapper.postDtoToAccount(post), 1L);
-        URI location = UriCreator.createURI("/Accounts", account.getId());
+        URI location = UriCreator.createURI("/accounts", account.getId());
 
         return ResponseEntity.created(location).build();
     }
@@ -58,7 +58,7 @@ public class AccountController {
             mapper.accountsToResponseDtos(Accounts)), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{Account-id}")
+    @DeleteMapping("/{account-id}")
     public ResponseEntity deleteAccount(@Positive @PathVariable("account-id") long id) {
         accountService.deleteAccount(id, 1L);
         return ResponseEntity.noContent().build();
