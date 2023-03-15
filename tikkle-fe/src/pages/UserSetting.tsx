@@ -1,5 +1,5 @@
 //TODO SIGNUP_002 유저 정보 입력 페이지 구현 (사용자 이름, 예산 시작일, 급여일, 고정 지출 등)
-import { SetStateAction, useState } from 'react';
+import { useState } from 'react';
 
 import styled from 'styled-components';
 import {
@@ -7,10 +7,10 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightAddon,
-  InputRightElement,
 } from '@chakra-ui/react';
+
 import { Button } from '@chakra-ui/react';
-import { CheckIcon, Icon, AddIcon } from '@chakra-ui/icons';
+import { Icon, AddIcon } from '@chakra-ui/icons';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { TbPigMoney } from 'react-icons/tb';
 import { GiReceiveMoney, GiExpense } from 'react-icons/gi';
@@ -36,6 +36,7 @@ const SetContainer = styled.div`
 // TODO 체크 아이콘 조건부 색상 변경 (green)
 // TODO 금액 입력 시 콤마 찍혀서 input에 출력
 function UserSetting() {
+  // username
   const [username, setUsername] = useState('');
   // initial budget
   const [ibDate, setIbDate] = useState();
