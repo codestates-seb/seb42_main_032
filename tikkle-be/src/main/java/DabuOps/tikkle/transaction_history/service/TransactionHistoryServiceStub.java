@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-@AllArgsConstructor
+
 @Service
 public class TransactionHistoryServiceStub implements TransactionHistoryService{
     private TransactionHistory stubTransactionHistory1;
