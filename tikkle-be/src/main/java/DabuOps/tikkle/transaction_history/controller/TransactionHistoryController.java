@@ -20,16 +20,16 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@RequestMapping("/transactionhistories")
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/transactionhistories")
 public class TransactionHistoryController {
     private final String DEFAULT_URL = "/transactionhistories";
     private final TransactionHistoryService transactionHistoryService;
     private final TransactionHistoryRepository transactionHistoryRepository;
     private final TransactionHistoryMapper mapper;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity postTransactionHistory(@Valid @RequestBody TransactionHistoryDto.Post requestBody) {
         Long memberCategoryId = requestBody.getMemberCategoryId();
         TransactionHistory transactionHistory = mapper.transactionHistoryPostDtoToTransactionHistory(requestBody);

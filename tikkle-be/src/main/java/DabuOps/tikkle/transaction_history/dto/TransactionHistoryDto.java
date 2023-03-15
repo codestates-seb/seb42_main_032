@@ -1,6 +1,7 @@
 package DabuOps.tikkle.transaction_history.dto;
 
 import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
+import DabuOps.tikkle.transaction_history.entity.TransactionHistory.InoutType;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -13,13 +14,13 @@ public class TransactionHistoryDto {
         private long memberCategoryId;
         private LocalDate date;
         private LocalTime time;
-        private TransactionHistory.InoutType inoutType;
+        private InoutType inoutType;
         private String memo;
         private int amount;
         private String branchName;
 
         @Builder
-        public Post(long memberCategoryId, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName) {
+        public Post(long memberCategoryId, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branchName) {
             this.memberCategoryId = memberCategoryId;
             this.date = date;
             this.time = time;
@@ -59,13 +60,13 @@ public class TransactionHistoryDto {
         private long memberCategoryId;
         private LocalDate date;
         private LocalTime time;
-        private TransactionHistory.InoutType inoutType;
+        private InoutType inoutType;
         private String memo;
         private int amount;
         private String branchName;
 
         @Builder
-        public Response(long id, long memberCategoryId, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName) {
+        public Response(long id, long memberCategoryId, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branchName) {
             this.id = id;
             this.memberCategoryId = memberCategoryId;
             this.date = date;

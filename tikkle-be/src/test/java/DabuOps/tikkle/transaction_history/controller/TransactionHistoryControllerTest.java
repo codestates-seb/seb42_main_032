@@ -33,7 +33,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -53,7 +55,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TransactionHistoryControllerTest {
     String BASE_URL = "/transactionhistories";
 
-    Member member = Member.builder()
+    private Member member = Member.builder()
             .id(1L)
             .email("test@gmail.com")
             .name("홍길동")
@@ -64,12 +66,12 @@ public class TransactionHistoryControllerTest {
             .location("seoul")
             .build();
 
-    Category category = Category.builder()
+    private Category category = Category.builder()
             .id(1L)
             .name("밥")
             .build();
 
-    MemberCategory memberCategory1 = MemberCategory.builder()
+    private MemberCategory memberCategory1 = MemberCategory.builder()
             .id(1L)
             .member(member)
             .category(category)
@@ -77,7 +79,7 @@ public class TransactionHistoryControllerTest {
             .status(MemberCategory.Status.ACTIVE)
             .build();
 
-    TransactionHistory transactionHistory1 = TransactionHistory.builder()
+    private TransactionHistory transactionHistory1 = TransactionHistory.builder()
             .id(1L)
             .memberCategory(memberCategory1)
             .date(LocalDate.parse("2023-03-13"))
@@ -88,7 +90,7 @@ public class TransactionHistoryControllerTest {
             .branch_name("GS25")
             .build();
 
-    TransactionHistory transactionHistory2 = TransactionHistory.builder()
+    private TransactionHistory transactionHistory2 = TransactionHistory.builder()
             .id(2L)
             .memberCategory(memberCategory1)
             .date(LocalDate.parse("2023-03-14"))
@@ -99,7 +101,7 @@ public class TransactionHistoryControllerTest {
             .branch_name("CU")
             .build();
 
-    TransactionHistoryDto.Post post = TransactionHistoryDto.Post.builder()
+    private TransactionHistoryDto.Post post = TransactionHistoryDto.Post.builder()
             .memberCategoryId(1L)
             .date(LocalDate.now())
             .time(null)
@@ -109,7 +111,7 @@ public class TransactionHistoryControllerTest {
             .branchName("7.11")
             .build();
 
-    TransactionHistoryDto.Patch patch = TransactionHistoryDto.Patch.builder()
+    private TransactionHistoryDto.Patch patch = TransactionHistoryDto.Patch.builder()
             .memberCategoryId(1L)
             .date(LocalDate.now())
             .time(LocalTime.now())
@@ -118,7 +120,7 @@ public class TransactionHistoryControllerTest {
             .branchName(null)
             .build();
 
-    TransactionHistoryDto.Response response1 = TransactionHistoryDto.Response.builder()
+    private TransactionHistoryDto.Response response1 = TransactionHistoryDto.Response.builder()
             .id(transactionHistory1.getId())
             .memberCategoryId(transactionHistory1.getMemberCategory().getId())
             .date(transactionHistory1.getDate())
@@ -129,7 +131,7 @@ public class TransactionHistoryControllerTest {
             .branchName(transactionHistory1.getBranch_name())
             .build();
 
-    TransactionHistoryDto.Response response2 = TransactionHistoryDto.Response.builder()
+    private TransactionHistoryDto.Response response2 = TransactionHistoryDto.Response.builder()
             .id(transactionHistory2.getId())
             .memberCategoryId(transactionHistory2.getMemberCategory().getId())
             .date(transactionHistory2.getDate())
@@ -145,16 +147,16 @@ public class TransactionHistoryControllerTest {
     @MockBean
     TransactionHistoryService transactionHistoryService;
     @MockBean
-    MemberCategoryService memberCategoryService;
-    @MockBean
     TransactionHistoryMapper mapper;
+    @MockBean
+    MemberCategoryService memberCategoryService;
     @MockBean
     TransactionHistoryRepository transactionHistoryRepository;
     @MockBean
     MemberCategoryMapper memberCategoryMapper;
-
     @MockBean
     MemberCategoryRepository memberCategoryRepository;
+
     @Autowired
     Gson gson;
 
@@ -162,8 +164,10 @@ public class TransactionHistoryControllerTest {
     @Test
     void postTransactionHistoryTest() throws Exception {
         String content = gson.toJson(post);
-        given(mapper.transactionHistoryPostDtoToTransactionHistory(post)).willReturn(new TransactionHistory());
-        given(transactionHistoryService.createTransactionHistory(Mockito.any(TransactionHistory.class), Mockito.anyLong())).willReturn(transactionHistory1);
+        doReturn(new TransactionHistory()).when(mapper).transactionHistoryPostDtoToTransactionHistory(post);
+        doReturn(transactionHistory1).when(transactionHistoryService)
+            .createTransactionHistory(eq(TransactionHistory.class).newInstance(),
+                Mockito.anyLong());
         ResultActions actions = mockMvc.perform(
                 post(BASE_URL)
                         .with(csrf())
