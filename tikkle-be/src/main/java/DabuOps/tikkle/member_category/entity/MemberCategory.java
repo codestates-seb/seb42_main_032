@@ -1,7 +1,10 @@
 package DabuOps.tikkle.member_category.entity;
 
+import DabuOps.tikkle.category.entity.Category;
+import DabuOps.tikkle.global.audit.Auditable;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
+import DabuOps.tikkle.member.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,16 +14,18 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Builder
-public class MemberCategory {
+public class MemberCategory extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberCategoryId;
+    private Long id;
 
-//    @ManyToOne // MEMBER n:1 양방향
-//    @JoinColumn(name = "MEMBER_ID")
-    private Long memberId;
+    @ManyToOne // MEMBER n:1 단방향
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
-    private Long categoryId;
+    @ManyToOne // CATEGORY n:1 단방향 // MEMBER : CATEGORY (n:m) 매핑
+    @JoinColumn(name = "CATEGORY_ID")
+    private Category category;
 
     @Column(name = "NAME", nullable = false)
     private String name;
@@ -29,6 +34,14 @@ public class MemberCategory {
     @Column(name = "CATEGORY_STATUS", nullable = false)
     @Builder.Default
     private Status status = Status.ACTIVE;
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     public enum Status {
         ACTIVE("활성화"),
@@ -39,10 +52,10 @@ public class MemberCategory {
     }
 
     @Builder
-    public MemberCategory(Long memberCategoryId, Long memberId, Long categoryId, String name, Status status) {
-        this.memberCategoryId = memberCategoryId;
-        this.memberId = memberId;
-        this.categoryId = categoryId;
+    public MemberCategory(Long id, Member member, Category category, String name, Status status) {
+        this.id = id;
+        this.member = member;
+        this.category = category;
         this.name = name;
         this.status = status;
     }

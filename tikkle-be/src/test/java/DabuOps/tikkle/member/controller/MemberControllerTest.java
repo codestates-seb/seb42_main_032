@@ -1,5 +1,6 @@
 package DabuOps.tikkle.member.controller;
 
+import DabuOps.tikkle.global.WithMockCustomMember;
 import DabuOps.tikkle.member.dto.MemberDto;
 import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.entity.Member.Gender;
@@ -26,17 +27,25 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.snippet.Attributes.attributes;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MemberController.class)
@@ -65,7 +74,7 @@ public class MemberControllerTest {
     MemberDto.Patch patch = MemberDto.Patch.builder()
         .name("홍길동3")
         .payDay(10)
-        .initdate(20)
+        .initDate(20)
         .location("NY")
         .build();
 
@@ -92,7 +101,7 @@ public class MemberControllerTest {
     @Autowired
     Gson gson;
 
-    @DisplayName("creation member")
+    @DisplayName("회원 생성")
     @Test
     void postMemberTest() throws Exception {
         String content = gson.toJson(post);
@@ -123,7 +132,150 @@ public class MemberControllerTest {
                     headerWithName(HttpHeaders.LOCATION)
                         .description("Header Location, 리소스의 URL")
                 )
-                ));
+            ));
+    }
+    @DisplayName("회원 수정")
+    @Test
+    @WithMockCustomMember
+    void patchMemberTest() throws Exception{
+        String content = gson.toJson(patch);
+
+        member.setName(patch.getName());
+        member.setLocation(patch.getLocation());
+        member.setPayDay(patch.getPayDay());
+        member.setInitDate(patch.getInitDate());
+
+        given(mapper.patchDtoToMember(Mockito.any(MemberDto.Patch.class))).willReturn(new Member());
+        given(memberService.updateMember(Mockito.any(Member.class))).willReturn(member);
+
+        ResultActions actions = mockMvc.perform(
+            patch(BASE_URL + "/{member-id}", member.getId())
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(content));
+
+        actions
+            .andExpect(status().isOk())
+            .andDo(document("Patch-Member",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    attributes(key("title")
+                        .value("Headers for user revision"))
+                ),
+                pathParameters(
+                    parameterWithName("member-id")
+                        .description("회원 아이디")),
+                requestFields(
+                    attributes(key("title")
+                        .value("Fields for user revision")),
+                    fieldWithPath("name")
+                        .type(JsonFieldType.STRING)
+                        .description("회원 이름"),
+                    fieldWithPath("location")
+                        .type(JsonFieldType.STRING)
+                        .optional()
+                        .description("회원 활동 지역"),
+                    fieldWithPath("payDay")
+                        .type(JsonFieldType.NUMBER)
+                        .optional()
+                        .description("급여일"),
+                    fieldWithPath("initDate")
+                        .type(JsonFieldType.NUMBER)
+                        .optional()
+                        .description("급여일")
+                    )));
+
+    }
+
+    @DisplayName("회원 조회")
+    @Test
+    @WithMockCustomMember
+    void getMember() throws Exception {
+
+        given(memberService.getMember(Mockito.anyLong())).willReturn(member);
+        given(mapper.memberToResponseDto(Mockito.any(Member.class))).willReturn(response);
+
+
+        ResultActions actions = mockMvc.perform(
+            get(BASE_URL + "/{member-id}", member.getId())
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        actions
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.memberId").value(member.getId()))
+            .andExpect(jsonPath("$.data.location").value(member.getLocation()))
+            .andDo(document("Get-Member",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    attributes(key("title")
+                        .value("Headers for user revision"))),
+                pathParameters( // path parameter
+                    parameterWithName("member-id") // parameter 이름
+                        .description("회원 아이디")), // parameter 설명
+                responseFields( // 응답 필드
+                    fieldWithPath("data") // 필드 이름
+                        .type(JsonFieldType.OBJECT) // 필드 타입
+                        .description("조회 데이터"), // 필드 설명
+                    fieldWithPath("data.memberId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("회원 아이디"),
+                    fieldWithPath("data.email")
+                        .type(JsonFieldType.STRING)
+                        .description("회원 이메일"),
+                    fieldWithPath("data.name")
+                        .type(JsonFieldType.STRING)
+                        .description("회원 이름"),
+                    fieldWithPath("data.location")
+                        .type(JsonFieldType.STRING)
+                        .description("회원 활동 지역"),
+                    fieldWithPath("data.gender")
+                        .type(JsonFieldType.STRING)
+                        .description("회원 성별"),
+                    fieldWithPath("data.state")
+                        .type(JsonFieldType.STRING)
+                        .description("회원 상태"),
+                    fieldWithPath("data.payDay")
+                        .type(JsonFieldType.NUMBER)
+                        .description("급여일"),
+                    fieldWithPath("data.initDate")
+                        .type(JsonFieldType.NUMBER)
+                        .description("예산 갱신일"),
+                    fieldWithPath("data.createdAt")
+                        .type(JsonFieldType.NULL)
+                        .description("가입일"),
+                    fieldWithPath("data.modifiedAt")
+                        .type(JsonFieldType.NULL)
+                        .description("최근 수정일"))));
+    }
+    @DisplayName("회원 삭제")
+    @Test
+    @WithMockCustomMember
+    void deleteMember() throws Exception {
+        doNothing().when(memberService).deleteMember(member.getId());
+
+        ResultActions actions = mockMvc.perform(
+            delete(BASE_URL + "/{member-id}", member.getId())
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON));
+
+
+        actions
+            .andExpect(status().isNoContent())
+            .andExpect(jsonPath("$.data").doesNotExist()) // json 응답이 없음.
+            .andDo(document("Delete-Member",
+                preprocessRequest(prettyPrint()),
+                requestHeaders(
+                    attributes(key("title")
+                        .value("Headers for user revision"))
+                ),
+                pathParameters( // path parameter
+                    parameterWithName("member-id").description("회원 아이디")
+                )));
     }
 
 }

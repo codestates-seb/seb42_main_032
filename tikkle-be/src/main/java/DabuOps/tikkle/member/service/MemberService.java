@@ -15,6 +15,8 @@ public interface MemberService {
 
     Member getMember(String email);
 
+    Member findExistMemberById(Long memberId);
+
     void deleteMember(Long memberId);
 
     void verifyExistEmail(String email);
