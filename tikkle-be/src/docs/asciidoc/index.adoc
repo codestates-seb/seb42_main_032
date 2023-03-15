@@ -139,4 +139,71 @@ include::{snippets}/Delete-Category/http-request.adoc[]
 .http-response
 include::{snippets}/Delete-Category/http-response.adoc[]
 
+== 계좌
+=== 계좌 등록
+.curl-request
+include::{snippets}/Post-Account/curl-request.adoc[]
+
+.http-request
+include::{snippets}/Post-Account/http-request.adoc[]
+
+.request-header
+include::{snippets}/Post-Account/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/Post-Account/request-fields.adoc[]
+
+.http-response
+include::{snippets}/Post-Account/http-response.adoc[]
+
+.response-header
+include::{snippets}/Post-Account/response-headers.adoc[]
+
+=== 계좌 수정
+.curl-request
+include::{snippets}/Patch-Account/curl-request.adoc[]
+
+.http-request
+include::{snippets}/Patch-Account/http-request.adoc[]
+
+.request-path-parameters
+include::{snippets}/Patch-Account/path-parameters.adoc[]
+
+.request-header
+include::{snippets}/Patch-Account/request-headers.adoc[]
+
+.request-fields
+include::{snippets}/Patch-Account/request-fields.adoc[]
+
+.http-response
+include::{snippets}/Patch-Account/http-response.adoc[]
+
+=== 계좌 리스트 조회
+.curl-request
+include::{snippets}/Get-Accounts/curl-request.adoc[]
+
+.http-request
+include::{snippets}/Get-Accounts/http-request.adoc[]
+
+.http-response
+include::{snippets}/Get-Accounts/http-response.adoc[]
+
+.response-fields
+include::{snippets}/Get-Accounts/response-fields.adoc[]
+
+=== 계좌 삭제
+.curl-request
+include::{snippets}/Delete-Account/curl-request.adoc[]
+
+.http-request
+include::{snippets}/Delete-Account/http-request.adoc[]
+
+.request-path-parameters
+include::{snippets}/Delete-Account/path-parameters.adoc[]
+
+.request-header
+include::{snippets}/Delete-Account/request-headers.adoc[]
+
+.http-response
+include::{snippets}/Delete-Account/http-response.adoc[]
 

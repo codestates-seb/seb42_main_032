@@ -28,8 +28,7 @@ public class TransactionHistory {
     @Column(name = "TIME")
     private LocalTime time;
 
-    @Column(name = "INOUT_TYPE")
-    @Enumerated(EnumType.STRING)
+    @Column
     private InoutType inoutType;
 
     @Column(name = "CONTENT")
@@ -45,10 +44,11 @@ public class TransactionHistory {
         INCOME("수입"),
         SPEND("지출");
 
-        private String string;
+        @Getter
+        private String type;
 
-        InoutType(String string) {
-            this.string = string;
+        InoutType(String type) {
+            this.type = type;
         }
     }
 
