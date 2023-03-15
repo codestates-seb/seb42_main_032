@@ -20,6 +20,7 @@ const Container = styled.div`
   flex-direction: column;
 
   h1 {
+    margin-top: 100px;
     margin-bottom: 8em;
     text-align: left;
   }
