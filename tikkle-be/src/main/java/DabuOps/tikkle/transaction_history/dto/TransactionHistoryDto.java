@@ -10,7 +10,7 @@ public class TransactionHistoryDto {
     @Getter
     @NoArgsConstructor
     public static class Post {
-        private long memberCategoryId;
+        private Long memberCategoryId;
         private LocalDate date;
         private LocalTime time;
         private TransactionHistory.InoutType inoutType;
@@ -19,7 +19,7 @@ public class TransactionHistoryDto {
         private String branchName;
 
         @Builder
-        public Post(long memberCategoryId, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName) {
+        public Post(Long memberCategoryId, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName) {
             this.memberCategoryId = memberCategoryId;
             this.date = date;
             this.time = time;
@@ -34,7 +34,7 @@ public class TransactionHistoryDto {
     @Setter
     @NoArgsConstructor
     public static class Patch {
-        private long memberCategoryId;
+        private Long memberCategoryId;
         private LocalDate date;
         private LocalTime time;
         private String memo;
@@ -55,8 +55,8 @@ public class TransactionHistoryDto {
     @Getter
     @NoArgsConstructor
     public static class Response {
-        private long id;
-        private long memberCategoryId;
+        private Long id;
+        private Long memberCategoryId;
         private LocalDate date;
         private LocalTime time;
         private TransactionHistory.InoutType inoutType;
