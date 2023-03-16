@@ -34,6 +34,7 @@ const MonthlyBudget = () => {
       flexDir="column"
       alignItems="flex-start"
       fontFamily="GmarketSansMedium"
+      w="400px"
     >
       {/* getMonth()는 1월이 0 값이므로, +1을 해줘야 함 */}
       <Text fontSize="0.8rem">{`${date.getMonth() + 1}월 예산`}</Text>
@@ -65,7 +66,12 @@ const MonthlyBudget = () => {
           </>
         )}
       </Box>
-      <Box fontSize="0.8rem" display="flex" gap="8rem">
+      <Box
+        fontSize="0.8rem"
+        display="flex"
+        justifyContent="space-between"
+        w="100%"
+      >
         <Text>지난 달 지출</Text>
         <Text>{`${new Intl.NumberFormat().format(totalBudget)}원`}</Text>
       </Box>

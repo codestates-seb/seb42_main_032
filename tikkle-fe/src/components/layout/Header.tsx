@@ -29,7 +29,8 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
 
   /* position을 fixed로 설정하면 헤더 외 요소의 상단부를 가리게 되므로 주석 처리  */
-  /* position: fixed; */
+  /* 헤더는 항상 표시되어야 하므로 필요함 */
+  position: fixed;
 
   top: 0;
   left: 0;
@@ -208,7 +209,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
               <MenuItem as={Button}>
                 <div className="header-menulistbutton">회원정보</div>
               </MenuItem>
-              <MenuItem as={Link} to={"/budget-setting"}>
+              <MenuItem as={Link} to={'/budget-setting'}>
                 <div className="header-menulistbutton">예산 설정</div>
               </MenuItem>
               <MenuItem as={Button}>

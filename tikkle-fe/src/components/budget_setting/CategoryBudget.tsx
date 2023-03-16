@@ -33,7 +33,14 @@ const CategoryBudget = (props: categoryBudget) => {
   };
 
   return (
-    <Box fontFamily="GmarketSansMedium" w="60%" display="flex" flexDir="column">
+    <Box
+      fontFamily="GmarketSansMedium"
+      w="100%"
+      minW="450px"
+      maxW="700px"
+      display="flex"
+      flexDir="column"
+    >
       <Box display="flex" w="100%">
         {/* Icon Container */}
         <Box
