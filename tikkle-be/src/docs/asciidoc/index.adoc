@@ -147,9 +147,6 @@ include::{snippets}/Post-Account/curl-request.adoc[]
 .http-request
 include::{snippets}/Post-Account/http-request.adoc[]
 
-.request-header
-include::{snippets}/Post-Account/request-headers.adoc[]
-
 .request-fields
 include::{snippets}/Post-Account/request-fields.adoc[]
 

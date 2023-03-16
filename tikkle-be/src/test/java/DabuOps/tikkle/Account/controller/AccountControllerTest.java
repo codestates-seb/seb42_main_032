@@ -159,6 +159,10 @@ public class AccountControllerTest {
             .andDo(document("Post-Account",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                requestHeaders(
+                    attributes(key("title")
+                        .value("Headers for account revision"))
+                ),
                 requestFields(
                     attributes(key("title")
                         .value("Fields for account creation")),
