@@ -62,9 +62,7 @@ function UserInput({ label, setState, state }) {
             <Input
               type="number"
               focusBorderColor="purple.400"
-              // TODO 핸들러 함수 작성
               onKeyUp={(e) => handleState(e)}
-              // TODO 상태 받아와서 작성
               value={state}
             ></Input>
             <InputRightAddon children="원" />
