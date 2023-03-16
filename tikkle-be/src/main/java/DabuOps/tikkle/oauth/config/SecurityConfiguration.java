@@ -1,4 +1,6 @@
-package DabuOps.tikkle.oauth;
+package DabuOps.tikkle.oauth.config;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,24 +14,28 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 @EnableWebSecurity(debug = true)
 public class SecurityConfiguration {
-    private final OAuthMemberService oAuthUserService;
-    @Value("${spring.security.oauth2.client.registration.google.clientId}")
-    private String clientId;
-    @Value("${spring.security.oauth2.client.registration.google.clientSecret}")
-    private String clientSecret;
+    private final CorsConfig config;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.authorizeRequests()
+        http
+            .headers().frameOptions().sameOrigin()
+            .and()
+            .csrf().disable()
+            .cors().configurationSource(config.corsConfigurationSource())
+
+            .and()
+            .formLogin().disable()
+            .httpBasic().disable()
+
+            .authorizeRequests()
             .antMatchers("/","/oauth2/**","/login/**","/h2-console/**")
             .permitAll()
             .anyRequest().authenticated()
+
             .and()
-            .headers()
-            .frameOptions().disable()
-            .and()
-            .csrf().disable()
-            .oauth2Login()
-            .userInfoEndpoint().userService(oAuthUserService);
+            .oauth2Login();
+
         return http.build();
     }
 }
