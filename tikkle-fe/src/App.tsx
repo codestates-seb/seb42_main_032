@@ -1,13 +1,17 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
+
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Calendar from './components/layout/Calendar';
 import Transaction from './components/layout/Transaction';
+import SignUp from './pages/SignUp';
+import UserSetting from './pages/UserSetting';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import BudgetView from './pages/BudgetView';
+
 
 // Transaction 컴포넌트용 거래내역 dummydata
 const transactions: Transaction[] = [
@@ -37,11 +41,14 @@ function App() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   return (
     <div className="App">
+      
       <Header selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <Routes>
         <Route path="/home" element={<Home selectedDate={selectedDate} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/budget" element={<BudgetView />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/usersetting" element={<UserSetting />} />
       </Routes>
       <Footer />
       {/* <Calendar date={new Date()} /> */}

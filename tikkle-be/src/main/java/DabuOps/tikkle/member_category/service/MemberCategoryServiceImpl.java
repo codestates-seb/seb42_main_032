@@ -3,6 +3,7 @@ package DabuOps.tikkle.member_category.service;
 import DabuOps.tikkle.category.entity.Category;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
+import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.member.service.MemberService;
 import DabuOps.tikkle.member_category.entity.MemberCategory;
@@ -27,9 +28,9 @@ public class MemberCategoryServiceImpl /*implements MemberCategoryService*/{
 
     //@Override
     public MemberCategory createMemberCategory(MemberCategory memberCategory, Long memberId) {
-        //Member member = memberService.findMember(memberId);
+        Member member = memberService.findExistMemberById(memberId);
         memberCategory.setCategory(category);
-        memberCategory.setMember(memberService.findExistMemberById(memberId));
+        memberCategory.setMember(member);
 
         return memberCategoryRepository.save(memberCategory);
     }
@@ -47,12 +48,12 @@ public class MemberCategoryServiceImpl /*implements MemberCategoryService*/{
         MemberCategory findMemberCategory =
                 optionalMemberCategory.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
-        if(findMemberCategory.getStatus() == MemberCategory.Status.INACTIVE) { throw new BusinessLogicException(ExceptionCode.CATEGORY_IS_INACTIVE); }
+        if(findMemberCategory.getStatus().equals(MemberCategory.Status.INACTIVE)) { throw new BusinessLogicException(ExceptionCode.CATEGORY_IS_INACTIVE); }
         return findMemberCategory;
     }
 
     public List<MemberCategory> findAllMemberCategories(Long memberId) {
-        List<MemberCategory> memberCategories = memberCategoryRepository.findAllMemberCategoriesByMemberId(memberId);
+        List<MemberCategory> memberCategories = memberCategoryRepository.findAllByMemberIdAndStatusNot(memberId, MemberCategory.Status.INACTIVE);
 
         return memberCategories;
     }

@@ -26,7 +26,6 @@ import java.util.List;
 @RequestMapping("/categories")
 public class MemberCategoryController {
     private final String DEFAULT_URL = "/categories";
-    private final MemberCategoryRepository memberCategoryRepository;
     private final MemberCategoryService memberCategoryService;
     private final MemberCategoryMapper mapper;
 
@@ -34,7 +33,7 @@ public class MemberCategoryController {
     public ResponseEntity postMemberCategory(@PathVariable("member_id") @Positive Long memberId,
                                              @Valid @RequestBody MemberCategoryDto.Post requestBody) {
         MemberCategory memberCategory = mapper.memberCategoryPostDtoToMemberCategory(requestBody);
-        memberCategoryService.createMemberCategory(memberCategory, memberId);
+        MemberCategory createdMemberCategory = memberCategoryService.createMemberCategory(memberCategory, memberId);
 
         URI location = UriCreator.createURI(DEFAULT_URL + "/1", 1L);
 
@@ -45,7 +44,6 @@ public class MemberCategoryController {
     public ResponseEntity patchMemberCategory(@PathVariable("member_category_id") Long memberCategoryId,
                                               @Valid @RequestBody MemberCategoryDto.Patch requestBody) {
         MemberCategory memberCategory = mapper.memberCategoryPatchDtoToMemberCategory(requestBody);
-//        memberCategory.setId(memberCategoryId);
         MemberCategory updatedMemberCategory = memberCategoryService.updateMemberCategory(memberCategory, memberCategoryId);
 
         return ResponseEntity.ok().build();

@@ -43,7 +43,6 @@ public class MemberCategoryDto {
         private LocalDateTime createdAt;
 
         @Builder
-
         public Response(long id, String name, long memberId, long categoryId, LocalDateTime createdAt) {
             this.id = id;
             this.name = name;

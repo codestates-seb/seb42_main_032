@@ -6,13 +6,15 @@ import DabuOps.tikkle.member.entity.Member.Gender;
 import DabuOps.tikkle.member.entity.Member.MemberState;
 import DabuOps.tikkle.member_category.entity.MemberCategory;
 import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
+import DabuOps.tikkle.transaction_history.entity.TransactionHistory.InoutType;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-
+@AllArgsConstructor
 @Service
 public class TransactionHistoryServiceStub implements TransactionHistoryService{
     private TransactionHistory stubTransactionHistory1;
@@ -20,7 +22,6 @@ public class TransactionHistoryServiceStub implements TransactionHistoryService{
 
     private MemberCategory stubMemberCategory;
     private Member stubMember;
-
     private Category category;
     @PostConstruct
     public void init() {
@@ -51,10 +52,10 @@ public class TransactionHistoryServiceStub implements TransactionHistoryService{
                 .memberCategory(stubMemberCategory)
                 .date(LocalDate.now())
                 .time(LocalTime.now())
-                .inoutType(TransactionHistory.InoutType.SPEND)
+                .inoutType(InoutType.SPEND)
                 .memo("메모1")
                 .amount(10000)
-                .branch_name("GS25")
+                .branchName("GS25")
                 .build();
 
         stubTransactionHistory2 = TransactionHistory.builder()
@@ -62,15 +63,15 @@ public class TransactionHistoryServiceStub implements TransactionHistoryService{
                 .memberCategory(stubMemberCategory)
                 .date(LocalDate.now())
                 .time(LocalTime.now())
-                .inoutType(TransactionHistory.InoutType.SPEND)
+                .inoutType(InoutType.SPEND)
                 .memo("메모2")
                 .amount(20000)
-                .branch_name("CU")
+                .branchName("CU")
                 .build();
     }
 
     public TransactionHistory createTransactionHistory(TransactionHistory transactionHistory, Long memberCategoryId) {
-        return null;
+        return this.stubTransactionHistory1;
     }
 
     public TransactionHistory updateTransactionHistory(TransactionHistory transactionHistory, Long transactionHistoryId) {
@@ -81,7 +82,7 @@ public class TransactionHistoryServiceStub implements TransactionHistoryService{
         return stubTransactionHistory1;
     }
 
-    public List<TransactionHistory> findAllTransactionHistories(int month) {
+    public List<TransactionHistory> findMonthlyTransactionHistories(int date, Long memberId) {
         return List.of(stubTransactionHistory1, stubTransactionHistory2);
     }
 

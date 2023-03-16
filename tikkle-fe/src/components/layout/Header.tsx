@@ -1,6 +1,7 @@
 //@ts-ignore
 
 //TODO 헤더 구현
+
 import React, { Dispatch, SetStateAction, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
@@ -19,6 +20,7 @@ import {
   MenuOptionGroup,
   MenuDivider,
 } from '@chakra-ui/react';
+
 import { Link, useLocation } from 'react-router-dom';
 
 const HeaderContainer = styled.header`
@@ -187,6 +189,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
       ) : (
         ''
       )}
+
       <HeaderContentWrap>
         <BeforeLogin>
           <BellIcon boxSize={25} />
@@ -202,7 +205,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
               <ChevronDownIcon boxSize={25} />
             </MenuButton>
             <MenuList className="header-menulist">
-              <MenuItem as={Button}>
+              <MenuItem as={Link} to="/usersetting">
                 <div className="header-menulistbutton">회원정보</div>
               </MenuItem>
               <MenuItem as={Button}>
