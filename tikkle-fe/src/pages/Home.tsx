@@ -1,6 +1,7 @@
 import Calendar from '../components/layout/Calendar';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
+import Transaction from '../components/layout/Transaction';
 
 // transaction 컴포넌트용 거래내역 dummydata
 const transactions: Transaction[] = [
@@ -46,6 +47,7 @@ function Home({ selectedDate }: { selectedDate: Date }) {
     <HomeContainer>
       <Body>
         <Calendar date={selectedDate} />
+        <Transaction transactions={transactions} />
       </Body>
     </HomeContainer>
   );
