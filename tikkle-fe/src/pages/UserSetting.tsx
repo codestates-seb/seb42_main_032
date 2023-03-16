@@ -1,6 +1,8 @@
 //TODO SIGNUP_002 유저 정보 입력 페이지 구현 (사용자 이름, 예산 시작일, 급여일, 고정 지출 등)
 import { useState } from 'react';
 
+import UserInput from '../components/UserInput';
+
 import styled from 'styled-components';
 import {
   Box,
@@ -17,7 +19,7 @@ import { TbPigMoney } from 'react-icons/tb';
 import { GiReceiveMoney, GiExpense } from 'react-icons/gi';
 
 const Container = styled.div`
-  background-color: lightgrey;
+  background-color: #eaeaea;
   display: flex;
   flex-direction: column;
   font-family: 'GmarketSansMedium';
@@ -44,10 +46,10 @@ const Container = styled.div`
 const SetContainer = styled.div`
   display: flex;
   button {
+    width: 200px;
     margin-bottom: 60px;
     position: relative;
     top: -80px;
-    left: 20px;
   }
 `;
 // TODO 체크 아이콘 조건부 색상 변경 (green)
@@ -69,40 +71,32 @@ function UserSetting() {
     setUsername(e.target.value);
   };
 
-  const handleIbAmount = (e: any) => {
-    setIbAmount(e.target.value);
-  };
-
-  const handleSalaryAmount = (e: any) => {
-    setSalaryAmount(e.target.value);
-  };
-
-  const handleFeAmount = (e: any) => {
-    setFeAmount(e.target.value);
-  };
   return (
     <Container>
       <div className="title-container">
         <span className="usersetting-title">회원 정보 설정</span>
       </div>
       <SetContainer>
-        <div>
-          <p>사용자 이름</p>
-          <InputGroup className="input-username" ml="10vw">
+        <Box display="flex" flexDir="column" ml="10vw">
+          <Box display="flex" mb="1vh">
+            <p>사용자 이름</p>
+          </Box>
+          <InputGroup className="input-username">
             <InputLeftElement
               pointerEvents="none"
-              children={<Icon as={BsFillPersonFill} color="gray.400" />}
+              children={<Icon as={BsFillPersonFill} color="gray.700" />}
             />
             <Input
               type="text"
-              size="sm"
+              size="md"
               focusBorderColor="purple.400"
               onKeyUp={(e) => {
                 handleUserInput(e);
               }}
             ></Input>
-            {/* <InputRightElement children={<CheckIcon color="gray.300" />} /> */}
+            {/* <InputRightElement children={<CheckIcon color="gray.700" />} /> */}
           </InputGroup>
+
           <Button
             colorScheme="purple"
             size="md"
@@ -112,97 +106,19 @@ function UserSetting() {
           >
             계좌 연결하기
           </Button>
-        </div>
+        </Box>
       </SetContainer>
-      <SetContainer>
-        {/* Box로 레이아웃 만들기 */}
-        <div>
-          <Box display="flex" flexDir="column">
-            <Box display="flex">
-              <p>예산 시작일</p>
-            </Box>
-            <Box display="flex" justifyContent="space-between">
-              <InputGroup className="input-initialbudget" ml="10vw">
-                <InputLeftElement
-                  pointerEvents="none"
-                  children={<Icon as={TbPigMoney} color="gray.400" />}
-                />
-                <Input
-                  type="date"
-                  size="sm"
-                  focusBorderColor="purple.400"
-                ></Input>
-              </InputGroup>
-              <InputGroup className="input-initialbudget" size="sm" ml="20vw">
-                <InputLeftElement
-                  pointerEvents="none"
-                  children={<Icon as={TbPigMoney} color="gray.400" />}
-                />
-
-                <Input
-                  type="number"
-                  focusBorderColor="purple.400"
-                  onKeyUp={(e) => handleIbAmount(e)}
-                  value={ibAmount}
-                ></Input>
-                <InputRightAddon children="원" />
-              </InputGroup>
-            </Box>
-          </Box>
-        </div>
-      </SetContainer>
-
-      <SetContainer>
-        <div>
-          <p>급여일</p>
-          <InputGroup className="input-salary" ml="10vw">
-            <InputLeftElement
-              pointerEvents="none"
-              children={<Icon as={GiReceiveMoney} color="gray.400" />}
-            />
-            <Input type="date" size="sm" focusBorderColor="purple.400"></Input>
-          </InputGroup>
-        </div>
-        <InputGroup className="input-salary" size="sm" ml="20vw">
-          <InputLeftElement
-            pointerEvents="none"
-            children={<Icon as={GiReceiveMoney} color="gray.400" />}
-          />
-          <Input
-            type="number"
-            focusBorderColor="purple.400"
-            onKeyUp={(e) => handleSalaryAmount(e)}
-          ></Input>
-          <InputRightAddon children="원" />
-        </InputGroup>
-      </SetContainer>
-      <SetContainer>
-        <div>
-          <p>급여일</p>
-          <InputGroup className="input-fixedexpenses" ml="10vw">
-            <InputLeftElement
-              pointerEvents="none"
-              children={<Icon as={GiExpense} color="gray.400" />}
-            />
-            <Input type="date" size="sm" focusBorderColor="purple.400"></Input>
-          </InputGroup>
-        </div>
-        <InputGroup className="input-fixedexpenses" size="sm" ml="20vw">
-          <InputLeftElement
-            pointerEvents="none"
-            children={<Icon as={GiExpense} color="gray.400" />}
-          />
-          <Input
-            type="number"
-            focusBorderColor="purple.400"
-            onKeyUp={(e) => handleFeAmount(e)}
-          ></Input>
-          <InputRightAddon children="원" />
-        </InputGroup>
-      </SetContainer>
-      <Button colorScheme="purple" size="md" variant="outline">
-        저장하기
-      </Button>
+      <UserInput
+        label={'예산 시작일'}
+        setState={setIbAmount}
+        state={ibAmount}
+      />
+      <UserInput
+        label={'급여일'}
+        setState={setSalaryAmount}
+        state={salaryAmount}
+      />
+      <UserInput label={'고정 지출'} setState={setFeAmount} state={feAmount} />
     </Container>
   );
 }
