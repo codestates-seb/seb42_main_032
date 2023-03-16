@@ -2,15 +2,41 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
+  background-image: url('/tikkle-background.jpg');
+  position: relative;
+  background-color: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
-  // ! 로고 크기 조정하기
+  font-family: 'GmarketSansMedium';
+  height: 100vh;
+  p {
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+    filter: drop-shadow(1px 1px 1px white);
+    margin-bottom: 100px;
+  }
+
+  ::before {
+    position: absolute;
+    content: '';
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
   .header-logo__img {
+    margin-top: 160px;
     width: 50vh;
+    filter: drop-shadow(1px 1px 1px white);
+    margin-bottom: 100px;
   }
 
   .google-btn {
+    filter: drop-shadow(1px 1px 1px white);
     margin: 25px;
     width: 80%;
     min-width: 184px;
@@ -18,13 +44,14 @@ const Container = styled.div`
     height: 42px;
     background-color: #fcfcfc;
     border-radius: 2px;
-    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.2);
     cursor: pointer;
     cursor: hand;
     align-self: center;
     user-select: none;
     transition: all 400ms ease 0s;
     display: flex;
+    font-family: Roboto-Medium;
   }
   .google-btn .google-icon-wrapper {
     position: absolute;
