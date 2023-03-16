@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import styled from 'styled-components';
 import {
+  Box,
   Input,
   InputGroup,
   InputLeftElement,
@@ -114,30 +115,41 @@ function UserSetting() {
         </div>
       </SetContainer>
       <SetContainer>
+        {/* Box로 레이아웃 만들기 */}
         <div>
-          <p>예산 시작일</p>
-          <InputGroup className="input-initialbudget" ml="10vw">
-            <InputLeftElement
-              pointerEvents="none"
-              children={<Icon as={TbPigMoney} color="gray.400" />}
-            />
-            <Input type="date" size="sm" focusBorderColor="purple.400"></Input>
-          </InputGroup>
-        </div>
-        <InputGroup className="input-initialbudget" size="sm" ml="20vw">
-          <InputLeftElement
-            pointerEvents="none"
-            children={<Icon as={TbPigMoney} color="gray.400" />}
-          />
+          <Box display="flex" flexDir="column">
+            <Box display="flex">
+              <p>예산 시작일</p>
+            </Box>
+            <Box display="flex" justifyContent="space-between">
+              <InputGroup className="input-initialbudget" ml="10vw">
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<Icon as={TbPigMoney} color="gray.400" />}
+                />
+                <Input
+                  type="date"
+                  size="sm"
+                  focusBorderColor="purple.400"
+                ></Input>
+              </InputGroup>
+              <InputGroup className="input-initialbudget" size="sm" ml="20vw">
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<Icon as={TbPigMoney} color="gray.400" />}
+                />
 
-          <Input
-            type="number"
-            focusBorderColor="purple.400"
-            onKeyUp={(e) => handleIbAmount(e)}
-            value={ibAmount}
-          ></Input>
-          <InputRightAddon children="원" />
-        </InputGroup>
+                <Input
+                  type="number"
+                  focusBorderColor="purple.400"
+                  onKeyUp={(e) => handleIbAmount(e)}
+                  value={ibAmount}
+                ></Input>
+                <InputRightAddon children="원" />
+              </InputGroup>
+            </Box>
+          </Box>
+        </div>
       </SetContainer>
 
       <SetContainer>
