@@ -18,7 +18,7 @@ public class TransactionHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "MEMBER_CATEGORY_ID")
     private MemberCategory memberCategory;
 
@@ -64,7 +64,6 @@ public class TransactionHistory {
     }
 
     @Builder
-
     public TransactionHistory(long id, MemberCategory memberCategory, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branchName, Status status) {
         this.id = id;
         this.memberCategory = memberCategory;
