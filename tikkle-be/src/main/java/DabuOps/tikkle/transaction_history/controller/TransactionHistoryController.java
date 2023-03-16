@@ -4,6 +4,7 @@ import DabuOps.tikkle.global.utils.MultiResponseDto;
 import DabuOps.tikkle.global.utils.ResponseListDto;
 import DabuOps.tikkle.global.utils.SingleResponseDto;
 import DabuOps.tikkle.global.utils.UriCreator;
+import DabuOps.tikkle.member_category.service.MemberCategoryService;
 import DabuOps.tikkle.transaction_history.dto.TransactionHistoryDto;
 import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
 import DabuOps.tikkle.transaction_history.mapper.TransactionHistoryMapper;
@@ -27,15 +28,16 @@ public class TransactionHistoryController {
     private final String DEFAULT_URL = "/transaction_histories";
     private final TransactionHistoryService transactionHistoryService;
     private final TransactionHistoryRepository transactionHistoryRepository;
+    private final MemberCategoryService memberCategoryService;
     private final TransactionHistoryMapper mapper;
 
-    @PostMapping("/{member_category_id}")
-    public ResponseEntity postTransactionHistory(@PathVariable("member_category_id")Long memberCategoryId,
-                                                 @Valid @RequestBody TransactionHistoryDto.Post requestBody) {
+    @PostMapping()
+    public ResponseEntity postTransactionHistory(@Valid @RequestBody TransactionHistoryDto.Post requestBody) {
+        Long memberCategoryId = requestBody.getMemberCategoryId();
         TransactionHistory transactionHistory = mapper.transactionHistoryPostDtoToTransactionHistory(requestBody);
         TransactionHistory createdTransactionHistory = transactionHistoryService.createTransactionHistory(transactionHistory, memberCategoryId);
 
-        URI location = UriCreator.createURI(DEFAULT_URL + "/1", 1L);
+        URI location = UriCreator.createURIWithoutResourceId(DEFAULT_URL);
 
         return ResponseEntity.created(location).build();
     }
@@ -43,7 +45,9 @@ public class TransactionHistoryController {
     @PatchMapping("/{transaction_history_id}")
     public ResponseEntity patchTransactionHistory(@PathVariable("transaction_history_id") Long transactionHistoryId,
                                                   @Valid @RequestBody TransactionHistoryDto.Patch requestBody) {
+        Long memberCategoryId = requestBody.getMemberCategoryId();
         TransactionHistory transactionHistory = mapper.transactionHistoryPatchDtoToTransactionHistory(requestBody);
+        transactionHistory.setMemberCategory(memberCategoryService.findMemberCategory(memberCategoryId));
         TransactionHistory updatedTransactionHistory = transactionHistoryService.updateTransactionHistory(transactionHistory, transactionHistoryId);
 
         return ResponseEntity.ok().build();
