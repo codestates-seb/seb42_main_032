@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+
 public class TransactionHistoryServiceImpl /*implements TransactionHistoryService*/{
-    private final TransactionHistoryRepository transactionHistoryRepository;
+//    private final TransactionHistoryRepository transactionHistoryRepository;
 
     public List<TransactionHistory> findMonthlyTransactionHistories(int month, Long memberId) {
         // TODO: 2023/03/14
