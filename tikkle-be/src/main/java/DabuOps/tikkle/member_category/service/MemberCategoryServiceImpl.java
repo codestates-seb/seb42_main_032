@@ -28,7 +28,6 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
      // 사용자 설정 멤버 카테고리가 갖다 쓸 카테고리 ID
 
 
-    //@Override
     public MemberCategory createMemberCategory(MemberCategory memberCategory, Long memberId) {
         Member member = memberService.findExistMemberById(memberId);
         memberCategory.setCategory(category);
@@ -37,12 +36,7 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
         return memberCategoryRepository.save(memberCategory);
     }
 
-    @Override
     public MemberCategory updateMemberCategory(MemberCategory memberCategory, Long memberCategoryId) {
-        return null;
-    }
-
-    public MemberCategory updateMemberCategory(MemberCategory memberCategory, long memberCategoryId) {
         MemberCategory updatedMemberCategory = findMemberCategory(memberCategoryId);
 
         Optional.ofNullable(memberCategory.getName())

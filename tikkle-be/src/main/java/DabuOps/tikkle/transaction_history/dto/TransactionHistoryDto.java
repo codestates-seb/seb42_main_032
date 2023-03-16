@@ -2,9 +2,11 @@ package DabuOps.tikkle.transaction_history.dto;
 
 import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public class TransactionHistoryDto {
     @Getter
@@ -75,5 +77,12 @@ public class TransactionHistoryDto {
             this.amount = amount;
             this.branchName = branchName;
         }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class DailySummaryResponse {
+        private List<List<Integer>> dailySummary;
     }
 }

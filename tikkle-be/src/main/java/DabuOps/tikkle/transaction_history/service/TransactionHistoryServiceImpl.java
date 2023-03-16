@@ -9,6 +9,9 @@ import DabuOps.tikkle.transaction_history.repository.TransactionHistoryRepositor
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,17 +51,59 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
         TransactionHistory findTransactionHistory =
                 optionalTransactionHistory.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.TRANSACTION_HISTORY_NOT_FOUND));
-        if(findTransactionHistory.getStatus().equals(TransactionHistory.Status.INACTIVE)) throw new BusinessLogicException(ExceptionCode.TRANSACTION_HISTORY_NOT_FOUND);
+        if(findTransactionHistory.getStatus().equals(TransactionHistory.Status.INACTIVE))
+        {throw new BusinessLogicException(ExceptionCode.TRANSACTION_HISTORY_NOT_FOUND);}
         return findTransactionHistory;
     }
 
-    public List<TransactionHistory> findMonthlyTransactionHistories(int month, Long memberId) {
-        // TODO: 2023/03/17
-        return null;
+    // 특정 월 거래내역 쭉 뽑아오기 -> 캘린더 뷰 아랫단 정보
+    public List<List> findMonthlyTransactionHistories(int date, Long memberId) {
+        //date = 6자리 숫자! 202303
+        int year = date / 100;
+        int month = date - year * 100;
+
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        List<TransactionHistory> transactionHistories =
+                transactionHistoryRepository.findByMemberCategory_Member_IdAndDateBetweenAndStatusNot(
+                memberId, startDate, endDate, TransactionHistory.Status.INACTIVE);
+
+        List dailySummary = findMonthlyTransactionHistoriesSummary(transactionHistories, startDate);
+
+        return List.of(transactionHistories, dailySummary);
+    }
+
+    public List<List<Integer>> findMonthlyTransactionHistoriesSummary(List<TransactionHistory> transactionHistories, LocalDate startDate) {
+        List<List<Integer>> daily = new ArrayList<>();
+        for (int i = 0; i <= LocalDate.now().getDayOfMonth(); i++) {
+            daily.add(Arrays.asList(0, 0));
+            // daily index = 일
+            // daily(i,0) = i일의 수입, daily(i,1) = i일의 지출
+        }
+
+        for(int i = 1; i <= transactionHistories.size(); i++) {
+            for(TransactionHistory j : transactionHistories) {
+                if(i == j.getDate().getDayOfMonth()) {
+                    if(j.getInoutType().equals(TransactionHistory.InoutType.INCOME)) daily.get(i).set(0, daily.get(i).get(0) + j.getAmount());
+                    else daily.get(i).set(1, daily.get(i).get(1) + j.getAmount());
+                }
+            }
+        }
+
+        return daily;
     }
 
     public void deleteTransactionHistory (Long transactionHistoryId) {
         TransactionHistory transactionHistory = findTransactionHistory(transactionHistoryId);
         transactionHistory.setStatus(TransactionHistory.Status.INACTIVE);
+    }
+
+    public static void main(String[] args) {
+        List<List<Integer>> daily = new ArrayList<>();
+        for (int i = 0; i <= LocalDate.now().getDayOfMonth(); i++) {
+            daily.add(Arrays.asList(0, 0));
+        }
+        System.out.println(daily);
     }
 }
