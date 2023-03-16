@@ -8,9 +8,9 @@ import { FiPercent } from 'react-icons/fi';
 import { IoLogoGameControllerA } from 'react-icons/io';
 
 const BodyContainer = styled.div`
-  margin-top: 80px;
+  margin-top: 60px;
   display: flex;
-  @media (max-width: 800px) {
+  @media (max-width: 1024px) {
     flex-direction: column;
   }
   font-family: 'GmarketSansMedium';
@@ -19,7 +19,7 @@ const BodyContainer = styled.div`
 const BudgetWrap = styled.div`
   position: sticky;
   top: 100px;
-  @media (max-width: 800px) {
+  @media (max-width: 1024px) {
     position: static;
     top: 0;
   }
@@ -32,6 +32,9 @@ const BudgetWrap = styled.div`
   h3 {
     text-align: left;
     font-size: 25px;
+  }
+  .budgetview-edit__span {
+    cursor: pointer;
   }
   .budgetview-total__div {
     display: flex;
@@ -46,9 +49,13 @@ const BudgetWrap = styled.div`
   }
 `;
 const CategoryBudgetWrap = styled.div`
-  padding: 20px;
+  padding: 40px;
   width: 100%;
   border-left: 1px solid gray;
+  min-height: 100vh;
+  @media (max-width: 1024px) {
+    border: none;
+  }
   padding-left: 30px;
   h3 {
     text-align: left;
@@ -68,7 +75,8 @@ const CategoryBudgetLists = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
   }
   .budgetview-categorycontent__div {
     flex-grow: 1;
@@ -159,7 +167,6 @@ const CategoryIconWrapper = styled.div<{ category: string }>`
   }};
 `;
 
-// const testArr = [1];
 const testArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
 function BudgetView() {
@@ -173,7 +180,7 @@ function BudgetView() {
         <h3>한 달 총 예산</h3>
         <div className="budgetview-total__div">
           <span className="budgetview-free__span">500,000원 남음</span>
-          <span>수정하기</span>
+          <span className="budgetview-edit__span">수정하기</span>
         </div>
         <div className="budgetview-day__div">총 하루 예산 20,000원</div>
         <div>
@@ -200,7 +207,7 @@ function BudgetView() {
         </div>
         <div className="budgetview-category-contents__div">
           <CategoryBudgetLists>
-            {testArr.map((el) => {
+            {testArr.map(() => {
               return (
                 <div className="budgetview-categorylist__div">
                   <CategoryIconWrapper category={'식비'}>
