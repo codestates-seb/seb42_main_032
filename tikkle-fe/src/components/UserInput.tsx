@@ -7,8 +7,10 @@ import {
   InputLeftElement,
   InputRightAddon,
 } from '@chakra-ui/react';
+
 import { TbPigMoney } from 'react-icons/tb';
 import { GiReceiveMoney, GiExpense } from 'react-icons/gi';
+
 const SetContainer = styled.div`
   display: flex;
   button {
@@ -19,9 +21,13 @@ const SetContainer = styled.div`
   }
 `;
 
-function UserInput({ label, setState, state }) {
+function UserInput({ label, setState, state, setDate, date }) {
   const handleState = (e: any) => {
     setState(e.target.value);
+  };
+
+  const handleDate = (e: any) => {
+    setDate(new Date(e.target.value).toISOString());
   };
 
   return (
@@ -44,7 +50,12 @@ function UserInput({ label, setState, state }) {
                 )
               }
             />
-            <Input type="date" size="md" focusBorderColor="purple.400"></Input>
+            <Input
+              type="date"
+              size="md"
+              focusBorderColor="purple.400"
+              onChange={(e) => handleDate(e)}
+            ></Input>
           </InputGroup>
           <InputGroup className="input-initialbudget" size="md" ml="20vw">
             <InputLeftElement

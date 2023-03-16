@@ -15,8 +15,6 @@ import {
 import { Button } from '@chakra-ui/react';
 import { Icon, AddIcon } from '@chakra-ui/icons';
 import { BsFillPersonFill } from 'react-icons/bs';
-import { TbPigMoney } from 'react-icons/tb';
-import { GiReceiveMoney, GiExpense } from 'react-icons/gi';
 
 const Container = styled.div`
   background-color: #eaeaea;
@@ -24,6 +22,7 @@ const Container = styled.div`
   flex-direction: column;
   font-family: 'GmarketSansMedium';
   font-size: 20px;
+
   .title-container {
     text-align: left;
     margin-top: 10vh;
@@ -112,13 +111,23 @@ function UserSetting() {
         label={'예산 시작일'}
         setState={setIbAmount}
         state={ibAmount}
+        setDate={setIbDate}
+        date={ibDate}
       />
       <UserInput
         label={'급여일'}
         setState={setSalaryAmount}
         state={salaryAmount}
+        setDate={setSalaryDate}
+        date={salaryDate}
       />
-      <UserInput label={'고정 지출'} setState={setFeAmount} state={feAmount} />
+      <UserInput
+        label={'고정 지출'}
+        setState={setFeAmount}
+        state={feAmount}
+        setDate={setFeDate}
+        date={feDate}
+      />
     </Container>
   );
 }
