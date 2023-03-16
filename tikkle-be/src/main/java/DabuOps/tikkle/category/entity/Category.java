@@ -20,9 +20,13 @@ public class Category {
     @Column(name = "NAME")
     private String name;
 
+    @Column(name = "AVG_BUDGET")
+    private int avgBudget; // 사용자끼리 예산 비교
+
     @Builder
-    public Category(long id, String name) {
+    public Category(long id, String name, int avgBudget) {
         this.id = id;
         this.name = name;
+        this.avgBudget = avgBudget;
     }
 }

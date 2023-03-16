@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface MemberCategoryRepository extends JpaRepository<MemberCategory, Long> {
-    List<MemberCategory> findAllMemberCategoriesByMemberId(Long memberId);
+    List<MemberCategory> findAllByMemberIdAndStatusNot(Long memberId, MemberCategory.Status status);
+
 }
