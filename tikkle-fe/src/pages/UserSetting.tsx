@@ -72,6 +72,7 @@ function UserSetting() {
     setUsername(e.target.value);
   };
 
+  // 회원탈퇴 버튼 클릭 시, 페이지 이동
   const handleClick = () => {
     navigate('/userout');
   };
