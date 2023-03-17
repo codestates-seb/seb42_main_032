@@ -1,6 +1,7 @@
 //TODO LOGIN_001 Google OAuth 로그인 페이지 구현
 import React from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const LoginContainer = styled.div`
   background-image: url('/tikkle-background.jpg');
@@ -68,13 +69,31 @@ const OauthLoginButton = styled.div`
 `;
 
 function Login() {
+  const handleOAuthLogin = () => {
+    // window.location.href =
+    //   'https://accounts.google.com/o/oauth2/auth?' +
+    //   'client_id=338499705230-mkcb14qnk7piqv7jlor03nbkmp29iog1.apps.googleusercontent.com&' +
+    //   'redirect_uri=http://localhost:5173/login&' +
+    //   'response_type=token&' +
+    //   'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
+
+    // TODO 백엔드로 access token 보내기
+    // TODO 백엔드에서 유저 정보 받아오기
+    const parsedHash = new URLSearchParams(window.location.hash.substring(1));
+    console.log(parsedHash.get('access_token'));
+    const accessToken = parsedHash.get('access_token');
+    axios
+      .post('http://localhost:8080/oauth/google', { accessToken })
+      .then((res) => console.log(res));
+  };
+
   return (
     <LoginContainer className="login-container">
       <LogoWrap>
         <img src="tikkle-logo.svg" alt="logo" />
         <span>편리한 예산별 지출 관리 서비스, 티클✨</span>
       </LogoWrap>
-      <OauthLoginButton>
+      <OauthLoginButton onClick={handleOAuthLogin}>
         <img src="g-logo.png" alt="googlelogin" />
         <span>Log in with Google</span>
       </OauthLoginButton>
