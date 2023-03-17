@@ -3,16 +3,16 @@ package DabuOps.tikkle.oauth.service;
 import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.entity.Member.MemberState;
 import DabuOps.tikkle.member.repository.MemberRepository;
-import DabuOps.tikkle.oauth.principal.OAuthUserInfo;
+import DabuOps.tikkle.oauth.UserInfo;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import java.util.Scanner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -48,18 +48,43 @@ public class OAuthService extends DefaultOAuth2UserService {
     * https://www.googleapis.com/oauth2/v2/tokeninfo?access_token=
      */
     public HttpStatus validate(String accessToken) throws IOException {
+        //아래의 url은 Google OAuth 2.0 access token의 유효성을 검증하고 토큰의 정보를 반환하는 데 사용
         URL url = new URL("https://oauth2.googleapis.com/tokeninfo?access_token=" + accessToken);
 
-        Scanner scanner = new Scanner(url.openStream());
-        String response = scanner.useDelimiter(",").next();
-        scanner.close();
+        //JSON 형식으로 Http 응답 읽기
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Accept", "application/json");
 
-        if (response.contains("\"email\":\"" + "\"name\":\"" + "\"picture\":\"")) {
-            getMemberProfile(accessToken);
-            return HttpStatus.OK;
-        } else {
-            return HttpStatus.UNAUTHORIZED;
+        //Http 요청 후 response data 확인
+        int responseCode = connection.getResponseCode();
+        if (responseCode == 200) {
+            try (InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
+                JsonObject jsonObject = JsonParser.parseReader(inputStreamReader).getAsJsonObject();
+
+                if (jsonObject.has("email") && jsonObject.has("name") && jsonObject.has("picture")) {
+                    getMemberProfile(accessToken);
+                    return HttpStatus.OK;
+                }
+            }
         }
+        String errorReason = "";
+        if (responseCode == 400) {
+            errorReason = "invalid_request";
+        } else if (responseCode == 401) {
+            errorReason = "invalid_token";
+        } else if (responseCode == 403) {
+            errorReason = "insufficient_scope";
+        } else if (responseCode == 404) {
+            errorReason = "token_not_found";
+        } else if (responseCode == 500) {
+            errorReason = "server_error";
+        } else {
+            errorReason = "unknown_error";
+        }
+        log.error("Access token validation failed. Error reason: {}", errorReason);
+
+        return HttpStatus.UNAUTHORIZED;
     }
 
     /*
@@ -67,31 +92,29 @@ public class OAuthService extends DefaultOAuth2UserService {
     * 유저 정보 확인 후 있으면 로그인 없으면 회원가입(UserInfo -> MemberRepository에 저장
      */
     private Optional<Member> getMemberProfile(String accessToken) throws IOException {
-        URL url = new URL("https://oauth2.googleapis.com/tokeninfo?access_token=" + accessToken);
+        //아래의 주소는 access token을 사용하여 사용자의 정보를 가져오는 데 사용
+        URL url = new URL("https://www.googleapis.com/oauth2/v3/userinfo?access_token=" + accessToken);
 
-        Scanner scanner = new Scanner(url.openStream());
-        String response = scanner.useDelimiter(",").next();
-        scanner.close();
+        try (InputStreamReader inputStreamReader = new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)) {
+            Gson gson = new Gson();
+            UserInfo userInfo = gson.fromJson(inputStreamReader, UserInfo.class);
 
-        Gson gson = new Gson();
-        OAuthUserInfo oAuthUserInfo = gson.fromJson(response, OAuthUserInfo.class);
+            String email = userInfo.getEmail();
+            String name = userInfo.getName();
+            String picture = userInfo.getPicture();
 
-        String email = oAuthUserInfo.getEmail();
-        String name = oAuthUserInfo.getName();
-        String picture = oAuthUserInfo.getPicture();
+            Optional<Member> member = memberRepository.findByEmailAndStateIs(email, MemberState.ACTIVE);
 
-        Optional<Member> member = memberRepository.findByEmailAndStateIs(email, MemberState.ACTIVE);
-
-        if (member.isPresent()) {
-            return member;
-        } else {
-            Member newMember = new Member();
-            newMember.setEmail(email);
-            newMember.setName(name);
-            newMember.setPicture(picture);
-            memberRepository.save(newMember);
-
-            return Optional.of(newMember);
+            if (member.isPresent()) {
+                return member;
+            } else {
+                Member newMember = new Member();
+                newMember.setEmail(email);
+                newMember.setName(name);
+                newMember.setPicture(picture);
+                memberRepository.save(newMember);
+                return Optional.of(newMember);
+            }
         }
     }
 }
