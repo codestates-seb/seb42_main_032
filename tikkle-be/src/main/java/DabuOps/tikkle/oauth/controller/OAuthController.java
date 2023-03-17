@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class OAuthController {
     private final OAuthService oAuthService;
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public String login(@RequestParam("accessToken") String accessToken) throws IOException {
         HttpStatus status = oAuthService.validate(accessToken);
         if (status == HttpStatus.OK) {
-            // 로그인 성공 처리
+            oAuthService.login(accessToken);
             return "Login successful";
         }
             return "Login failed";

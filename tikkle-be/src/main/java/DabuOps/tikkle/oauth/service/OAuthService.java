@@ -4,6 +4,7 @@ import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.entity.Member.MemberState;
 import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.oauth.principal.OAuthUserInfo;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -34,9 +35,9 @@ public class OAuthService extends DefaultOAuth2UserService {
     * return으로 UserInfo 반환
      */
 
-    public Optional<Member> login(){
+    public Optional<Member> login(String accessToken){
 
-        Optional<Member> member = getMemberProfile();
+        Optional<Member> member = getMemberProfile(accessToken);
 
         return member;
     }
@@ -63,8 +64,9 @@ public class OAuthService extends DefaultOAuth2UserService {
     * UserInfo 받아오기
     * 유저 정보 확인 후 있으면 로그인 없으면 회원가입(UserInfo -> MemberRepository에 저장
      */
-    private Optional<Member> getMemberProfile(){
-        OAuthUserInfo oAuthUserInfo = null;
+    private Optional<Member> getMemberProfile(String accessToken){
+        Gson gson = new Gson();
+        OAuthUserInfo oAuthUserInfo = gson.fromJson(accessToken, OAuthUserInfo.class);
 
         String email =  oAuthUserInfo.getEmail();
         String name = oAuthUserInfo.getName();
