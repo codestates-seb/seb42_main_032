@@ -48,13 +48,13 @@ public class OAuthService extends DefaultOAuth2UserService {
     * https://www.googleapis.com/oauth2/v2/tokeninfo?access_token=
      */
     public HttpStatus validate(String accessToken) throws IOException {
-        URL url = new URL("https://oauth2.googleapis.com/tokeninfo?id_token=" + accessToken);
+        URL url = new URL("https://oauth2.googleapis.com/tokeninfo?access_token=" + accessToken);
 
         Scanner scanner = new Scanner(url.openStream());
-        String response = scanner.useDelimiter("\\Z").next();
+        String response = scanner.useDelimiter(",").next();
         scanner.close();
 
-        if (response.contains("\"aud\":\"" + "${G_CLIENT_ID}" + "\"")) {
+        if (response.contains("\"email\":\"" + "\"name\":\"" + "\"picture\":\"")) {
             getMemberProfile(accessToken);
             return HttpStatus.OK;
         } else {
@@ -67,10 +67,10 @@ public class OAuthService extends DefaultOAuth2UserService {
     * 유저 정보 확인 후 있으면 로그인 없으면 회원가입(UserInfo -> MemberRepository에 저장
      */
     private Optional<Member> getMemberProfile(String accessToken) throws IOException {
-        URL url = new URL("https://oauth2.googleapis.com/tokeninfo?id_token=" + accessToken);
+        URL url = new URL("https://oauth2.googleapis.com/tokeninfo?access_token=" + accessToken);
 
         Scanner scanner = new Scanner(url.openStream());
-        String response = scanner.useDelimiter("\\Z").next();
+        String response = scanner.useDelimiter(",").next();
         scanner.close();
 
         Gson gson = new Gson();
