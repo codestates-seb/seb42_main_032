@@ -1,7 +1,8 @@
 //TODO LOGIN_001 Google OAuth 로그인 페이지 구현
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const LoginContainer = styled.div`
   background-image: url('/tikkle-background.jpg');
@@ -69,22 +70,26 @@ const OauthLoginButton = styled.div`
 `;
 
 function Login() {
-  const handleOAuthLogin = () => {
-    // window.location.href =
-    //   'https://accounts.google.com/o/oauth2/auth?' +
-    //   'client_id=338499705230-mkcb14qnk7piqv7jlor03nbkmp29iog1.apps.googleusercontent.com&' +
-    //   'redirect_uri=http://localhost:5173/login&' +
-    //   'response_type=token&' +
-    //   'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
+  // Login 페이지가 렌더링될 때 주소창에 access_token이 있는 상태라면 해당 정보로 서버에 사용자 정보 요청
+  const parsedHash = new URLSearchParams(window.location.hash.substring(1));
+  const accessToken = parsedHash.get('access_token');
+  accessToken !== null
+    ? axios
+        .get(`http://localhost:8080/login?accessToken=${accessToken}`)
+        .then((res) => {
+          console.log(typeof res);
+          console.log(res);
+        })
+        .catch((err) => console.log(err))
+    : '';
 
-    // TODO 백엔드로 access token 보내기
-    // TODO 백엔드에서 유저 정보 받아오기
-    const parsedHash = new URLSearchParams(window.location.hash.substring(1));
-    console.log(parsedHash.get('access_token'));
-    const accessToken = parsedHash.get('access_token');
-    axios
-      .post('http://localhost:8080/oauth/google', { accessToken })
-      .then((res) => console.log(res));
+  const handleOAuthLogin = () => {
+    window.location.href =
+      'https://accounts.google.com/o/oauth2/auth?' +
+      'client_id=338499705230-mkcb14qnk7piqv7jlor03nbkmp29iog1.apps.googleusercontent.com&' +
+      'redirect_uri=http://localhost:5173/login&' +
+      'response_type=token&' +
+      'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
   };
 
   return (
