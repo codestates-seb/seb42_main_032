@@ -17,6 +17,7 @@ import { Icon, AddIcon } from '@chakra-ui/icons';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
+
 const Container = styled.div`
   background-color: #eaeaea;
   display: flex;
@@ -24,6 +25,7 @@ const Container = styled.div`
   font-family: 'GmarketSansMedium';
   font-size: 20px;
   font-weight: bold;
+
   .title-container {
     text-align: left;
     margin-top: 10vh;

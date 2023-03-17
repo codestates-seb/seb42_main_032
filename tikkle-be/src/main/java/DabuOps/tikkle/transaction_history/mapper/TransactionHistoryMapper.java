@@ -16,7 +16,6 @@ public interface TransactionHistoryMapper {
     TransactionHistory transactionHistoryPatchDtoToTransactionHistory(TransactionHistoryDto.Patch requestBody);
 
     @Mapping(target = "memberCategoryId", source = "memberCategory.id")
-    @Mapping(target = "branchName", source = "branch_name")
     TransactionHistoryDto.Response transactionHistoryToTransactionHistoryResponseDto(TransactionHistory transactionHistory);
 
     List<TransactionHistoryDto.Response> transactionHistoriesToTransactionHistoryResponseDto(List<TransactionHistory> transactionHistories);
