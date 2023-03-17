@@ -158,7 +158,6 @@ const Header: React.FunctionComponent<HeaderProps> = ({
     setSelectedDate(nextDate);
   };
 
-
   const location = useLocation();
   const [selectedPath, setSeletctedPath] = useState<String>('');
 
@@ -206,14 +205,16 @@ const Header: React.FunctionComponent<HeaderProps> = ({
               <ChevronDownIcon boxSize={25} />
             </MenuButton>
             <MenuList className="header-menulist">
-              <MenuItem as={Button}>
+              <MenuItem as={Link} to="/usersetting">
                 <div className="header-menulistbutton">회원정보</div>
               </MenuItem>
               <MenuItem as={Button}>
                 <div className="header-menulistbutton">예산 설정</div>
               </MenuItem>
               <MenuItem as={Button}>
-                <div className="header-menulistbutton">예산 조회</div>
+                <Link to="budget">
+                  <div className="header-menulistbutton">예산 조회</div>
+                </Link>
               </MenuItem>
               <MenuItem as={Button}>
                 <div className="header-menulistbutton">거래내역 조회</div>

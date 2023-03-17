@@ -50,9 +50,12 @@ public class Member extends Auditable {
     @Column
     private Integer initDate;
 
+    @Column(nullable = false)
+    private String picture = "이미지";
+
     @Builder
     public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay,
-        Integer initDate) {
+        Integer initDate, String picture) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -61,7 +64,13 @@ public class Member extends Auditable {
         this.gender = gender;
         this.payDay = payDay;
         this.initDate = initDate;
+        this.picture = picture;
     }
+
+    public Member(String email, String name, String picture) {
+
+    }
+
     public static enum Gender{
         male("남성"),
         female("여성");

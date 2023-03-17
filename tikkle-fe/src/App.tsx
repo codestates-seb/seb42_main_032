@@ -10,6 +10,8 @@ import SignUp from './pages/SignUp';
 import UserSetting from './pages/UserSetting';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
+import UserOut from './pages/UserOut';
+import BudgetView from './pages/BudgetView';
 
 
 // Transaction 컴포넌트용 거래내역 dummydata
@@ -40,17 +42,18 @@ function App() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   return (
     <div className="App">
-      
       <Header selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <Routes>
         <Route path="/home" element={<Home selectedDate={selectedDate} />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/budget" element={<BudgetView />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/usersetting" element={<UserSetting />} />
+        <Route path="/userout" element={<UserOut />} />
       </Routes>
       <Footer />
-      {/* <Calendar date={new Date()} />
-      <Transaction transactions={transactions} /> */}
+      {/* <Calendar date={new Date()} /> */}
+      {/* <Transaction transactions={transactions} /> */}
     </div>
   );
 }
