@@ -7,6 +7,7 @@ import DabuOps.tikkle.oauth.principal.OAuthUserInfo;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class OAuthService extends DefaultOAuth2UserService {
     * return으로 UserInfo 반환
      */
 
-    public Optional<Member> login(String accessToken){
+    public Optional<Member> login(String accessToken) throws IOException {
 
         Optional<Member> member = getMemberProfile(accessToken);
 
@@ -53,7 +54,8 @@ public class OAuthService extends DefaultOAuth2UserService {
         String response = scanner.useDelimiter("\\Z").next();
         scanner.close();
 
-        if (response.contains("\"aud\":\"${G_CLIENT_ID}\"")) {
+        if (response.contains("\"aud\":\"" + "${G_CLIENT_ID}" + "\"")) {
+            getMemberProfile(accessToken);
             return HttpStatus.OK;
         } else {
             return HttpStatus.UNAUTHORIZED;
@@ -64,33 +66,32 @@ public class OAuthService extends DefaultOAuth2UserService {
     * UserInfo 받아오기
     * 유저 정보 확인 후 있으면 로그인 없으면 회원가입(UserInfo -> MemberRepository에 저장
      */
-    private Optional<Member> getMemberProfile(String accessToken){
-        Gson gson = new Gson();
-        OAuthUserInfo oAuthUserInfo = gson.fromJson(accessToken, OAuthUserInfo.class);
+    private Optional<Member> getMemberProfile(String accessToken) throws IOException {
+        URL url = new URL("https://oauth2.googleapis.com/tokeninfo?id_token=" + accessToken);
 
-        String email =  oAuthUserInfo.getEmail();
+        Scanner scanner = new Scanner(url.openStream());
+        String response = scanner.useDelimiter("\\Z").next();
+        scanner.close();
+
+        Gson gson = new Gson();
+        OAuthUserInfo oAuthUserInfo = gson.fromJson(response, OAuthUserInfo.class);
+
+        String email = oAuthUserInfo.getEmail();
         String name = oAuthUserInfo.getName();
         String picture = oAuthUserInfo.getPicture();
 
         Optional<Member> member = memberRepository.findByEmailAndStateIs(email, MemberState.ACTIVE);
 
-        if (member.isPresent()){
-            Map<String, String> response = new HashMap<>();
-            response.put("email", email);
-            response.put("name", name);
-
-        }else {
+        if (member.isPresent()) {
+            return member;
+        } else {
             Member newMember = new Member();
             newMember.setEmail(email);
             newMember.setName(name);
             newMember.setPicture(picture);
             memberRepository.save(newMember);
 
-            Map<String, String> response = new HashMap<>();
-            response.put("email", email);
-            response.put("name", name);
-            response.put("picture", picture);
+            return Optional.of(newMember);
         }
-        return member;
     }
 }
