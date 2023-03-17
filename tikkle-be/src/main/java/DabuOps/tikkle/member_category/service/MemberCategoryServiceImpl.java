@@ -9,13 +9,15 @@ import DabuOps.tikkle.member.service.MemberService;
 import DabuOps.tikkle.member_category.entity.MemberCategory;
 import DabuOps.tikkle.member_category.repository.MemberCategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 //@Service
 @RequiredArgsConstructor
-public class MemberCategoryServiceImpl /*implements MemberCategoryService*/{
+@Service
+public class MemberCategoryServiceImpl implements MemberCategoryService{
     private final MemberService memberService;
     private final MemberCategoryRepository memberCategoryRepository;
 
@@ -26,7 +28,6 @@ public class MemberCategoryServiceImpl /*implements MemberCategoryService*/{
      // 사용자 설정 멤버 카테고리가 갖다 쓸 카테고리 ID
 
 
-    //@Override
     public MemberCategory createMemberCategory(MemberCategory memberCategory, Long memberId) {
         Member member = memberService.findExistMemberById(memberId);
         memberCategory.setCategory(category);
@@ -34,7 +35,8 @@ public class MemberCategoryServiceImpl /*implements MemberCategoryService*/{
 
         return memberCategoryRepository.save(memberCategory);
     }
-    public MemberCategory updateMemberCategory(MemberCategory memberCategory, long memberCategoryId) {
+
+    public MemberCategory updateMemberCategory(MemberCategory memberCategory, Long memberCategoryId) {
         MemberCategory updatedMemberCategory = findMemberCategory(memberCategoryId);
 
         Optional.ofNullable(memberCategory.getName())

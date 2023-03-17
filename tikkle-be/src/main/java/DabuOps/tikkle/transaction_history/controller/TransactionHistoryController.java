@@ -1,9 +1,6 @@
 package DabuOps.tikkle.transaction_history.controller;
 
-import DabuOps.tikkle.global.utils.MultiResponseDto;
-import DabuOps.tikkle.global.utils.ResponseListDto;
-import DabuOps.tikkle.global.utils.SingleResponseDto;
-import DabuOps.tikkle.global.utils.UriCreator;
+import DabuOps.tikkle.global.utils.*;
 import DabuOps.tikkle.member_category.service.MemberCategoryService;
 import DabuOps.tikkle.transaction_history.dto.TransactionHistoryDto;
 import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
@@ -61,13 +58,14 @@ public class TransactionHistoryController {
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @GetMapping("/{member_id}/{month}")
+    @GetMapping("/{member_id}/{date}")
     public ResponseEntity getMonthlyTransactionHistories(@PathVariable("member_id") Long memberId,
-                                                         @PathVariable("month") int month) {
-        List<TransactionHistory> transactionHistories = transactionHistoryService.findMonthlyTransactionHistories(month, memberId);
-        List<TransactionHistoryDto.Response> responses = mapper.transactionHistoriesToTransactionHistoryResponseDto(transactionHistories);
+                                                         @PathVariable("date") int date) {
+        List<List> monthlyInfo = transactionHistoryService.findMonthlyTransactionHistories(date, memberId);
+        List<TransactionHistory> transactionHistories = monthlyInfo.get(0);
+        List dailySummary = monthlyInfo.get(1);
 
-        return new ResponseEntity<>(new ResponseListDto<>(responses), HttpStatus.OK);
+        return new ResponseEntity<>(new MonthlyTransactionHistoriesDto<>(transactionHistories, dailySummary), HttpStatus.OK);
     }
 
     @DeleteMapping("/{transaction_history_id}")
