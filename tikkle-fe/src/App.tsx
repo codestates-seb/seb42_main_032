@@ -1,12 +1,17 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
+
 import Home from './pages/Home';
 import Login from './pages/Login';
-import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
 import { RecoilRoot } from 'recoil';
 import BudgetSetting from './pages/BudgetSetting';
+import SignUp from './pages/SignUp';
+import UserSetting from './pages/UserSetting';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import UserOut from './pages/UserOut';
+import BudgetView from './pages/BudgetView';
 
 function App() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -20,6 +25,10 @@ function App() {
             <Route path="/home" element={<Home selectedDate={selectedDate} />} />
             <Route path="/login" element={<Login />} />
             <Route path='/budget-setting' element={<BudgetSetting />} />
+            <Route path="/budget" element={<BudgetView />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/usersetting" element={<UserSetting />} />
+            <Route path="/userout" element={<UserOut />} />
           </Routes>
         <Footer />
       </div>

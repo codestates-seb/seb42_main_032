@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Service
-public class MemberCategoryServiceStub implements MemberCategoryService {
+public class MemberCategoryServiceStub{
     private MemberCategory stubMemberCategory1;
     private MemberCategory stubMemberCategory2;
     private Member stubMember;
