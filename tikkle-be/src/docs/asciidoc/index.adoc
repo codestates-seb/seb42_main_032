@@ -102,18 +102,12 @@ include::{snippets}/Patch-Category/request-fields.adoc[]
 .http-response
 include::{snippets}/Patch-Category/http-response.adoc[]
 
-.response-header
-include::{snippets}/Patch-Category/response-headers.adoc[]
-
 === 카테고리 상세 조회
 .curl-request
 include::{snippets}/Get-Category/curl-request.adoc[]
 
 .http-request
 include::{snippets}/Get-Category/http-request.adoc[]
-
-.request-fields
-include::{snippets}/Get-Category/request-fields.adoc[]
 
 .http-response
 include::{snippets}/Get-Category/http-response.adoc[]
