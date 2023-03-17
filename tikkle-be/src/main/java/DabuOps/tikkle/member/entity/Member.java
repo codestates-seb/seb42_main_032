@@ -30,7 +30,7 @@ public class Member extends Auditable {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String name;
 
     @Column(length = 210)
@@ -50,7 +50,7 @@ public class Member extends Auditable {
     @Column
     private Integer initDate;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String picture = "이미지";
 
     @Builder
