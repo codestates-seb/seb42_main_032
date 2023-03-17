@@ -1,8 +1,6 @@
 package DabuOps.tikkle.oauth.config;
 
-import java.net.URI;
 import java.util.Arrays;
-import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
