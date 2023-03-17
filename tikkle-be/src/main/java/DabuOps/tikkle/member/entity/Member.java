@@ -1,6 +1,8 @@
 package DabuOps.tikkle.member.entity;
 
 import DabuOps.tikkle.global.audit.Auditable;
+import DabuOps.tikkle.member_category.entity.MemberCategory;
+import java.lang.annotation.Retention;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
@@ -10,6 +12,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,9 +57,18 @@ public class Member extends Auditable {
     @Column(nullable = false)
     private String picture = "이미지";
 
+    @OneToMany
+    @JoinColumn(name = "MEMBER_CATEGORY_ID")
+    private MemberCategory memberCategory;
+
+    public void setMemberCategory(MemberCategory memberCategory) {
+        this.memberCategory = memberCategory;
+    }
+
     @Builder
-    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay,
-        Integer initDate, String picture) {
+    public Member(Long id, String email, String name, String location, MemberState state,
+        Gender gender,
+        Integer payDay, Integer initDate, String picture, MemberCategory memberCategory) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -65,6 +78,7 @@ public class Member extends Auditable {
         this.payDay = payDay;
         this.initDate = initDate;
         this.picture = picture;
+        this.memberCategory = memberCategory;
     }
 
     public Member(String email, String name, String picture) {
