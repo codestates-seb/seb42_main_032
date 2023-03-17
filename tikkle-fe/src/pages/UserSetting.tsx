@@ -25,6 +25,10 @@ const Container = styled.div`
   font-family: 'GmarketSansMedium';
   font-size: 20px;
   font-weight: bold;
+  
+  h1 {
+    margin-top: 100px;
+    margin-bottom: 8em;
 
   .title-container {
     text-align: left;
