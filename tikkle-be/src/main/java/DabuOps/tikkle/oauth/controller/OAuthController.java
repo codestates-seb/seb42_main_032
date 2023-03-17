@@ -1,7 +1,9 @@
 package DabuOps.tikkle.oauth.controller;
 
+import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.oauth.service.OAuthService;
 import java.io.IOException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,12 +20,9 @@ public class OAuthController {
     private final OAuthService oAuthService;
 
     @GetMapping("/login")
-    public String login(@RequestParam("accessToken") String accessToken) throws IOException {
+    public Optional<Member> login(@RequestParam("accessToken") String accessToken) throws IOException {
         HttpStatus status = oAuthService.validate(accessToken);
-        if (status == HttpStatus.OK) {
-            oAuthService.login(accessToken);
-          //  return "Login successful";
-        }
-            return "Login failed";
+        if (status == HttpStatus.OK) return oAuthService.login(accessToken);
+        return null;
     }
 }
