@@ -18,13 +18,17 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     public Account createAccount(Account account, Long memberId) {
-        return null;
+        //계좌번호가 존재하는지 확인
+        verifyExistAccountNumber(account.getNumber());
+
+        return  accountRepository.save(account);
     }
 
     @Override
     public Account updateAccount(Account account, Long id, Long memberId) {
-
+        //계좌가 존재하는지 검색
         Account obtainAccount = findExistAccountById(id);
+        //이름 변경
         Optional.ofNullable(account.getName())
             .ifPresent(content -> obtainAccount.setName(content));
         return accountRepository.save(obtainAccount);
@@ -56,6 +60,15 @@ public class AccountServiceImpl implements AccountService{
         Account obtainAccount = optionalAccount
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ACCOUNT_NOT_FOUND));
         return obtainAccount;
+    }
+
+    @Override
+    public void verifyExistAccountNumber(String number){
+        //계좌번호로 저장소에서 검색
+        Optional<Account> optionalAccount = accountRepository.findByNumber(number);
+        //있으면 이미 있다고 에러 출력
+        if(optionalAccount.isPresent())
+            throw new BusinessLogicException(ExceptionCode.ACCOUNT_NUMBER_EXIST);
     }
 
 
