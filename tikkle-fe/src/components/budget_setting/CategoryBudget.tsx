@@ -4,32 +4,18 @@ import {
   Input,
   InputGroup,
   InputRightAddon,
-  InputRightElement,
   Text,
-  Button,
 } from '@chakra-ui/react';
-import { MdShoppingCart, MdEdit } from 'react-icons/md';
+import { MdShoppingCart } from 'react-icons/md';
 import { useState } from 'react';
 
-// ToDo 추후 post, patch 요청 시 ID 값 활용
-interface categoryBudget {
-  categoryId?: number;
-  handleDelete: () => void;
-}
-const CategoryBudget = (props: categoryBudget) => {
+const CategoryBudget = () => {
   // ToDo 네트워크에 연결된 데이터를 수정하도록 변경
   const [budget, setBudget] = useState(0);
-  const [isEditable, setIsEditable] = useState(false);
-  const [label, setLabel] = useState('카테고리명');
+  const [label] = useState('카테고리명');
 
   const handleBudget = (e: any) => {
     setBudget(e.target.value);
-  };
-  const handleLabel = (e: any) => {
-    setLabel(e.target.value);
-  };
-  const handleEditable = (e: any) => {
-    setIsEditable(!isEditable);
   };
 
   return (
@@ -56,26 +42,7 @@ const CategoryBudget = (props: categoryBudget) => {
         <Box display="flex" justifyContent="space-between" w="85%">
           {/* Category Label Container */}
           <Box display="flex" flexDir="column" alignItems="flex-start" w="40%">
-            {isEditable ? (
-              <InputGroup>
-                <Input type="text" value={label} onChange={handleLabel}></Input>
-                <InputRightElement>
-                  <Button onClick={handleEditable}>저장</Button>
-                </InputRightElement>
-              </InputGroup>
-            ) : (
-              <Box display="flex">
-                <Text>{label}</Text>
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  ml={1}
-                  onClick={handleEditable}
-                >
-                  <MdEdit color="grey" width={2} />
-                </Box>
-              </Box>
-            )}
+            <Text>{label}</Text>
             <Text fontSize="0.8rem" color="grey">
               지난달 0원
             </Text>
@@ -87,7 +54,6 @@ const CategoryBudget = (props: categoryBudget) => {
           </InputGroup>
         </Box>
       </Box>
-      <Button onClick={props.handleDelete}>삭제</Button>
     </Box>
   );
 };

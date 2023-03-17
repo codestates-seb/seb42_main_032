@@ -1,19 +1,14 @@
-import { Box, Button, Text, useMediaQuery } from '@chakra-ui/react';
+import { Box, Text, useMediaQuery } from '@chakra-ui/react';
 import { useState } from 'react';
+import BudgetDropdown from '../components/budget_setting/BudgetDropdown';
 import CategoryBudget from '../components/budget_setting/CategoryBudget';
 import MonthlyBudget from '../components/budget_setting/MonthlyBudget';
 
 const BudgetSetting = () => {
   const [isLagerThan900px] = useMediaQuery('(min-width: 900px)');
 
-  const [categoryList, setCategoryList] = useState([{}]);
-
-  const addCategory = () => {
-    setCategoryList([...categoryList, {}]);
-  };
-  const deleteCategory = () => {
-    setCategoryList(categoryList.slice(0, categoryList.length - 1));
-  };
+  // ToDo 카테고리 페이지에서 추가된 카테고리를 기준으로 List 생성
+  const [categoryList] = useState([{}]);
 
   return (
     <Box
@@ -53,11 +48,13 @@ const BudgetSetting = () => {
             <Text align="right" fontSize="0.8rem" color="grey">
               전체 예산 500,000원
             </Text>
-            <Button onClick={addCategory}>+</Button>
+            <Box display="flex" justifyContent="flex-start" my="20px">
+              <BudgetDropdown />
+            </Box>
           </Box>
-          <Box display="flex" flexDir="column" w="100%" gap="40px">
+          <Box display="flex" flexDir="column" w="100%" gap="40px" mb="40px">
             {categoryList.map(() => (
-              <CategoryBudget handleDelete={deleteCategory} />
+              <CategoryBudget />
             ))}
           </Box>
         </Box>
