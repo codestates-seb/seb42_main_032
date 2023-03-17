@@ -11,7 +11,7 @@ import UserSetting from './pages/UserSetting';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import BudgetView from './pages/BudgetView';
-
+import CategoryEdit from './pages/CategoryEdit';
 
 // Transaction 컴포넌트용 거래내역 dummydata
 const transactions: Transaction[] = [
@@ -41,7 +41,6 @@ function App() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   return (
     <div className="App">
-      
       <Header selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <Routes>
         <Route path="/home" element={<Home selectedDate={selectedDate} />} />
@@ -49,6 +48,7 @@ function App() {
         <Route path="/budget" element={<BudgetView />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/usersetting" element={<UserSetting />} />
+        <Route path="categoryedit" element={<CategoryEdit />} />
       </Routes>
       <Footer />
       {/* <Calendar date={new Date()} /> */}
