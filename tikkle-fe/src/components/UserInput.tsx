@@ -74,7 +74,6 @@ function UserInput({ label, setState, state, setDate, date }) {
               type="number"
               focusBorderColor="purple.400"
               onKeyUp={(e) => handleState(e)}
-              value={state}
             ></Input>
             <InputRightAddon children="원" />
           </InputGroup>
