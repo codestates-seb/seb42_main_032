@@ -9,7 +9,8 @@ public enum ExceptionCode {
     MEMBER_NOT_FOUND(404, "Member Not Found"),
     MEMBER_UNAUTHORIZED(401, "Member Unauthorized"),
     MEMBER_NOT_MATCH(403, "Member Not Match"),
-    MEMBER_EMAIL_EXISTS(409, "Email Already Exist.");
+    MEMBER_EMAIL_EXISTS(409, "Email Already Exist."),
+    TRANSACTION_HISTORY_NOT_FOUND(404, "Transaction History Not Found : 존재하지 않는 거래내역입니다.");
 
     @Getter
     private int status;

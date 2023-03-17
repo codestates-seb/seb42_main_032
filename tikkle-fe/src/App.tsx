@@ -10,6 +10,7 @@ import SignUp from './pages/SignUp';
 import UserSetting from './pages/UserSetting';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
+import BudgetView from './pages/BudgetView';
 
 
 // Transaction 컴포넌트용 거래내역 dummydata
@@ -45,12 +46,13 @@ function App() {
       <Routes>
         <Route path="/home" element={<Home selectedDate={selectedDate} />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/budget" element={<BudgetView />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/usersetting" element={<UserSetting />} />
       </Routes>
       <Footer />
-      {/* <Calendar date={new Date()} />
-      <Transaction transactions={transactions} /> */}
+      {/* <Calendar date={new Date()} /> */}
+      {/* <Transaction transactions={transactions} /> */}
     </div>
   );
 }

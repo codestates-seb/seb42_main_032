@@ -1,8 +1,11 @@
 //TODO SIGNUP_002 유저 정보 입력 페이지 구현 (사용자 이름, 예산 시작일, 급여일, 고정 지출 등)
 import { useState } from 'react';
 
+import UserInput from '../components/UserInput';
+
 import styled from 'styled-components';
 import {
+  Box,
   Input,
   InputGroup,
   InputLeftElement,
@@ -12,16 +15,25 @@ import {
 import { Button } from '@chakra-ui/react';
 import { Icon, AddIcon } from '@chakra-ui/icons';
 import { BsFillPersonFill } from 'react-icons/bs';
-import { TbPigMoney } from 'react-icons/tb';
-import { GiReceiveMoney, GiExpense } from 'react-icons/gi';
 
 const Container = styled.div`
+  background-color: #eaeaea;
   display: flex;
   flex-direction: column;
+  font-family: 'GmarketSansMedium';
+  font-size: 20px;
 
-  h1 {
-    margin-bottom: 8em;
+  .title-container {
     text-align: left;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+    background-color: #faf5ff;
+  }
+  .usersetting-title {
+    margin-left: 5vh;
+    text-align: left;
+    font-weight: bold;
+    font-size: 2rem;
   }
 
   input {
@@ -32,6 +44,12 @@ const Container = styled.div`
 
 const SetContainer = styled.div`
   display: flex;
+  button {
+    width: 200px;
+    margin-bottom: 60px;
+    position: relative;
+    top: -80px;
+  }
 `;
 // TODO 체크 아이콘 조건부 색상 변경 (green)
 // TODO 금액 입력 시 콤마 찍혀서 input에 출력
@@ -52,114 +70,64 @@ function UserSetting() {
     setUsername(e.target.value);
   };
 
-  const handleIbAmount = (e: any) => {
-    setIbAmount(e.target.value);
-  };
-
-  const handleSalaryAmount = (e: any) => {
-    setSalaryAmount(e.target.value);
-  };
-
-  const handleFeAmount = (e: any) => {
-    setFeAmount(e.target.value);
-  };
   return (
     <Container>
-      <h1>회원 정보 설정</h1>
+      <div className="title-container">
+        <span className="usersetting-title">회원 정보 설정</span>
+      </div>
       <SetContainer>
-        <InputGroup className="input-username">
-          <InputLeftElement
-            pointerEvents="none"
-            children={<Icon as={BsFillPersonFill} color="gray.400" />}
-          />
-          <Input
-            type="text"
-            size="sm"
-            focusBorderColor="purple.400"
-            onKeyUp={(e) => {
-              handleUserInput(e);
-            }}
-          ></Input>
-          {/* <InputRightElement children={<CheckIcon color="gray.300" />} /> */}
-        </InputGroup>
-        <Button
-          colorScheme="purple"
-          size="md"
-          variant="outline"
-          leftIcon={<AddIcon />}
-          loadingText="연결 중"
-        >
-          계좌 연결하기
-        </Button>
-      </SetContainer>
-      <SetContainer>
-        <InputGroup className="input-initialbudget">
-          <InputLeftElement
-            pointerEvents="none"
-            children={<Icon as={TbPigMoney} color="gray.400" />}
-          />
-          <Input type="date" size="sm" focusBorderColor="purple.400"></Input>
-        </InputGroup>
-        <InputGroup className="input-initialbudget" size="sm">
-          <InputLeftElement
-            pointerEvents="none"
-            children={<Icon as={TbPigMoney} color="gray.400" />}
-          />
-          <Input
-            type="number"
-            focusBorderColor="purple.400"
-            onKeyUp={(e) => handleIbAmount(e)}
-            value={ibAmount}
-          ></Input>
-          <InputRightAddon children="원" />
-        </InputGroup>
-      </SetContainer>
+        <Box display="flex" flexDir="column" ml="10vw">
+          <Box display="flex" mb="1vh">
+            <p>사용자 이름</p>
+          </Box>
+          <InputGroup className="input-username">
+            <InputLeftElement
+              pointerEvents="none"
+              children={<Icon as={BsFillPersonFill} color="gray.700" />}
+            />
+            <Input
+              type="text"
+              size="md"
+              focusBorderColor="purple.400"
+              onKeyUp={(e) => {
+                handleUserInput(e);
+              }}
+            ></Input>
+            {/* <InputRightElement children={<CheckIcon color="gray.700" />} /> */}
+          </InputGroup>
 
-      <SetContainer>
-        <InputGroup className="input-salary">
-          <InputLeftElement
-            pointerEvents="none"
-            children={<Icon as={GiReceiveMoney} color="gray.400" />}
-          />
-          <Input type="date" size="sm" focusBorderColor="purple.400"></Input>
-        </InputGroup>
-        <InputGroup className="input-salary" size="sm">
-          <InputLeftElement
-            pointerEvents="none"
-            children={<Icon as={GiReceiveMoney} color="gray.400" />}
-          />
-          <Input
-            type="number"
-            focusBorderColor="purple.400"
-            onKeyUp={(e) => handleSalaryAmount(e)}
-          ></Input>
-          <InputRightAddon children="원" />
-        </InputGroup>
+          <Button
+            colorScheme="purple"
+            size="md"
+            variant="outline"
+            leftIcon={<AddIcon />}
+            loadingText="연결 중"
+          >
+            계좌 연결하기
+          </Button>
+        </Box>
       </SetContainer>
-      <SetContainer>
-        <InputGroup className="input-fixedexpenses">
-          <InputLeftElement
-            pointerEvents="none"
-            children={<Icon as={GiExpense} color="gray.400" />}
-          />
-          <Input type="date" size="sm" focusBorderColor="purple.400"></Input>
-        </InputGroup>
-        <InputGroup className="input-fixedexpenses" size="sm">
-          <InputLeftElement
-            pointerEvents="none"
-            children={<Icon as={GiExpense} color="gray.400" />}
-          />
-          <Input
-            type="number"
-            focusBorderColor="purple.400"
-            onKeyUp={(e) => handleFeAmount(e)}
-          ></Input>
-          <InputRightAddon children="원" />
-        </InputGroup>
-      </SetContainer>
-      <Button colorScheme="purple" size="md" variant="outline">
-        저장하기
-      </Button>
+      <UserInput
+        label={'예산 시작일'}
+        setState={setIbAmount}
+        state={ibAmount}
+        setDate={setIbDate}
+        date={ibDate}
+      />
+      <UserInput
+        label={'급여일'}
+        setState={setSalaryAmount}
+        state={salaryAmount}
+        setDate={setSalaryDate}
+        date={salaryDate}
+      />
+      <UserInput
+        label={'고정 지출'}
+        setState={setFeAmount}
+        state={feAmount}
+        setDate={setFeDate}
+        date={feDate}
+      />
     </Container>
   );
 }

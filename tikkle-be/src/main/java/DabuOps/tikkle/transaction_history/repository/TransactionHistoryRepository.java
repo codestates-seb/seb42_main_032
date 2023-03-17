@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface TransactionHistoryRepository extends JpaRepository<TransactionHistory, Long> {
-    List<TransactionHistory> findByMemberCategory_Member_IdAndDateBetween(Long memberId, LocalDate startDate, LocalDate endDate);
+    List<TransactionHistory> findByMemberCategory_Member_IdAndDateBetweenAndStatusNot(Long memberId, LocalDate startDate, LocalDate endDate, TransactionHistory.Status status);
 }

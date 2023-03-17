@@ -14,9 +14,9 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-
-@Service
-public class TransactionHistoryServiceStub implements TransactionHistoryService{
+@AllArgsConstructor
+//@Service
+public class TransactionHistoryServiceStub{
     private TransactionHistory stubTransactionHistory1;
     private TransactionHistory stubTransactionHistory2;
 
@@ -55,7 +55,7 @@ public class TransactionHistoryServiceStub implements TransactionHistoryService{
                 .inoutType(InoutType.SPEND)
                 .memo("메모1")
                 .amount(10000)
-                .branch_name("GS25")
+                .branchName("GS25")
                 .build();
 
         stubTransactionHistory2 = TransactionHistory.builder()
@@ -66,7 +66,7 @@ public class TransactionHistoryServiceStub implements TransactionHistoryService{
                 .inoutType(InoutType.SPEND)
                 .memo("메모2")
                 .amount(20000)
-                .branch_name("CU")
+                .branchName("CU")
                 .build();
     }
 
