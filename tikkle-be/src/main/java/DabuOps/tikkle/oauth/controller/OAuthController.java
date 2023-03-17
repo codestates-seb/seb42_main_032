@@ -22,7 +22,7 @@ public class OAuthController {
         HttpStatus status = oAuthService.validate(accessToken);
         if (status == HttpStatus.OK) {
             oAuthService.login(accessToken);
-            return "Login successful";
+          //  return "Login successful";
         }
             return "Login failed";
     }
