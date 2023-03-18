@@ -1,0 +1,4 @@
+#!/bin/sh
+cd ./tikkle-be
+chmod +x ./gradlew
+./gradlew build && java -jar ./build/libs/tikkle-0.0.1-SNAPSHOT.jar
