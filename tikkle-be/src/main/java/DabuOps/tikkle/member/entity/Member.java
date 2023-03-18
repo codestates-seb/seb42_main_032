@@ -53,13 +53,9 @@ public class Member extends Auditable {
     @Column(nullable = true)
     private String picture = "이미지";
 
-    @Column
-    private String access_token;
-
-
     @Builder
     public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay,
-        Integer initDate, String picture, String access_token) {
+        Integer initDate, String picture) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -69,7 +65,6 @@ public class Member extends Auditable {
         this.payDay = payDay;
         this.initDate = initDate;
         this.picture = picture;
-        this.access_token = access_token;
     }
 
     public Member(String email, String name, String picture) {

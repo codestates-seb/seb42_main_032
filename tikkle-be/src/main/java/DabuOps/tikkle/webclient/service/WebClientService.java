@@ -53,8 +53,7 @@ public class WebClientService {
             .retrieve()
             .bodyToMono(TokenResponseDto.class);
     }
-
-
-
-
+    //거래내역 일별로 조회해서 레포에 저장.1
+    //액세스토큰을 멤버 레포지토리에 집어넣는것 2
+    //사용자 정보조회 후 핀테크넘 받아서 계좌별로 집어넣는것(계좌생성) 3
 }
