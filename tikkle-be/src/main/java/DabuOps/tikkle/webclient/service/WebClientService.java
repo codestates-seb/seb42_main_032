@@ -1,7 +1,7 @@
 package DabuOps.tikkle.webclient.service;
 
+import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.webclient.dto.TokenResponseDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
  */
 @Service
 public class WebClientService {
+    private final MemberRepository memberRepository;
     WebClient webClient = WebClient.create("{openbanking.api.url}");
     @Value("{K_CLIENT_ID}")
     private String clientId;
@@ -30,7 +31,11 @@ public class WebClientService {
     @Value("{K_REDIRECT_URI}")
     private String redirectUri;
 
-    public Mono<TokenResponseDto> requestToken(String authorizationCode) {
+    public WebClientService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
+    public Mono<TokenResponseDto> requestToken(String authorizationCode, Long memberId) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("code", authorizationCode);
         formData.add("client_id", clientId);
@@ -48,4 +53,8 @@ public class WebClientService {
             .retrieve()
             .bodyToMono(TokenResponseDto.class);
     }
+
+
+
+
 }

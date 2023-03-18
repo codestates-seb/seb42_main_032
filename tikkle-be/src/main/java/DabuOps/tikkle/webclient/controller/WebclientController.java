@@ -1,5 +1,7 @@
 package DabuOps.tikkle.webclient.controller;
 
+import DabuOps.tikkle.oauth.dto.LogInMemberDto;
+import DabuOps.tikkle.oauth.resolver.LoginMember;
 import DabuOps.tikkle.webclient.dto.TokenResponseDto;
 import DabuOps.tikkle.webclient.service.WebClientService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +19,9 @@ import reactor.core.publisher.Mono;
 public class WebclientController {
     private final WebClientService webClientService;
 
-    @GetMapping("/account/auth")
-    public Mono<TokenResponseDto> accountAuth(@RequestParam("authorization_code") String authorizationCode) {
-        return webClientService.requestToken(authorizationCode);
+    @GetMapping("/members/auth")
+    public Mono<TokenResponseDto> accountAuth(@RequestParam("code") String authorizationCode,
+        @LoginMember LogInMemberDto logInMemberDto) {
+        return webClientService.requestToken(authorizationCode, logInMemberDto.getMemberId());
     }
 }

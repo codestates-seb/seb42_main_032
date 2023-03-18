@@ -3,7 +3,7 @@ package DabuOps.tikkle.oauth.service;
 import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.entity.Member.MemberState;
 import DabuOps.tikkle.member.repository.MemberRepository;
-import DabuOps.tikkle.oauth.UserInfo;
+import DabuOps.tikkle.oauth.dto.UserInfo;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
