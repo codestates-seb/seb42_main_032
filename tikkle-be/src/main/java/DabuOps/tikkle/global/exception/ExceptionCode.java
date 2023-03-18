@@ -11,12 +11,10 @@ public enum ExceptionCode {
     MEMBER_NOT_MATCH(403, "Member Not Match"),
     MEMBER_EMAIL_EXISTS(409, "Email Already Exist."),
     TRANSACTION_HISTORY_NOT_FOUND(404, "Transaction History Not Found : 존재하지 않는 거래내역입니다."),
-
-    BUDGET_NOT_FOUND(404, "Budget Not Found : 존재하지 않는 예산입니다."),
-
-    CANNOT_CHANGE_BUDGET(400, "Cannot Change Budget : 예산 설정을 변경할 수 없습니다."),
-
-    BUDGET_IS_INACTIVE(400, "Budget is Inactive : 비활성화 된 예산입니다.");
+    ACCOUNT_NOT_FOUND(404, "Account Not Found"),
+    ACCOUNT_NUMBER_EXIST(409, "Account Not Found"),
+    BUDGET_NOT_FOUND(404, "Budget Not Found"),
+    BUDGET_IS_INACTIVE(403, "Budget is Inactive");
 
     @Getter
     private int status;

@@ -44,9 +44,6 @@ public class BudgetService {
 
     public Budget updateBudget(Budget budget, Long budgetId) {
         Budget updatedBudget = findBudget(budgetId);
-        if(!LocalDate.now().equals(LocalDate.now().withDayOfMonth(updatedBudget.getStartDate().getDayOfMonth()))) {
-            throw new BusinessLogicException(ExceptionCode.CANNOT_CHANGE_BUDGET);
-        }
 
         Optional.ofNullable(budget.getAmount())
                 .ifPresent(amount -> updatedBudget.setAmount(amount));
