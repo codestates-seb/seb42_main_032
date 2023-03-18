@@ -1,7 +1,9 @@
 package DabuOps.tikkle.webclient.service;
 
+import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.webclient.dto.TokenResponseDto;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -51,9 +53,20 @@ public class WebClientService {
             .headers(h -> h.addAll(headers))
             .body(BodyInserters.fromFormData(formData))
             .retrieve()
-            .bodyToMono(TokenResponseDto.class);
+            .bodyToMono(TokenResponseDto.class)
+            .doOnSuccess(tokenResponse -> {
+                Optional<Member> optionalMember = memberRepository.findById(memberId);
+                if (optionalMember.isPresent()) {
+                    Member member = optionalMember.get();
+                    member.setAccessToken(tokenResponse.getAccessToken());
+                    memberRepository.save(member);
+                }
+            });
     }
     //거래내역 일별로 조회해서 레포에 저장.1
     //액세스토큰을 멤버 레포지토리에 집어넣는것 2
     //사용자 정보조회 후 핀테크넘 받아서 계좌별로 집어넣는것(계좌생성) 3
 }
+//거래내역 리스트 조회해서 일일?
+//엑세스 토큰 맴버 repo에 집어넣기
+//사용자 정보조회 하고 fin_tec_no 받아서 계좌별로(계좌 생성시 넣어줘야함)

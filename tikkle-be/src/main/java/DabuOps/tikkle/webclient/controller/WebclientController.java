@@ -22,6 +22,7 @@ public class WebclientController {
     @GetMapping("/members/auth")
     public Mono<TokenResponseDto> accountAuth(@RequestParam("code") String authorizationCode,
         @LoginMember LogInMemberDto logInMemberDto) {
+
         return webClientService.requestToken(authorizationCode, logInMemberDto.getMemberId());
     }
 }
