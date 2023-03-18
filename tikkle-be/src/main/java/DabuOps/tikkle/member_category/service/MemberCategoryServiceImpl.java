@@ -9,6 +9,7 @@ import DabuOps.tikkle.member.service.MemberService;
 import DabuOps.tikkle.member_category.entity.MemberCategory;
 import DabuOps.tikkle.member_category.repository.MemberCategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +18,9 @@ import java.util.Optional;
 //@Service
 @RequiredArgsConstructor
 @Service
+
 public class MemberCategoryServiceImpl implements MemberCategoryService{
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final MemberCategoryRepository memberCategoryRepository;
 
     private final Category category = Category.builder()
@@ -28,13 +30,23 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
      // 사용자 설정 멤버 카테고리가 갖다 쓸 카테고리 ID
 
 
-    public MemberCategory createMemberCategory(MemberCategory memberCategory, Long memberId) {
-        Member member = memberService.findExistMemberById(memberId);
+    public MemberCategory createOriginalMemberCategory(MemberCategory memberCategory, Long memberId) {
+        Optional<Member> member = memberRepository.findById(memberId);
+        Member findMember = member.get();
         memberCategory.setCategory(category);
-        memberCategory.setMember(member);
+        memberCategory.setMember(findMember);
 
         return memberCategoryRepository.save(memberCategory);
     }
+    public MemberCategory createAutoMemberCategory(Member member, Category category) {
+        MemberCategory memberCategory = new MemberCategory();
+        memberCategory.setMember(member);
+        memberCategory.setCategory(category);
+        memberCategory.setName(category.getName());
+
+        return memberCategoryRepository.save(memberCategory);
+    }
+
 
     public MemberCategory updateMemberCategory(MemberCategory memberCategory, Long memberCategoryId) {
         MemberCategory updatedMemberCategory = findMemberCategory(memberCategoryId);

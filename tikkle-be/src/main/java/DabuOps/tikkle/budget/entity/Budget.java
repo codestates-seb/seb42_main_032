@@ -20,9 +20,7 @@ public class Budget extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "MEMBER_CATEGORY_ID")
-    private MemberCategory memberCategory;
+    private Long memberCategoryId;
 
     @Column(name = "AMOUNT")
     private int amount;
@@ -44,9 +42,6 @@ public class Budget extends Auditable {
     @Builder.Default
     private Budget.Status status = Budget.Status.ACTIVE;
 
-    public void setMemberCategory(MemberCategory memberCategory) {
-        this.memberCategory = memberCategory;
-    }
 
     public enum Status {
         ACTIVE("활성화"),
@@ -57,9 +52,9 @@ public class Budget extends Auditable {
     }
 
     @Builder
-    public Budget(Long id, MemberCategory memberCategory, int amount, LocalDate startDate, LocalDate endDate, int spend, boolean current, Status status) {
+    public Budget(Long id, Long memberCategoryId, int amount, LocalDate startDate, LocalDate endDate, int spend, boolean current, Status status) {
         this.id = id;
-        this.memberCategory = memberCategory;
+        this.memberCategoryId = memberCategoryId;
         this.amount = amount;
         this.startDate = startDate;
         this.endDate = endDate;
