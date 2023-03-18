@@ -20,7 +20,9 @@ public class Budget extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long memberCategoryId;
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_CATEGORY_ID")
+    private MemberCategory memberCategory;
 
     @Column(name = "AMOUNT")
     private int amount;
@@ -52,9 +54,10 @@ public class Budget extends Auditable {
     }
 
     @Builder
-    public Budget(Long id, Long memberCategoryId, int amount, LocalDate startDate, LocalDate endDate, int spend, boolean current, Status status) {
+
+    public Budget(Long id, MemberCategory memberCategory, int amount, LocalDate startDate, LocalDate endDate, int spend, boolean current, Status status) {
         this.id = id;
-        this.memberCategoryId = memberCategoryId;
+        this.memberCategory = memberCategory;
         this.amount = amount;
         this.startDate = startDate;
         this.endDate = endDate;

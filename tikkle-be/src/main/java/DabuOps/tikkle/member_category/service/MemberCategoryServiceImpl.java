@@ -1,5 +1,6 @@
 package DabuOps.tikkle.member_category.service;
 
+import DabuOps.tikkle.budget.service.BudgetService;
 import DabuOps.tikkle.category.entity.Category;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
@@ -22,6 +23,7 @@ import java.util.Optional;
 public class MemberCategoryServiceImpl implements MemberCategoryService{
     private final MemberRepository memberRepository;
     private final MemberCategoryRepository memberCategoryRepository;
+    private final BudgetService budgetService;
 
     private final Category category = Category.builder()
         .id(1L)
@@ -31,12 +33,14 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
 
 
     public MemberCategory createOriginalMemberCategory(MemberCategory memberCategory, Long memberId) {
-        Optional<Member> member = memberRepository.findById(memberId);
-        Member findMember = member.get();
+        Member member = memberRepository.findById(memberId).get();
         memberCategory.setCategory(category);
-        memberCategory.setMember(findMember);
+        memberCategory.setMember(member);
+        MemberCategory savedMemberCategory = memberCategoryRepository.save(memberCategory);
 
-        return memberCategoryRepository.save(memberCategory);
+        budgetService.createAutoBudget(savedMemberCategory);
+
+        return savedMemberCategory;
     }
     public MemberCategory createAutoMemberCategory(Member member, Category category) {
         MemberCategory memberCategory = new MemberCategory();
