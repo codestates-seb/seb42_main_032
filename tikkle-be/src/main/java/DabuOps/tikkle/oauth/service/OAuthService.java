@@ -35,7 +35,6 @@ public class OAuthService extends DefaultOAuth2UserService {
     * UserInfo 확인 후 첫 로그인이면 회원가입처리, 아니면 로그인 (getMemberProfile())
     * return으로 UserInfo 반환
      */
-
     public Optional<Member> login(String accessToken) throws IOException {
 
         Optional<Member> member = getMemberProfile(accessToken);
@@ -56,34 +55,19 @@ public class OAuthService extends DefaultOAuth2UserService {
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/json");
 
-        //Http 요청 후 response data 확인
+        //Http 요청 후 response code값 확인
         int responseCode = connection.getResponseCode();
         if (responseCode == 200) {
             try (InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
+                //Google Server에서 validation 완료 후 response data가 넘어오는 부분
                 JsonObject jsonObject = JsonParser.parseReader(inputStreamReader).getAsJsonObject();
-
-                if (jsonObject.has("email") && jsonObject.has("name") && jsonObject.has("picture")) {
+                //response data에서 아래의 내용이 있으면 getMemberProfile에 validation한 access token 보내기
+                if (jsonObject.has("aud") && jsonObject.has("sub") && jsonObject.has("scope")) {
                     getMemberProfile(accessToken);
                     return HttpStatus.OK;
                 }
             }
         }
-        String errorReason = "";
-        if (responseCode == 400) {
-            errorReason = "invalid_request";
-        } else if (responseCode == 401) {
-            errorReason = "invalid_token";
-        } else if (responseCode == 403) {
-            errorReason = "insufficient_scope";
-        } else if (responseCode == 404) {
-            errorReason = "token_not_found";
-        } else if (responseCode == 500) {
-            errorReason = "server_error";
-        } else {
-            errorReason = "unknown_error";
-        }
-        log.error("Access token validation failed. Error reason: {}", errorReason);
-
         return HttpStatus.UNAUTHORIZED;
     }
 
