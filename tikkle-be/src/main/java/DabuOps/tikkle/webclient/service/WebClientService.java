@@ -3,6 +3,7 @@ package DabuOps.tikkle.webclient.service;
 import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.webclient.dto.AccountInfoDto;
+import DabuOps.tikkle.webclient.dto.AccountTransactionListDto;
 import DabuOps.tikkle.webclient.dto.TokenResponseDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -79,5 +80,9 @@ public class WebClientService {
             .retrieve()
             .bodyToMono(AccountInfoDto.class);
     }
+
+//    public Mono<AccountTransactionListDto> requestTransactionHistory(String fromDate, String toDate){
+//
+//    }
 
 }

@@ -2,6 +2,7 @@ package DabuOps.tikkle.webclient.controller;
 
 import DabuOps.tikkle.oauth.dto.LogInMemberDto;
 import DabuOps.tikkle.oauth.resolver.LoginMember;
+import DabuOps.tikkle.webclient.dto.AccountTransactionListDto;
 import DabuOps.tikkle.webclient.dto.TokenResponseDto;
 import DabuOps.tikkle.webclient.service.WebClientService;
 import lombok.RequiredArgsConstructor;
@@ -25,4 +26,11 @@ public class WebclientController {
 
         return webClientService.requestToken(authorizationCode, logInMemberDto.getMemberId());
     }
+
+//    @GetMapping("/transaction_histories/auth")
+//    public Mono<AccountTransactionListDto> transactionList(@RequestParam("from_date") String fromDate,
+//        @RequestParam("to_date") String toDate,
+//        @LoginMember LogInMemberDto logInMemberDto){}
+
+
 }
