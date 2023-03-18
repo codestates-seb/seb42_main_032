@@ -21,15 +21,16 @@ function App() {
       <div className="App">
         <Header selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
         <Routes>
-            <Route path="/" element={<Home selectedDate={selectedDate} />} />
-            <Route path="/home" element={<Home selectedDate={selectedDate} />} />
-            <Route path="/login" element={<Login />} />
-            <Route path='/budget-setting' element={<BudgetSetting />} />
-            <Route path="/budget" element={<BudgetView />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/usersetting" element={<UserSetting />} />
-            <Route path="/userout" element={<UserOut />} />
-          </Routes>
+          <Route path="/" element={<Home selectedDate={selectedDate} />} />
+          <Route path="/home" element={<Home selectedDate={selectedDate} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/budgetsetting" element={<BudgetSetting />} />
+          <Route path="/budgetview" element={<BudgetView />} />
+          <Route path="/budget" element={<BudgetView />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/usersetting" element={<UserSetting />} />
+          <Route path="/userout" element={<UserOut />} />
+        </Routes>
         <Footer />
       </div>
     </RecoilRoot>

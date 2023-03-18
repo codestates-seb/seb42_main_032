@@ -212,10 +212,10 @@ const Header: React.FunctionComponent<HeaderProps> = ({
               <MenuItem as={Link} to="/usersetting">
                 <div className="header-menulistbutton">회원정보</div>
               </MenuItem>
-              <MenuItem as={Link} to={'/budget-setting'}>
+              <MenuItem as={Link} to={'/budgetsetting'}>
                 <div className="header-menulistbutton">예산 설정</div>
               </MenuItem>
-              <MenuItem as={Button}>
+              <MenuItem as={Link} to={'/budgetview'}>
                 <Link to="budget">
                   <div className="header-menulistbutton">예산 조회</div>
                 </Link>
