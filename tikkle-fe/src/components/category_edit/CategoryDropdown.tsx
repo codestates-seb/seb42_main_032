@@ -9,7 +9,7 @@
 //   IoLogoGameControllerA,
 //   IoBeer,
 //   MdOutlineLocalHospital,
-//   ImAirplane,
+//   BsFillAirplaneFill,
 //   BiWon,
 //   BsFillCarFrontFill,
 //   IoIosSubway,
@@ -84,8 +84,8 @@
 //       case 'MdOutlineLocalHospital':
 //         setSelectedIcon(<MdOutlineLocalHospital />);
 //         break;
-//       case 'ImAirplane':
-//         setSelectedIcon(<ImAirplane />);
+//       case 'BsFillAirplaneFill':
+//         setSelectedIcon(<BsFillAirplaneFill />);
 //         break;
 //       case 'BiWon':
 //         setSelectedIcon(<BiWon />);
@@ -157,7 +157,7 @@
 //                 <MdOutlineLocalHospital />
 //               </li>
 //               <li>
-//                 <ImAirplane />
+//                 <BsFillAirplaneFill />
 //               </li>
 //               <li>
 //                 <BiWon />
@@ -210,7 +210,7 @@
 //         <MdOutlineLocalHospital />
 //         </li>
 //         <li>
-//         <ImAirplane />
+//         <BsFillAirplaneFill />
 //         </li>
 //         <li>
 //         <BiWon />
@@ -248,7 +248,7 @@
 
 // export default CategoryDropdown;
 
-import React, { useState } from 'react';
+import React, { useState, Dispatch, SetStateAction, useEffect } from 'react';
 import {
   FiShoppingBag,
   MdFastfood,
@@ -256,7 +256,7 @@ import {
   IoLogoGameControllerA,
   IoBeer,
   MdOutlineLocalHospital,
-  ImAirplane,
+  BsFillAirplaneFill,
   BiWon,
   BsFillCarFrontFill,
   IoIosSubway,
@@ -265,23 +265,10 @@ import {
   BiPhoneCall,
   BsCart4,
   BsPeopleFill,
+  AiOutlineQuestion,
 } from 'react-icons/all';
 import { IconContext } from 'react-icons/lib';
 import styled from 'styled-components';
-
-const Container = styled.div`
-  .react-icons {
-    color: white;
-    font-size: 20px o !important;
-    vertical-align: middle;
-    padding: 15px;
-    height: 60px;
-    width: 60px;
-    border: none;
-    border-radius: 100%;
-    background-color: lightblue;
-  }
-`;
 
 interface IconListProps {
   icons: string[];
@@ -289,57 +276,80 @@ interface IconListProps {
   selectedIcon: string;
 }
 
+const IconListsContainer = styled.div`
+  border: 1px solid black;
+  width: 240px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  position: absolute;
+  border-radius: 10px;
+  background-color: white;
+  padding: 20px 10px;
+`;
+
 const IconList: React.FC<IconListProps> = ({
   icons,
   onChange,
   selectedIcon,
 }) => {
   const iconMap: any = {
-    FiShoppingBag: <FiShoppingBag />,
-    MdFastfood: <MdFastfood />,
-    BiCoffeeTogo: <BiCoffeeTogo />,
-    IoLogoGameControllerA: <IoLogoGameControllerA />,
-    IoBeer: <IoBeer />,
-    MdOutlineLocalHospital: <MdOutlineLocalHospital />,
-    ImAirplane: <ImAirplane />,
-    BiWon: <BiWon />,
-    BsFillCarFrontFill: <BsFillCarFrontFill />,
-    IoIosSubway: <IoIosSubway />,
-    BsFillHouseFill: <BsFillHouseFill />,
-    GiPresent: <GiPresent />,
-    BiPhoneCall: <BiPhoneCall />,
-    BsCart4: <BsCart4 />,
-    BsPeopleFill: <BsPeopleFill />,
+    FiShoppingBag: <FiShoppingBag className="FiShoppingBag" />,
+    MdFastfood: <MdFastfood className="MdFastfood" />,
+    BiCoffeeTogo: <BiCoffeeTogo className="BiCoffeeTogo" />,
+    IoLogoGameControllerA: (
+      <IoLogoGameControllerA className="IoLogoGameControllerA" />
+    ),
+    IoBeer: <IoBeer className="IoBeer" />,
+    MdOutlineLocalHospital: (
+      <MdOutlineLocalHospital className="MdOutlineLocalHospital" />
+    ),
+    BsFillAirplaneFill: <BsFillAirplaneFill className="BsFillAirplaneFill" />,
+    BiWon: <BiWon className="BiWon" />,
+    BsFillCarFrontFill: <BsFillCarFrontFill className="BsFillCarFrontFill" />,
+    IoIosSubway: <IoIosSubway className="IoIosSubway" />,
+    BsFillHouseFill: <BsFillHouseFill className="BsFillHouseFill" />,
+    GiPresent: <GiPresent className="GiPresent" />,
+    BiPhoneCall: <BiPhoneCall className="BiPhoneCall" />,
+    BsCart4: <BsCart4 className="BsCart4" />,
+    BsPeopleFill: <BsPeopleFill className="BsPeopleFill" />,
+    AiOutlineQuestion: <AiOutlineQuestion className="AiOutlineQuestion" />,
   };
-
   return (
-    <div>
+    <IconListsContainer>
       {icons.map((icon) => (
-        <div key={icon} onClick={() => onChange(icon)}>
+        <span key={icon} onClick={() => onChange(icon)}>
           {iconMap[icon]}
-          {icon === selectedIcon}
-        </div>
+          {/* {icon === selectedIcon} */}
+        </span>
       ))}
-    </div>
+    </IconListsContainer>
   );
 };
-
 interface IconSelectorProps {
   initialIcon: string;
   icons: string[];
   onChange: (icon: string) => void;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const IconSelector: React.FC<IconSelectorProps> = ({
   initialIcon,
   icons,
   onChange,
+  isOpen,
+  setIsOpen,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState(initialIcon);
-
-  const toggleList = () => {
+  const [isModal, setIsModal] = useState(false);
+  const toggleList = (e?: React.MouseEvent<Element>) => {
+    e && e.stopPropagation();
     setIsOpen(!isOpen);
+    setIsModal(!isModal);
   };
 
   const handleSelect = (icon: string) => {
@@ -348,34 +358,84 @@ const IconSelector: React.FC<IconSelectorProps> = ({
     toggleList();
   };
 
+  useEffect(() => {
+    if (!isOpen) {
+      setIsModal(false);
+    }
+  }, [isOpen]);
+
   return (
     <div>
       {selectedIcon === 'FiShoppingBag' && (
-        <FiShoppingBag onClick={toggleList} />
+        <FiShoppingBag
+          className="FiShoppingBag"
+          onClick={(e) => toggleList(e)}
+        />
       )}
-      {selectedIcon === 'MdFastfood' && <MdFastfood onClick={toggleList} />}
-      {selectedIcon === 'BiCoffeeTogo' && <BiCoffeeTogo onClick={toggleList} />}
+      {selectedIcon === 'MdFastfood' && (
+        <MdFastfood className="MdFastfood" onClick={(e) => toggleList(e)} />
+      )}
+      {selectedIcon === 'BiCoffeeTogo' && (
+        <BiCoffeeTogo className="BiCoffeeTogo" onClick={(e) => toggleList(e)} />
+      )}
       {selectedIcon === 'IoLogoGameControllerA' && (
-        <IoLogoGameControllerA onClick={toggleList} />
+        <IoLogoGameControllerA
+          className="IoLogoGameControllerA"
+          onClick={(e) => toggleList(e)}
+        />
       )}
-      {selectedIcon === 'IoBeer' && <IoBeer onClick={toggleList} />}
+      {selectedIcon === 'IoBeer' && (
+        <IoBeer className="IoBeer" onClick={(e) => toggleList(e)} />
+      )}
       {selectedIcon === 'MdOutlineLocalHospital' && (
-        <MdOutlineLocalHospital onClick={toggleList} />
+        <MdOutlineLocalHospital
+          className="MdOutlineLocalHospital"
+          onClick={(e) => toggleList(e)}
+        />
       )}
-      {selectedIcon === 'ImAirplane' && <ImAirplane onClick={toggleList} />}
-      {selectedIcon === 'BiWon' && <BiWon onClick={toggleList} />}
+      {selectedIcon === 'BsFillAirplaneFill' && (
+        <BsFillAirplaneFill
+          className="BsFillAirplaneFill"
+          onClick={(e) => toggleList(e)}
+        />
+      )}
+      {selectedIcon === 'BiWon' && (
+        <BiWon className="BiWon" onClick={(e) => toggleList(e)} />
+      )}
       {selectedIcon === 'BsFillCarFrontFill' && (
-        <BsFillCarFrontFill onClick={toggleList} />
+        <BsFillCarFrontFill
+          className="BsFillCarFrontFill"
+          onClick={(e) => toggleList(e)}
+        />
       )}
-      {selectedIcon === 'IoIosSubway' && <IoIosSubway onClick={toggleList} />}
+      {selectedIcon === 'IoIosSubway' && (
+        <IoIosSubway className="IoIosSubway" onClick={(e) => toggleList(e)} />
+      )}
       {selectedIcon === 'BsFillHouseFill' && (
-        <BsFillHouseFill onClick={toggleList} />
+        <BsFillHouseFill
+          className="BsFillHouseFill"
+          onClick={(e) => toggleList(e)}
+        />
       )}
-      {selectedIcon === 'GiPresent' && <GiPresent onClick={toggleList} />}
-      {selectedIcon === 'BiPhoneCall' && <BiPhoneCall onClick={toggleList} />}
-      {selectedIcon === 'BsCart4' && <BsCart4 onClick={toggleList} />}
-      {selectedIcon === 'BsPeopleFill' && <BsPeopleFill onClick={toggleList} />}
-      {isOpen && (
+      {selectedIcon === 'GiPresent' && (
+        <GiPresent className="GiPresent" onClick={(e) => toggleList(e)} />
+      )}
+      {selectedIcon === 'BiPhoneCall' && (
+        <BiPhoneCall className="BiPhoneCall" onClick={(e) => toggleList(e)} />
+      )}
+      {selectedIcon === 'BsCart4' && (
+        <BsCart4 className="BsCart4" onClick={(e) => toggleList(e)} />
+      )}
+      {selectedIcon === 'BsPeopleFill' && (
+        <BsPeopleFill className="BsPeopleFill" onClick={(e) => toggleList(e)} />
+      )}
+      {selectedIcon === 'AiOutlineQuestion' && (
+        <AiOutlineQuestion
+          className="AiOutlineQuestion"
+          onClick={(e) => toggleList(e)}
+        />
+      )}
+      {isModal && isOpen && (
         <IconList
           icons={icons}
           onChange={handleSelect}
@@ -385,9 +445,31 @@ const IconSelector: React.FC<IconSelectorProps> = ({
     </div>
   );
 };
+const Container = styled.div`
+  .react-icons {
+    color: white;
+    font-size: 20px o !important;
+    vertical-align: middle;
+    padding: 10px;
+    height: 50px;
+    width: 50px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+`;
+interface CategoryDropdownProps {
+  categoryIcon: string;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}
 
-const CategoryDropdown: React.FC = () => {
-  const [selectedIcon, setSelectedIcon] = useState('FiShoppingBag');
+const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
+  categoryIcon,
+  isOpen,
+  setIsOpen,
+}) => {
+  const [selectedIcon, setSelectedIcon] = useState(categoryIcon);
   const icons = [
     'FiShoppingBag',
     'MdFastfood',
@@ -395,7 +477,7 @@ const CategoryDropdown: React.FC = () => {
     'IoLogoGameControllerA',
     'IoBeer',
     'MdOutlineLocalHospital',
-    'ImAirplane',
+    'BsFillAirplaneFill',
     'BiWon',
     'BsFillCarFrontFill',
     'IoIosSubway',
@@ -404,6 +486,7 @@ const CategoryDropdown: React.FC = () => {
     'BiPhoneCall',
     'BsCart4',
     'BsPeopleFill',
+    'AiOutlineQuestion',
   ];
 
   const handleIconChange = (icon: string) => {
@@ -417,6 +500,8 @@ const CategoryDropdown: React.FC = () => {
           initialIcon={selectedIcon}
           icons={icons}
           onChange={handleIconChange}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
         />
       </IconContext.Provider>
     </Container>

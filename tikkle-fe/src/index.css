@@ -48,3 +48,53 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+
+.FiShoppingBag {
+    background-color: lightblue;
+  }
+
+  .MdFastfood{
+    background-color: #FFC107;
+  }
+  .BiCoffeeTogo{
+    background-color: #4CAF50;
+  }
+  .IoLogoGameControllerA{
+    background-color: #9C27B0;
+  }
+  .IoBeer{
+    background-color: darkorange;
+  }
+  .MdOutlineLocalHospital{
+    background-color: crimson;
+  }
+  .BsFillAirplaneFill{
+    background-color: cornflowerblue;
+  }
+  .BiWon{
+    background-color: darkgreen;
+  }
+  .BsFillCarFrontFill{
+    background-color: dimgrey;
+  }
+  .IoIosSubway{
+    background-color: darkslateblue;
+  }
+  .BsFillHouseFill{
+    background-color: darksalmon;
+  }
+  .GiPresent{
+    background-color: orchid;
+  }
+  .BiPhoneCall{
+    background-color: mediumaquamarine;
+  }
+  .BsCart4{
+    background-color: lightslategray;
+  }
+  .BsPeopleFill{
+    background-color: pink;
+  }
+  .AiOutlineQuestion{
+    background-color: dodgerblue;
+  }
