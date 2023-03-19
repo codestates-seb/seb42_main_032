@@ -4,6 +4,7 @@ import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.webclient.dto.AccountInfoDto;
 import DabuOps.tikkle.webclient.dto.AccountTransactionListDto;
+import DabuOps.tikkle.webclient.dto.AccountTransactionRequestDto;
 import DabuOps.tikkle.webclient.dto.TokenResponseDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -81,8 +82,16 @@ public class WebClientService {
             .bodyToMono(AccountInfoDto.class);
     }
 
-//    public Mono<AccountTransactionListDto> requestTransactionHistory(String fromDate, String toDate){
-//
-//    }
+    public Mono<AccountTransactionListDto> requestTransactionHistory(AccountTransactionRequestDto accountTransactionRequestDto){
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("bank_tran_id", accountTransactionRequestDto.getBank_tran_id());
+        formData.add("fintech_use_num", accountTransactionRequestDto.getFintech_use_num());
+        formData.add("inquiry_type", accountTransactionRequestDto.getInquiry_type());
+        formData.add("inquiry_base", a);
+        formData.add("from_date", "authorization_code");
+        formData.add("to_date", "authorization_code");
+        formData.add("from_date", "authorization_code");
+        HttpHeaders headers = new HttpHeaders();
+    }
 
 }
