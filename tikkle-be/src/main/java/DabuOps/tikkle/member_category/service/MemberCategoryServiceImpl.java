@@ -32,9 +32,10 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
      // 사용자 설정 멤버 카테고리가 갖다 쓸 카테고리 ID
 
 
+    // 사용자가 직접 카테고리 만들 때 쓸 메서드
     public MemberCategory createOriginalMemberCategory(MemberCategory memberCategory, Long memberId) {
         Member member = memberRepository.findById(memberId).get();
-        memberCategory.setCategory(category);
+        memberCategory.setCategory(category); // '기타' 카테고리로 고정
         memberCategory.setMember(member);
         MemberCategory savedMemberCategory = memberCategoryRepository.save(memberCategory);
 
@@ -42,11 +43,13 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
 
         return savedMemberCategory;
     }
+
+    // 처음 가입했을 때 멤버 카테고리 자동 생성
     public MemberCategory createAutoMemberCategory(Member member, Category category) {
-        MemberCategory memberCategory = new MemberCategory();
+        MemberCategory memberCategory = new MemberCategory(); // 리퀘스트 바디를 받는게 아니라서
         memberCategory.setMember(member);
-        memberCategory.setCategory(category);
-        memberCategory.setName(category.getName());
+        memberCategory.setCategory(category); // 반복문으로 들어오는 카테고리가 매번 바뀜
+        memberCategory.setName(category.getName()); // 일단 이름의 기본값을 카테고리거 가져와서 사용
 
         return memberCategoryRepository.save(memberCategory);
     }

@@ -40,17 +40,17 @@ public class MemberServiceImpl implements MemberService {
     public Member createMember(Member member) {
         // 동일한 이메일이 존재하는지 확인.
         verifyExistEmail(member.getEmail());
-        member.setPicture("이미지");
-        member.setMemberCategories(new ArrayList<>());
-        Member savedMember = memberRepository.save(member);
+        member.setPicture("이미지"); // 임시 이미지 필드 채워주고
+        member.setMemberCategories(new ArrayList<>()); // 이거 안하면 널포인트예외 나옴
+        Member savedMember = memberRepository.save(member); // 세이브 해주고~
 
         // Category 리스트 가져오기
         List<Category> categories = categoryRepository.findAll();
 
         for(Category category : categories) {
-            MemberCategory memberCategory = memberCategoryService.createAutoMemberCategory(member, category);
-            budgetService.createAutoBudget(memberCategory);
-            savedMember.getMemberCategories().add(memberCategory);
+            MemberCategory memberCategory = memberCategoryService.createAutoMemberCategory(member, category); // 멤버와 카테고리로 멤버카테고리 생성
+            Budget budget = budgetService.createAutoBudget(memberCategory); // 예산도 생성
+            savedMember.getMemberCategories().add(memberCategory); // 동일 트랜젝션 내에서 실행
         }
 
         return savedMember;
