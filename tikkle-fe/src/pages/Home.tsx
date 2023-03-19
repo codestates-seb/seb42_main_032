@@ -13,6 +13,20 @@ const transactions: Transaction[] = [
     amount: -9200,
   },
   {
+    date: new Date('2023-03-01'),
+    bankInfo: '국민은행',
+    payee: '스타벅스',
+    category: '음료',
+    amount: -10200,
+  },
+  {
+    date: new Date('2023-03-01'),
+    bankInfo: '국민은행',
+    payee: '왕소금구이',
+    category: '식비',
+    amount: -32000,
+  },
+  {
     date: new Date('2023-03-03'),
     bankInfo: '우리은행',
     payee: '스타벅스',
@@ -20,11 +34,25 @@ const transactions: Transaction[] = [
     amount: -5200,
   },
   {
+    date: new Date('2023-03-03'),
+    bankInfo: '토스뱅크',
+    payee: '메가커피',
+    category: '음료',
+    amount: -3200,
+  },
+  {
     date: new Date('2023-03-06'),
     bankInfo: '토스뱅크',
     payee: '볼링장',
     category: '오락',
     amount: -30000,
+  },
+  {
+    date: new Date('2023-03-06'),
+    bankInfo: '토스뱅크',
+    payee: '코인노래방',
+    category: '오락',
+    amount: -3000,
   },
 ];
 
