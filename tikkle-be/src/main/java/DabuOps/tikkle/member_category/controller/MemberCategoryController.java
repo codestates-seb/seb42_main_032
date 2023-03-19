@@ -29,13 +29,13 @@ public class MemberCategoryController {
     private final MemberCategoryService memberCategoryService;
     private final MemberCategoryMapper mapper;
 
-    @PostMapping("/{member_id}")
-    public ResponseEntity postMemberCategory(@PathVariable("member_id") @Positive Long memberId,
+    @PostMapping("/{member-id}")
+    public ResponseEntity postMemberCategory(@PathVariable("member-id") @Positive Long memberId,
                                              @Valid @RequestBody MemberCategoryDto.Post requestBody) {
         MemberCategory memberCategory = mapper.memberCategoryPostDtoToMemberCategory(requestBody);
         MemberCategory createdMemberCategory = memberCategoryService.createMemberCategory(memberCategory, memberId);
 
-        URI location = UriCreator.createURI(DEFAULT_URL + "/{member_id}", memberId);
+        URI location = UriCreator.createURI(DEFAULT_URL + "/{member-id}", 1L);
 
         return ResponseEntity.created(location).build();
     }
