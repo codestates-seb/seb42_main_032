@@ -82,16 +82,20 @@ public class WebClientService {
             .bodyToMono(AccountInfoDto.class);
     }
 
-    public Mono<AccountTransactionListDto> requestTransactionHistory(AccountTransactionRequestDto accountTransactionRequestDto){
+    public Mono<AccountTransactionListDto> requestTransactionHistory(AccountTransactionRequestDto accountTransactionRequestDto
+    , String accessToken){
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("bank_tran_id", accountTransactionRequestDto.getBank_tran_id());
         formData.add("fintech_use_num", accountTransactionRequestDto.getFintech_use_num());
         formData.add("inquiry_type", accountTransactionRequestDto.getInquiry_type());
-        formData.add("inquiry_base", a);
-        formData.add("from_date", "authorization_code");
-        formData.add("to_date", "authorization_code");
-        formData.add("from_date", "authorization_code");
+        formData.add("inquiry_base", accountTransactionRequestDto.getInquiry_base());
+        formData.add("from_date", accountTransactionRequestDto.getFrom_date());
+        formData.add("to_date", accountTransactionRequestDto.getTo_date());
+        formData.add("tran_dtime", accountTransactionRequestDto.getTran_dtime());
+
         HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(accessToken);
     }
 
 }
