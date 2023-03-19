@@ -1,7 +1,7 @@
 // TODO 거래내역 박스
 // TODO 무한 스크롤 구현하기
 
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { MdFastfood } from 'react-icons/md';
 import { BiCoffeeTogo } from 'react-icons/bi';
@@ -77,13 +77,33 @@ const ContentContainer = styled.div`
 const Transaction: FC<TransactionList> = ({ transactions }) => {
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
+  const options = {
+    root: null,
+    rootMargin: '10px',
+    threshold: 0.5,
+  };
+
+  const callback = () => {
+    console.log('관측되었습니다.');
+  };
+
+  let target = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let observer = new IntersectionObserver(callback, options);
+    if (target.current) {
+      observer.observe(target.current as Element);
+    }
+    return () => observer && observer.disconnect();
+  }, []);
+
   return (
-    <Container className="transaction-history-box">
+    <Container className="transaction-history-box" ref={target}>
       {transactions.map((transaction, index) => {
         const IconComponent = categoryIcons[transaction.category];
         return (
-          <TransactionContainer>
-            <div key={index}>
+          <TransactionContainer key={index}>
+            <div>
               <div className="transaction-date-box">
                 {transaction.date.getDate()}일{' '}
                 {daysOfWeek[transaction.date.getDay()]}요일
