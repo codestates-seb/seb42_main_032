@@ -35,7 +35,7 @@ public class MemberCategoryController {
         MemberCategory memberCategory = mapper.memberCategoryPostDtoToMemberCategory(requestBody);
         MemberCategory createdMemberCategory = memberCategoryService.createMemberCategory(memberCategory, memberId);
 
-        URI location = UriCreator.createURI(DEFAULT_URL + "/{member-id}", 1L);
+        URI location = UriCreator.createURI(DEFAULT_URL + "/{member-id}", memberId);
 
         return ResponseEntity.created(location).build();
     }
