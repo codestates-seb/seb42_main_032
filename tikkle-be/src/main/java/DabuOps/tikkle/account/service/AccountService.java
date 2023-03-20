@@ -9,4 +9,5 @@ public interface AccountService {
     List<Account> getAccounts(Long memberId);
     void deleteAccount(Long id, Long memberId);
     Account findExistAccountById(Long id);
+    void verifyExistAccountNumber(String number);
 }
