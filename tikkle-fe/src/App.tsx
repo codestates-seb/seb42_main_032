@@ -6,7 +6,6 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import { RecoilRoot } from 'recoil';
 import BudgetSetting from './pages/BudgetSetting';
-import SignUp from './pages/SignUp';
 import UserSetting from './pages/UserSetting';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -27,7 +26,6 @@ function App() {
           <Route path="/budgetsetting" element={<BudgetSetting />} />
           <Route path="/budgetview" element={<BudgetView />} />
           <Route path="/budget" element={<BudgetView />} />
-          <Route path="/signup" element={<SignUp />} />
           <Route path="/usersetting" element={<UserSetting />} />
           <Route path="/userout" element={<UserOut />} />
         </Routes>
