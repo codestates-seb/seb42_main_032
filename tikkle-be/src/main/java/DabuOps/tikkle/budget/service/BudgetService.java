@@ -36,8 +36,8 @@ public class BudgetService {
                 .amount(0)
                 .current(true)
                 .build();
-        //budget.setStartDate(LocalDate.now().withDayOfMonth(memberCategory.getMember().getInitDate()));
-        //budget.setEndDate(budget.getStartDate().plusMonths(1).minusDays(1));
+        budget.setStartDate(LocalDate.now().withDayOfMonth(memberCategory.getMember().getInitDate()));
+        budget.setEndDate(budget.getStartDate().plusMonths(1).minusDays(1));
 
         return budgetRepository.save(budget);
     }
@@ -75,6 +75,19 @@ public class BudgetService {
         return findBudget;
     }
 
+    public List<Budget> findAllCurrentBudget(Long memberId) {
+        List<MemberCategory> memberCategories = memberCategoryRepository.findAllByMemberIdAndStatusNot(memberId, MemberCategory.Status.INACTIVE);
+
+        List<Long> memberCategoryIdList = new ArrayList<>();
+        for(MemberCategory memberCategory : memberCategories) {
+            memberCategoryIdList.add(memberCategory.getId());
+        }
+
+        List<Budget> budgets = budgetRepository.findByMemberCategoryIdInAndCurrentIsTrue(memberCategoryIdList);
+
+        return budgets;
+    }
+
     public void deleteBudget(Long budgetId) {
         Budget budget = findBudget(budgetId);
 
@@ -90,7 +103,7 @@ public class BudgetService {
             if(initDate.equals(today)) { //initDate가 오늘인 member가 있으면!
                 // 해당 member의 활성화 된 모든 memberCategory 불러오기
                 List<MemberCategory> memberCategories = memberCategoryRepository.findAllByMemberIdAndStatusNot(member.getId(), MemberCategory.Status.INACTIVE);
-                // 걔네의 id만 담을 리스트
+
                 List<Long> memberCategoryIdList = new ArrayList<>();
                 for(MemberCategory memberCategory : memberCategories) {
                     memberCategoryIdList.add(memberCategory.getId());
@@ -111,6 +124,5 @@ public class BudgetService {
         }
         System.out.println("스케줄 메서드 잘 실행중!");
     }
-
 
 }

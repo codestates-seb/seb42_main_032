@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,5 +40,17 @@ public class BudgetController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    @GetMapping("/members/{member_id}")
+    public ResponseEntity getAllBudgets(@PathVariable("member_id") Long memberId) {
+        List<Budget> budgets = budgetService.findAllCurrentBudget(memberId);
+        List<BudgetDto.Response> responses = mapper.budgetsToResponseDto(budgets);
 
+        return new ResponseEntity(responses, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{budget_id}")
+    public ResponseEntity deleteBudget(@PathVariable("budget_id") Long budgetId) {
+        budgetService.deleteBudget(budgetId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }
