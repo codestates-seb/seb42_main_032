@@ -1,9 +1,20 @@
 //TODO LOGIN_001 Google OAuth 로그인 페이지 구현
-import React, { useEffect } from 'react';
+/**
+ * [README]
+ * 주석에서 토큰은 액세스 토큰을 의미합니다
+ * 액세스 토큰이 유효하다는 것은 만료되지 않은 액세스 토큰이 recoil 상태로 존재한다는 것을 의미합니다
+ */
+
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import { tokenState } from '../util/store';
+import { useRecoilState } from 'recoil';
 
+/**
+ * 스타일 코드 부분
+ */
 const LoginContainer = styled.div`
   background-image: url('/tikkle-background.jpg');
   position: relative;
@@ -69,20 +80,40 @@ const OauthLoginButton = styled.div`
   }
 `;
 
+/**
+ * 컴포넌트 코드 부분
+ */
+
+//  ToDo 저장된 액세스 토큰이 존재할 경우, 사용자의 현재 상태에 따라 유저/카테고리/예산 설정 페이지 중 하나로 이동
+//  ToDo 저장된 액세스 토큰이 존재하며, 회원가입 절차도 모두 마친 경우 홈 페이지로 이동
 function Login() {
-  // Login 페이지가 렌더링될 때 주소창에 access_token이 있는 상태라면 해당 정보로 서버에 사용자 정보 요청
-  const parsedHash = new URLSearchParams(window.location.hash.substring(1));
-  const accessToken = parsedHash.get('access_token');
-  accessToken !== null
-    ? axios
-        .get(`http://localhost:8080/login?accessToken=${accessToken}`)
+  const [accessToken, setAccessToken] = useRecoilState(tokenState);
+
+  // TODO 현재 무한로딩 오류 발생 중, 수정 필요
+  useEffect(() => {
+    // 토큰이 유효할 때만 페이지 이동 로직 수행
+    if (accessToken !== null) {
+      axios
+        .get(
+          `${process.env.REACT_APP_SERVER}:8080/login?accessToken=${accessToken}`
+        )
         .then((res) => {
           console.log(typeof res);
           console.log(res);
         })
-        .catch((err) => console.log(err))
-    : '';
+        .catch((err) => console.log(err));
+    } else {
+      // 토큰이 유효하지 않으면 URL에 발행된 토큰이 있는지 확인하고,
+      // 있다면 토큰을 저장
+      const parsedHash = new URLSearchParams(window.location.hash.substring(1));
 
+      // URL에서 읽은 액세스 토큰 저장
+      const parsedAccessToken = parsedHash.get('access_token');
+      setAccessToken(parsedAccessToken);
+    }
+  }, [accessToken]);
+
+  // 저장된 토큰이 없거나 만료되었다면 페이지 이동이 되지 않기 때문에 로그인 버튼 클릭 가능
   const handleOAuthLogin = () => {
     window.location.href =
       'https://accounts.google.com/o/oauth2/auth?' +

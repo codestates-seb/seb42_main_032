@@ -33,6 +33,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@chakra-ui/system", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:2.5.1"],\
             ["@emotion/react", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:11.10.6"],\
             ["@emotion/styled", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:11.10.6"],\
+            ["@types/node", "npm:18.15.3"],\
             ["@types/react", "npm:18.0.28"],\
             ["@types/react-dom", "npm:18.0.11"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -3436,6 +3437,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-18.14.6-7d0665d471-2f88f482ca.zip/node_modules/@types/node/",\
           "packageDependencies": [\
             ["@types/node", "npm:18.14.6"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:18.15.3", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-18.15.3-d092b0c75c-31b1d92475.zip/node_modules/@types/node/",\
+          "packageDependencies": [\
+            ["@types/node", "npm:18.15.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -7031,6 +7039,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@chakra-ui/system", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:2.5.1"],\
             ["@emotion/react", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:11.10.6"],\
             ["@emotion/styled", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:11.10.6"],\
+            ["@types/node", "npm:18.15.3"],\
             ["@types/react", "npm:18.0.28"],\
             ["@types/react-dom", "npm:18.0.11"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -7295,7 +7304,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["vite", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:4.1.4"],\
             ["@types/less", null],\
-            ["@types/node", null],\
+            ["@types/node", "npm:18.15.3"],\
             ["@types/sass", null],\
             ["@types/stylus", null],\
             ["@types/sugarss", null],\

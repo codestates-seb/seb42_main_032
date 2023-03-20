@@ -16,3 +16,11 @@ export const totalBudgetState = atom<number>({
   key: 'totalBudgetState',
   default: 500000
 })
+
+/**
+ * 액세스 토큰
+ */
+export const tokenState = atom<string | null>({
+  key: 'tokenState',
+  default: null
+})
