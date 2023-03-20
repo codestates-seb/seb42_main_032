@@ -6,6 +6,20 @@ import Transaction from '../components/layout/Transaction';
 // transaction 컴포넌트용 거래내역 dummydata
 const transactions: Transaction[] = [
   {
+    date: new Date('2023-02-01'),
+    bankInfo: '국민은행',
+    payee: '2월테스트',
+    category: '식비',
+    amount: -9200,
+  },
+  {
+    date: new Date('2023-02-07'),
+    bankInfo: '2월로가야돼',
+    payee: '버거킹',
+    category: '식비',
+    amount: -9200,
+  },
+  {
     date: new Date('2023-03-01'),
     bankInfo: '국민은행',
     payee: '버거킹',
@@ -75,7 +89,7 @@ function Home({ selectedDate }: { selectedDate: Date }) {
     <HomeContainer>
       <Body>
         <Calendar date={selectedDate} />
-        <Transaction transactions={transactions} />
+        <Transaction transactions={transactions} date={selectedDate} />
       </Body>
     </HomeContainer>
   );
