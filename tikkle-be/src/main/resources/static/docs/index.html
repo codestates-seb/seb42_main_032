@@ -482,7 +482,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members?_csrf=207e5a92-e0e8-426f-a8e5-c22907a1eaaa' -i -X POST \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members?_csrf=a4670ac1-b36e-4437-b3ea-447427625de3' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -H 'Accept: application/json' \
     -d '{
@@ -494,7 +494,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">POST /members?_csrf=207e5a92-e0e8-426f-a8e5-c22907a1eaaa HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">POST /members?_csrf=a4670ac1-b36e-4437-b3ea-447427625de3 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Content-Length: 58
@@ -537,13 +537,7 @@ Host: localhost:8080
 <div class="title">http-response</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 201 Created
-Location: /members/1
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
+Location: /members/1</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -571,7 +565,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members/1?_csrf=0c931c0e-9b23-48ea-a764-f1e93ab6948c' -i -X PATCH \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members/1?_csrf=6a119902-8a7a-4466-aa33-0541d796a2b1' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -H 'Accept: application/json' \
     -d '{
@@ -585,7 +579,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">PATCH /members/1?_csrf=0c931c0e-9b23-48ea-a764-f1e93ab6948c HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">PATCH /members/1?_csrf=6a119902-8a7a-4466-aa33-0541d796a2b1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Content-Length: 84
@@ -671,13 +665,7 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="title">http-response</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
+<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK</code></pre>
 </div>
 </div>
 </div>
@@ -686,7 +674,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members/1?_csrf=a911c9b1-fa9c-4ae5-9e58-352e34840a54' -i -X GET \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members/1?_csrf=7de42f65-8d71-44b9-b771-fa63e2da1683' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -H 'Accept: application/json'</code></pre>
 </div>
@@ -694,7 +682,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">GET /members/1?_csrf=a911c9b1-fa9c-4ae5-9e58-352e34840a54 HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">GET /members/1?_csrf=7de42f65-8d71-44b9-b771-fa63e2da1683 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Host: localhost:8080</code></pre>
@@ -737,12 +725,6 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
 Content-Length: 259
 
 {
@@ -839,14 +821,14 @@ Content-Length: 259
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members/1?_csrf=e94a1fe2-8b70-48ce-97d4-eb583cbbdac8' -i -X DELETE \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/members/1?_csrf=7374e8ea-1210-482a-aa01-3646e60b354d' -i -X DELETE \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /members/1?_csrf=e94a1fe2-8b70-48ce-97d4-eb583cbbdac8 HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /members/1?_csrf=7374e8ea-1210-482a-aa01-3646e60b354d HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -873,13 +855,7 @@ Host: localhost:8080</code></pre>
 <div class="listingblock">
 <div class="title">http-response</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 204 No Content
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
+<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 204 No Content</code></pre>
 </div>
 </div>
 </div>
@@ -1162,7 +1138,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/accounts?_csrf=1554748e-52dc-41b0-bf22-99cc51cabcbf' -i -X POST \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/accounts?_csrf=2e42e8c1-46bd-491e-a2e7-67cb8924203d' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -H 'Accept: application/json' \
     -d '{
@@ -1176,7 +1152,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">POST /accounts?_csrf=1554748e-52dc-41b0-bf22-99cc51cabcbf HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">POST /accounts?_csrf=2e42e8c1-46bd-491e-a2e7-67cb8924203d HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Content-Length: 110
@@ -1235,13 +1211,7 @@ Host: localhost:8080
 <div class="title">http-response</div>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 201 Created
-Location: /accounts/1
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
+Location: /accounts/1</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -1269,7 +1239,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/accounts/1?_csrf=af4ac772-19bf-43f7-beac-037b1beddba9' -i -X PATCH \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/accounts/1?_csrf=76fde759-fb87-4780-bb5f-9220649a0128' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -H 'Accept: application/json' \
     -d '{
@@ -1280,7 +1250,7 @@ X-Frame-Options: DENY</code></pre>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">PATCH /accounts/1?_csrf=af4ac772-19bf-43f7-beac-037b1beddba9 HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">PATCH /accounts/1?_csrf=76fde759-fb87-4780-bb5f-9220649a0128 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Content-Length: 30
@@ -1348,13 +1318,7 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="title">http-response</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
+<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK</code></pre>
 </div>
 </div>
 </div>
@@ -1380,12 +1344,6 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
 Content-Length: 460
 
 {
@@ -1486,14 +1444,14 @@ Content-Length: 460
 <div class="listingblock">
 <div class="title">curl-request</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/accounts/1?_csrf=52d5c323-bb61-4a46-a180-5592efb50b75' -i -X DELETE \
+<pre class="prettyprint highlight"><code data-lang="bash">$ curl 'http://localhost:8080/accounts/1?_csrf=7b3df2b9-7cd4-485e-91f3-70d0d14bc1a8' -i -X DELETE \
     -H 'Accept: application/json'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">http-request</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /accounts/1?_csrf=52d5c323-bb61-4a46-a180-5592efb50b75 HTTP/1.1
+<pre class="prettyprint highlight nowrap"><code data-lang="http">DELETE /accounts/1?_csrf=7b3df2b9-7cd4-485e-91f3-70d0d14bc1a8 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -1533,13 +1491,7 @@ Host: localhost:8080</code></pre>
 <div class="listingblock">
 <div class="title">http-response</div>
 <div class="content">
-<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 204 No Content
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY</code></pre>
+<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 204 No Content</code></pre>
 </div>
 </div>
 </div>

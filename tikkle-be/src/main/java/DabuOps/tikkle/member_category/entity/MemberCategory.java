@@ -1,5 +1,6 @@
 package DabuOps.tikkle.member_category.entity;
 
+import DabuOps.tikkle.budget.entity.Budget;
 import DabuOps.tikkle.category.entity.Category;
 import DabuOps.tikkle.global.audit.Auditable;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
@@ -8,6 +9,8 @@ import DabuOps.tikkle.member.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -52,6 +55,7 @@ public class MemberCategory extends Auditable {
     }
 
     @Builder
+
     public MemberCategory(Long id, Member member, Category category, String name, Status status) {
         this.id = id;
         this.member = member;

@@ -96,6 +96,9 @@ const Transaction: FC<TransactionList> = ({ transactions }) => {
                 <div className="transaction-content-box">
                   <div className="transaction-amount-box">
                     <strong>
+                      {transaction.amount
+                        .toString()
+                        .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}
                       원
                     </strong>
                   </div>

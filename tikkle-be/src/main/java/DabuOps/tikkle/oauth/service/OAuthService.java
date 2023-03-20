@@ -1,8 +1,9 @@
 package DabuOps.tikkle.oauth.service;
 
 import DabuOps.tikkle.member.entity.Member;
+import DabuOps.tikkle.member.entity.Member.MemberState;
 import DabuOps.tikkle.member.repository.MemberRepository;
-import DabuOps.tikkle.oauth.dto.UserInfo;
+import DabuOps.tikkle.oauth.UserInfo;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -11,17 +12,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class OAuthService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
 
@@ -35,13 +35,11 @@ public class OAuthService extends DefaultOAuth2UserService {
     * UserInfo 확인 후 첫 로그인이면 회원가입처리, 아니면 로그인 (getMemberProfile())
     * return으로 UserInfo 반환
      */
-    public Object login(String accessToken) throws IOException {
+    public Optional<Member> login(String accessToken) throws IOException {
 
-        HttpStatus validate = validate(accessToken);
-        if (validate == HttpStatus.OK){
-            return getMemberProfile(accessToken);
-        }
-        return "유효하지 않은 access token 입니다.";
+        Optional<Member> member = getMemberProfile(accessToken);
+
+        return member;
     }
 
     /*
@@ -77,7 +75,7 @@ public class OAuthService extends DefaultOAuth2UserService {
     * UserInfo 받아오기
     * 유저 정보 확인 후 있으면 로그인 없으면 회원가입(UserInfo -> MemberRepository에 저장
      */
-    private Member getMemberProfile(String accessToken) throws IOException {
+    private Optional<Member> getMemberProfile(String accessToken) throws IOException {
         //아래의 주소는 access token을 사용하여 사용자의 정보를 가져오는 데 사용
         URL url = new URL("https://www.googleapis.com/oauth2/v3/userinfo?access_token=" + accessToken);
 
@@ -89,17 +87,17 @@ public class OAuthService extends DefaultOAuth2UserService {
             String name = userInfo.getName();
             String picture = userInfo.getPicture();
 
-            Member member = memberRepository.findByEmail(email);
+            Optional<Member> member = memberRepository.findByEmailAndStateIs(email, MemberState.ACTIVE);
 
-            if (member == null) {
+            if (member.isPresent()) {
+                return member;
+            } else {
                 Member newMember = new Member();
                 newMember.setEmail(email);
                 newMember.setName(name);
                 newMember.setPicture(picture);
                 memberRepository.save(newMember);
-                return newMember;
-            } else {
-                return  member;
+                return Optional.of(newMember);
             }
         }
     }

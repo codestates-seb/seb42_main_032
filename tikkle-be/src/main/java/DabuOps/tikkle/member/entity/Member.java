@@ -1,17 +1,21 @@
 package DabuOps.tikkle.member.entity;
 
+import DabuOps.tikkle.category.entity.Category;
+import DabuOps.tikkle.category.repository.CategoryRepository;
 import DabuOps.tikkle.global.audit.Auditable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import DabuOps.tikkle.member_category.entity.MemberCategory;
+import java.lang.annotation.Retention;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.*;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Builder
@@ -51,13 +55,13 @@ public class Member extends Auditable {
     @Column(nullable = true)
     private String picture = "이미지";
 
-    @Column
-    private String accessToken;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<MemberCategory> memberCategories;
+
 
 
     @Builder
-    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay,
-        Integer initDate, String picture, String accessToken) {
+    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay, Integer initDate, String picture, List<MemberCategory> memberCategories) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -67,9 +71,10 @@ public class Member extends Auditable {
         this.payDay = payDay;
         this.initDate = initDate;
         this.picture = picture;
-        this.accessToken = accessToken;
-
+        this.memberCategories = memberCategories;
     }
+
+
 
     public static enum Gender{
         male("남성"),

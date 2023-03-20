@@ -38,10 +38,3 @@ jwt:
     secret: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 180
-webClient:
-  baseUrl: {openbanking.api.url}
-openbanking:
-  api:
-    client-id: {K_CLIENT_ID}
-    client-secret: {K_CLIENT_SECRET}
-    redirect-uri: {K_REDIRECT_URI}
