@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "식비",
+      "categoryIcon": "MdFastfood",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 2,
+      "name": "교통비",
+      "categoryIcon": "IoIosSubway",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 3,
+      "name": "통신비",
+      "categoryIcon": "BiPhoneCall",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    }
+  ]
+}

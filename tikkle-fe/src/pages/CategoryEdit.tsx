@@ -6,6 +6,7 @@ import CategoryNameEdit from '../components/category_edit/CategoryNameEdit';
 import { AddIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
 import { RiDeleteBin5Line } from 'react-icons/ri';
+import axios from 'axios';
 
 const BodyContainer = styled.div`
   margin-top: 80px;
@@ -57,30 +58,56 @@ const CategoryList = styled.div`
   box-shadow: 1px 1px 3px;
   border-radius: 20px;
   padding: 10px;
+  /* max-width: 300px; */
 `;
 
-const dummyData: { id?: number; categoryName: string; categoryIcon: string }[] =
-  [
-    { id: 1, categoryName: '식비', categoryIcon: 'MdFastfood' },
-    { id: 2, categoryName: '교통비', categoryIcon: 'IoIosSubway' },
-    { id: 3, categoryName: '통신비', categoryIcon: 'BiPhoneCall' },
-  ];
-
 function CategoryEdit() {
-  const [data, setData] = useState(dummyData);
+  const [data, setData] = useState<
+    { id: number; name: string; categoryIcon: string }[]
+  >([]);
   const [isOpen, setIsOpen] = useState(false);
   const handleCloseEdit = () => {
     setIsOpen(false);
   };
+
   const handleClickAdd = () => {
-    setData([...data, { categoryName: '', categoryIcon: 'AiOutlineQuestion' }]);
+    const postCategory = async () => {
+      try {
+        await axios.post(`http://localhost:3001/data`, {
+          name: '',
+          categoryIcon: 'AiOutlineQuestion',
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    postCategory();
+    getCategoryList();
   };
-  const handleClickDelete = (index: number) => {
-    const newArr = [...data];
-    newArr.splice(index, 1);
-    console.log(newArr);
-    setData([...newArr]);
+  const handleClickDelete = (id: number) => {
+    const delCategory = async () => {
+      try {
+        await axios.delete(`http://localhost:3001/data/${id}`);
+        getCategoryList();
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    delCategory();
   };
+  const getCategoryList = async () => {
+    try {
+      const res = await axios.get(`http://localhost:3001/data`);
+      setData(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getCategoryList();
+  }, []);
+
+  useEffect(() => {}, [data]);
 
   return (
     <BodyContainer onClick={handleCloseEdit}>
@@ -96,22 +123,24 @@ function CategoryEdit() {
         </HeaderWrap>
         <CategoryLists>
           {data &&
-            data.map((el, index) => {
+            data.map((el) => {
               return (
-                <CategoryList>
+                <CategoryList key={el.id}>
                   <CategoryDropdown
                     categoryIcon={el.categoryIcon}
+                    categoryId={el.id}
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
                   />
                   <CategoryNameEdit
-                    categoryName={el.categoryName}
+                    categoryName={el.name}
+                    categoryId={el.id}
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
                   />
                   <RiDeleteBin5Line
-                    onClick={() => handleClickDelete(index)}
-                    style={{ cursor: 'pointer' }}
+                    onClick={() => handleClickDelete(el.id)}
+                    style={{ cursor: 'pointer', width: '25px', height: '25px' }}
                   />
                 </CategoryList>
               );
