@@ -47,6 +47,10 @@ public class Account extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @Column
+    private String fintech_use_num;
+
+
     public void setMember(Member member) {
         this.member = member;
     }
@@ -61,7 +65,7 @@ public class Account extends Auditable {
 
     @Builder
     public Account(Long id, String name, String number, String bankName, Long balance,
-        AccountState state, Member member) {
+        AccountState state, Member member, String fintech_use_num) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -69,5 +73,6 @@ public class Account extends Auditable {
         this.balance = balance;
         this.state = state;
         this.member = member;
+        this.fintech_use_num = fintech_use_num;
     }
 }
