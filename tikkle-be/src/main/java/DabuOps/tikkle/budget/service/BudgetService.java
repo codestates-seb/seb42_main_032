@@ -30,21 +30,28 @@ public class BudgetService {
     private final MemberCategoryRepository memberCategoryRepository;
 
     public Budget createAutoBudget(MemberCategory memberCategory) {
-        Budget budget = new Budget();
-        budget.setMemberCategory(memberCategory);
-        budget.setSpend(0);
-        budget.setAmount(0);
-        budget.setCurrent(true);
+        Budget budget = Budget.builder()
+                .memberCategory(memberCategory)
+                .spend(0)
+                .amount(0)
+                .current(true)
+                .build();
+        //budget.setStartDate(LocalDate.now().withDayOfMonth(memberCategory.getMember().getInitDate()));
+        //budget.setEndDate(budget.getStartDate().plusMonths(1).minusDays(1));
+
         return budgetRepository.save(budget);
     }
 
-    public Budget initBudget(MemberCategory memberCategory) {
-        Budget budget = new Budget();
-        budget.setMemberCategory(memberCategory);
-        budget.setStartDate(LocalDate.now());
-        budget.setEndDate(LocalDate.now().plusMonths(1).minusDays(1));
-        budget.setCurrent(true);
-        budget.setSpend(0);
+    public Budget initBudget(MemberCategory memberCategory, Integer amount) {
+        Budget budget = Budget.builder()
+                .memberCategory(memberCategory)
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusMonths(1).minusDays(1))
+                .current(true)
+                .spend(0)
+                .amount(amount)
+                .build();
+
         return budgetRepository.save(budget);
     }
 
@@ -90,13 +97,15 @@ public class BudgetService {
                 }
 
                 List<Budget> budgets = budgetRepository.findByMemberCategoryIdInAndCurrentIsTrue(memberCategoryIdList); // 해당 memberCategory의 현재 budget 땡겨오기
+                List<Integer> amountList = new ArrayList<>(); // 전월 예산 설정 모은 리스트
                 for(Budget budget : budgets) {
                     budget.setCurrent(false); // 이제 안쓴다!
                     budgetRepository.save(budget);
+                    amountList.add(budget.getAmount());
                 }
-                // 마지막으로 memberCategory마다 예산 하나씩 새로 만들어주기
-                for(MemberCategory memberCategory : memberCategories) {
-                    createAutoBudget(memberCategory);
+                // 마지막으로 memberCategory마다 예산 하나씩 새로 만들어주고, 전월 설정 가져오기
+                for(int i = 0; i < memberCategories.size(); i++) {
+                    initBudget(memberCategories.get(i), amountList.get(i));
                 }
             }
         }
