@@ -42,13 +42,15 @@ public class Member extends Auditable {
     private MemberState state = MemberState.ACTIVE;
 
     @Column
+    @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
     @Column
     private Integer payDay;
 
     @Column
-    private Integer initDate;
+    @Builder.Default
+    private Integer initDate = 1;
 
     @Column(nullable = true)
     private String picture = "이미지";
