@@ -1,4 +1,4 @@
-package DabuOps.tikkle.webclient.dto;
+package DabuOps.tikkle.userauth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

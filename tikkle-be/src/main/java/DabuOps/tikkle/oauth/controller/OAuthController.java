@@ -15,15 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Slf4j
 public class OAuthController {
-
     private final OAuthService oAuthService;
 
     @GetMapping("/login")
     public Member login(@RequestParam("accessToken") String accessToken) throws IOException {
-        //validate() 메서드에 Client 에서 받아온 accessToken을 보내서 유효성 검증하기
         Member member = (Member) oAuthService.login(accessToken);
 
         return member;
-
     }
 }

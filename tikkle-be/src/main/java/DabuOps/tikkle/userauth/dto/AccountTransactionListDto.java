@@ -1,4 +1,4 @@
-package DabuOps.tikkle.webclient.dto;
+package DabuOps.tikkle.userauth.dto;
 
 import java.util.List;
 import lombok.Data;
