@@ -1,4 +1,4 @@
-package DabuOps.tikkle.global.dto;
+package DabuOps.tikkle.oauth.dto;
 
 import lombok.Builder;
 import lombok.Getter;

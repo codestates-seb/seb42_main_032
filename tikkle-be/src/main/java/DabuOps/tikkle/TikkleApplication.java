@@ -15,11 +15,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class TikkleApplication {
 
-//	@Bean
-//	public BCryptPasswordEncoder encoder(){
-//		return new BCryptPasswordEncoder();
-//	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(TikkleApplication.class, args);
 	}

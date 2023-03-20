@@ -96,7 +96,7 @@ public class BudgetService {
 
 
     public void checkInitDate() { // 매일 자정에 전체 멤버 initDate 검사
-        List<Member> members = memberRepository.findByStateEquals(Member.MemberState.ACTIVE);
+        List<Member> members = memberRepository.findByStateIs(Member.MemberState.ACTIVE);
         LocalDate today = LocalDate.now(); // 오늘
         for(Member member : members) { // 전체 멤버 탐색
             LocalDate initDate = LocalDate.now().withDayOfMonth(member.getInitDate()); // member의 initDate
