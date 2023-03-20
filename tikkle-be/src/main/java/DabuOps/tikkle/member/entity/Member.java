@@ -69,10 +69,6 @@ public class Member extends Auditable {
 
     }
 
-    public Member(String email, String name, String picture) {
-
-    }
-
     public static enum Gender{
         male("남성"),
         female("여성");

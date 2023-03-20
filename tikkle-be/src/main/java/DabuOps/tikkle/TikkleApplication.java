@@ -13,11 +13,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 public class TikkleApplication {
 
-	@Bean
-	public BCryptPasswordEncoder encoder(){
-		return new BCryptPasswordEncoder();
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(TikkleApplication.class, args);
 	}
