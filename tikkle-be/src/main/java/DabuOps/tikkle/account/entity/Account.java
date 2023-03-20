@@ -64,7 +64,7 @@ public class Account extends Auditable {
 
     @Builder
     public Account(Long id, String name, String number, String bankName, Long balance,
-        AccountState state, Member member) {
+        AccountState state, Member member, String fintechUseNum) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -72,9 +72,6 @@ public class Account extends Auditable {
         this.balance = balance;
         this.state = state;
         this.member = member;
-    }
-
-    public Account(String fintechUseNum) {
         this.fintechUseNum = fintechUseNum;
     }
 }

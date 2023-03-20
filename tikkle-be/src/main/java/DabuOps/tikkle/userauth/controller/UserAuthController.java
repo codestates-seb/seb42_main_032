@@ -23,15 +23,8 @@ public class UserAuthController {
     @GetMapping("/members/auth")
     public String accountAuth(@RequestParam("code") String authorizationCode, @LoginMember LogInMemberDto logInMemberDto) {
         TokenResponseDto tokenResponse = userAuthService.requestToken(authorizationCode, logInMemberDto.getMemberId());
-        List<AccountInfoDto> accountInfoDtoList = userAuthService.requestUserInfo(tokenResponse.getAccessToken());
+        List<AccountInfoDto> accountInfoDtoList = userAuthService.requestUserInfo(tokenResponse.getAccessToken(), tokenResponse.getUserSeqNo());
 
         return "사용자 인증이 완료되었습니다.";
     }
-
-//    @GetMapping("/transaction_histories/auth")
-//    public Mono<AccountTransactionListDto> transactionList(@RequestParam("from_date") String fromDate,
-//        @RequestParam("to_date") String toDate,
-//        @LoginMember LogInMemberDto logInMemberDto){}
-
-
 }
