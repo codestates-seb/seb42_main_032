@@ -7,7 +7,7 @@ import { MdFastfood } from 'react-icons/md';
 import { BiCoffeeTogo } from 'react-icons/bi';
 import { IoLogoGameControllerA } from 'react-icons/io';
 
-interface Transaction {
+export interface Transaction {
   date: Date;
   bankInfo: string;
   payee: string;
@@ -15,7 +15,7 @@ interface Transaction {
   amount: number;
 }
 
-interface Props {
+export interface Props {
   transactions: Transaction[];
   date: Date;
 }
@@ -80,7 +80,7 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
 
   //헤더의 Month
   let headerMonth = date.getMonth() + 1;
-  console.log(date.getMonth() + 1);
+
   //거래내역의 Month
   // let transactioinMonth = transactions[0].date.getMonth() + 1;
   // console.log(transactions[0].date.getMonth() + 1);
@@ -89,6 +89,7 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
   const transactionThisMonth = transactions.filter(
     (el) => el.date.getMonth() + 1 === headerMonth
   );
+
   //TODO 무한스크롤
   const options = {
     root: null,

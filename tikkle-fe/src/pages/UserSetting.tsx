@@ -4,19 +4,12 @@ import { useState } from 'react';
 import UserInput from '../components/UserInput';
 
 import styled from 'styled-components';
-import {
-  Box,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Link,
-} from '@chakra-ui/react';
+import { Box, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
 
 import { Button } from '@chakra-ui/react';
 import { Icon, AddIcon } from '@chakra-ui/icons';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-
 
 const Container = styled.div`
   background-color: #eaeaea;
@@ -25,11 +18,6 @@ const Container = styled.div`
   font-family: 'GmarketSansMedium';
   font-size: 20px;
   font-weight: bold;
-  
-  h1 {
-    margin-top: 100px;
-    margin-bottom: 8em;
-
   .title-container {
     text-align: left;
     margin-top: 10vh;
@@ -78,7 +66,6 @@ function UserSetting() {
     setUsername(e.target.value);
   };
 
-  // 회원탈퇴 버튼 클릭 시, 페이지 이동
   const handleClick = () => {
     navigate('/userout');
   };

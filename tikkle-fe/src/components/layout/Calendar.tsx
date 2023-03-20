@@ -1,10 +1,16 @@
 //TODO 캘린더 구현
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Table, Thead, Tbody, Tr, TableContainer } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/react';
 
 // 각 칸의 스타일링을 자유롭게 하기 위해 Box 컴포넌트 사용
 import { Box } from '@chakra-ui/react';
+import { ClassNames } from '@emotion/react';
+import { GiDelicatePerfume } from 'react-icons/gi';
+import Transaction from './Transaction';
+import { Props } from './Transaction';
+import axios from 'axios';
+import Loading from './Loading';
 
 /**
  * day: 요일, date: 일자 의미로 주석을 작성했습니다.
@@ -15,6 +21,21 @@ import { Box } from '@chakra-ui/react';
 const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
 const Calendar = ({ date }: { date: Date }) => {
+  // 월별 지출, 수입: 데이터 idx === 날짜 / 수입, 지출 이중배열
+  const [dailySummary, setDailySummary] = useState<number[][]>([[0, 0]]);
+  const [loading, setLoading] = useState<boolean>(true);
+  // 월별 지출, 수입 데이터 받아오기
+  useEffect(() => {
+    axios
+      .get('http://localhost:8080/dailySummary')
+      .then((res) => {
+        setDailySummary(res.data);
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+  console.log(dailySummary);
+
   // 현재 날짜를 불러올 수 있도록 Date 타입의 상태로 생성하고, 초기값을 Date 객체로 설정
   // ! 초기값은 'Home' 페이지에서 설정함.
   // const [date, setCurrentDate] = useState<Date>(date);
@@ -43,6 +64,7 @@ const Calendar = ({ date }: { date: Date }) => {
   // 달력 시작일 전까지 빈 칸 렌더링
   // 0부터 날짜가 시작되는 요일까지 빈 칸을 렌더링한 배열
   const renderBlank = [];
+
   for (let i = 0; i < dayOfFirstDate; i++) {
     renderBlank.push(<Box key={`blank-${i}`} as="td" w={52} h={24} />);
   }
@@ -54,7 +76,7 @@ const Calendar = ({ date }: { date: Date }) => {
   }
 
   // 일자를 나타내는 칸 렌더링
-  const renderDate = dateArr.map((date) => {
+  const renderDate = dateArr.map((date, idx) => {
     return (
       // w-52 === 13rem
       // h-24 === 6rem
@@ -69,10 +91,14 @@ const Calendar = ({ date }: { date: Date }) => {
           {date}
         </Box>
         <Box fontSize={[8, 10, 12]}>
-          {/* ToDo: 받아온 데이터로 지출 레이블 표시 */}
-          <Text color={'blue'}>-10,000</Text>
-          {/* ToDo: 받아온 데이터로 수입 레이블 표시 */}
-          <Text color={'red'}>20,000</Text>
+          {/* 받아온 데이터로 지출 레이블 표시 */}
+          <Text color={'blue'}>
+            {dailySummary !== undefined ? dailySummary[idx][0] : 0}
+          </Text>
+          {/* 받아온 데이터로 수입 레이블 표시 */}
+          <Text color={'red'}>
+            {dailySummary !== undefined ? dailySummary[idx][1] : 0}
+          </Text>
         </Box>
       </Box>
     );
@@ -92,7 +118,7 @@ const Calendar = ({ date }: { date: Date }) => {
     );
   }
 
-  return (
+  return !loading ? (
     <TableContainer>
       <Table>
         <Thead>
@@ -101,6 +127,8 @@ const Calendar = ({ date }: { date: Date }) => {
         <Tbody>{renderRow}</Tbody>
       </Table>
     </TableContainer>
+  ) : (
+    <Loading />
   );
 };
 
