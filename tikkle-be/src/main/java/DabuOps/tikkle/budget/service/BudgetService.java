@@ -38,14 +38,13 @@ public class BudgetService {
         return budgetRepository.save(budget);
     }
 
-    public Budget initBudget(MemberCategory memberCategory, boolean isKeep) {
+    public Budget initBudget(MemberCategory memberCategory) {
         Budget budget = new Budget();
         budget.setMemberCategory(memberCategory);
         budget.setStartDate(LocalDate.now());
         budget.setEndDate(LocalDate.now().plusMonths(1).minusDays(1));
         budget.setCurrent(true);
         budget.setSpend(0);
-        if(isKeep) {}
         return budgetRepository.save(budget);
     }
 
@@ -75,9 +74,9 @@ public class BudgetService {
         budget.setStatus(Budget.Status.INACTIVE);
     }
 
-    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행된다는 크론 표현식
-    public void checkInitDate(Boolean isKeep) { // 매일 자정에 전체 멤버 initDate 검사
-        List<Member> members = memberRepository.findByStateEquals("ACTIVE");
+
+    public void checkInitDate() { // 매일 자정에 전체 멤버 initDate 검사
+        List<Member> members = memberRepository.findByStateEquals(Member.MemberState.ACTIVE);
         LocalDate today = LocalDate.now(); // 오늘
         for(Member member : members) { // 전체 멤버 탐색
             LocalDate initDate = LocalDate.now().withDayOfMonth(member.getInitDate()); // member의 initDate
@@ -93,6 +92,7 @@ public class BudgetService {
                 List<Budget> budgets = budgetRepository.findByMemberCategoryIdInAndCurrentIsTrue(memberCategoryIdList); // 해당 memberCategory의 현재 budget 땡겨오기
                 for(Budget budget : budgets) {
                     budget.setCurrent(false); // 이제 안쓴다!
+                    budgetRepository.save(budget);
                 }
                 // 마지막으로 memberCategory마다 예산 하나씩 새로 만들어주기
                 for(MemberCategory memberCategory : memberCategories) {
@@ -100,6 +100,7 @@ public class BudgetService {
                 }
             }
         }
+        System.out.println("스케줄 메서드 잘 실행중!");
     }
 
 

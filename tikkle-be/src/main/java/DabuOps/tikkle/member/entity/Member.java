@@ -57,6 +57,7 @@ public class Member extends Auditable {
     private List<MemberCategory> memberCategories;
 
 
+
     @Builder
     public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay, Integer initDate, String picture, List<MemberCategory> memberCategories) {
         this.id = id;
@@ -71,10 +72,7 @@ public class Member extends Auditable {
         this.memberCategories = memberCategories;
     }
 
-    @Builder
-    public Member(String email, String name, String picture) {
 
-    }
 
     public static enum Gender{
         male("남성"),

@@ -16,7 +16,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     @PostMapping
-    public void createCategory() {
+    public void createCategory() { // 임시 카테고리
         Category category1 = Category.builder()
                 .id(1)
                 .name("식비")
@@ -32,9 +32,15 @@ public class CategoryService {
                 .name("유흥비")
                 .avgBudget(0)
                 .build();
+        Category category4 = Category.builder()
+                .id(4)
+                .name("기타")
+                .avgBudget(0)
+                .build();
         categoryRepository.save(category1);
         categoryRepository.save(category2);
         categoryRepository.save(category3);
+        categoryRepository.save(category4);
     }
 
     public Category findCategory(Long categoryId) {
