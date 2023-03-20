@@ -15,8 +15,9 @@ interface Transaction {
   amount: number;
 }
 
-interface TransactionList {
+interface Props {
   transactions: Transaction[];
+  date: Date;
 }
 
 // 카테고리별 아이콘 설정하기 <카테고리명: 아이콘이름>
@@ -74,9 +75,21 @@ const ContentContainer = styled.div`
 `;
 
 // 날짜+요일별 거래내역 박스
-const Transaction: FC<TransactionList> = ({ transactions }) => {
+const Transaction: FC<Props> = ({ transactions, date }) => {
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
+  //헤더의 Month
+  let headerMonth = date.getMonth() + 1;
+  console.log(date.getMonth() + 1);
+  //거래내역의 Month
+  // let transactioinMonth = transactions[0].date.getMonth() + 1;
+  // console.log(transactions[0].date.getMonth() + 1);
+
+  // 헤더에서 선택한 달과 일치하는 거래내역만 가져오기
+  const transactionThisMonth = transactions.filter(
+    (el) => el.date.getMonth() + 1 === headerMonth
+  );
+  //TODO 무한스크롤
   const options = {
     root: null,
     rootMargin: '10px',
@@ -99,7 +112,7 @@ const Transaction: FC<TransactionList> = ({ transactions }) => {
 
   return (
     <Container className="transaction-history-box" ref={target}>
-      {transactions.map((transaction, index) => {
+      {transactionThisMonth.map((transaction, index) => {
         const IconComponent = categoryIcons[transaction.category];
         return (
           <TransactionContainer key={index}>
