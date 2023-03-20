@@ -68,6 +68,13 @@ const transactions: Transaction[] = [
     category: '오락',
     amount: -3000,
   },
+  {
+    date: new Date('2023-03-06'),
+    bankInfo: '토스뱅크',
+    payee: '코드스테이츠',
+    category: '오락',
+    amount: +326000,
+  },
 ];
 
 const HomeContainer = styled.div`
