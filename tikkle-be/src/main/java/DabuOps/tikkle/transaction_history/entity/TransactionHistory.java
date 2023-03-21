@@ -31,7 +31,7 @@ public class TransactionHistory {
     @Column(name = "INOUT_TYPE")
     private InoutType inoutType;
 
-    @Column(name = "CONTENT")
+    @Column(name = "MEMO")
     private String memo;
 
     @Column(name = "AMOUNT")
