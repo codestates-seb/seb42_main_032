@@ -97,4 +97,17 @@ public class TransactionHistoryDto {
     public static class DailySummaryResponse {
         private List<List<Integer>> dailySummary;
     }
+
+    public static class ApiRequest {
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        private LocalDate date;
+        @DateTimeFormat(pattern = "HH:mm:ss")
+        private LocalTime time;
+        private TransactionHistory.InoutType inoutType;
+        private String memo;
+        private int amount;
+        private String branchName;
+
+        private String bankName;
+    }
 }

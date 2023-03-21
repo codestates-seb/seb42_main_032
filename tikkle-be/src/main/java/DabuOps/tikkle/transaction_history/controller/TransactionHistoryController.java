@@ -82,8 +82,11 @@ public class TransactionHistoryController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping()
-    public ResponseEntity updateTransactionHistoiesFromOpenApi() {
-        List<AccountTransactionDto> accountTransactionDtoList = userAuthService.requestTransactionHistories()
-    }
+//    @PostMapping("/{member_id}/request")
+//    public ResponseEntity updateTransactionHistoriesFromOpenApi(@PathVariable("member_id")Long memberId) {
+//        List<AccountTransactionDto> accountTransactionDtoList = userAuthService.requestTransactionHistories(memberId);
+//        for(AccountTransactionDto dto : accountTransactionDtoList) {
+//            TransactionHistoryDto.ApiRequest transactionHistory = accountTransactionMapper.accountTransactionDtoToTransactionHistoryPostDto(dto, );
+//        }
+//    }
 }

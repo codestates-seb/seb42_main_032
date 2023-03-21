@@ -101,8 +101,8 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
         transactionHistory.setStatus(TransactionHistory.Status.INACTIVE);
     }
 
-    public TransactionHistory getTransactionHistoriesfromOpenApi(TransactionHistory transactionHistory) {
-        String branchName = transactionHistory.getBranchName();
-
-    }
+//    public TransactionHistory getTransactionHistoriesfromOpenApi(TransactionHistory transactionHistory) {
+//        String branchName = transactionHistory.getBranchName();
+//
+//    }
 }
