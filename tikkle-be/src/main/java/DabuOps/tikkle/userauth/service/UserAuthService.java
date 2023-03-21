@@ -105,7 +105,7 @@ public class UserAuthService {
             .queryParam("fintech_use_num", obtainAccount.getFintechUseNum())
             .queryParam("inquiry_type", "A")
             .queryParam("inquiry_base", "T")
-            .queryParam("from_time", obtainMember.getLastDateTimeInquiryTransactionHistory())
+            .queryParam("from_time", obtainAccount.getLastDateTimeInquiryTransactionHistory())
             .queryParam("to_time", LocalDateTime.now())
             .queryParam("sort_order", "D")
             .queryParam("tran_dtime", LocalDateTime.now());
@@ -120,22 +120,22 @@ public class UserAuthService {
      * 이용기관 부여번호는 하루동안의 유일성을 보장받아야함
      * 각 회원별 거래 내역 조회수로 하루동안의 유일성 보장
      */
-    private String generateInstitutionGrantNumber(Long memberId){
+    private String generateInstitutionGrantNumber(Long accountId){
         //id로 멤버 찾기
-        Member obtainMember = memberRepository.findById(memberId).get();
+        Account obtainAccount = accountRepository.findById(accountId).get();
         LocalDate today = LocalDate.now();
         String generatedNumber;
         //호출한 멤버의 마지막 거래 내역 조회날짜가 어제면 거래내역 조횟수를 1로 초기화
-        if(obtainMember.getLastDateTimeInquiryTransactionHistory().toLocalDate().isBefore(today)) {
-            obtainMember.setCallTransactionHistories(1);
+        if(obtainAccount.getLastDateTimeInquiryTransactionHistory().toLocalDate().isBefore(today)) {
+            obtainAccount.setCallTransactionHistories(1);
         }
         else{
             //아니면 거래내역 조회수를 +1
-            obtainMember.setCallTransactionHistories(obtainMember.getCallTransactionHistories() + 1);
+            obtainAccount.setCallTransactionHistories(obtainAccount.getCallTransactionHistories() + 1);
         }
         //이용기관 부여번호 9자리 생성(하루동안의 유일성 보장)
-        generatedNumber = String.format("%09d", obtainMember.getCallTransactionHistories());
-        memberRepository.save(obtainMember);
+        generatedNumber = String.format("%09d", obtainAccount.getCallTransactionHistories());
+        accountRepository.save(obtainAccount);
         return generatedNumber;
     }
 }
