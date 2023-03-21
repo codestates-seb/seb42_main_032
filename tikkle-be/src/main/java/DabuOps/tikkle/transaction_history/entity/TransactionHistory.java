@@ -67,7 +67,8 @@ public class TransactionHistory {
     }
 
     @Builder
-    public TransactionHistory(long id, MemberCategory memberCategory, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branchName, Status status) {
+
+    public TransactionHistory(long id, MemberCategory memberCategory, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branchName, Status status, String bankName) {
         this.id = id;
         this.memberCategory = memberCategory;
         this.date = date;
@@ -77,5 +78,6 @@ public class TransactionHistory {
         this.amount = amount;
         this.branchName = branchName;
         this.status = status;
+        this.bankName = bankName;
     }
 }

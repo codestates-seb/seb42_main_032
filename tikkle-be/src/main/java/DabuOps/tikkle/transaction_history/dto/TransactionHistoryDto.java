@@ -70,9 +70,11 @@ public class TransactionHistoryDto {
         private String memo;
         private int amount;
         private String branchName;
+        private String bankName;
 
         @Builder
-        public Response(long id, long memberCategoryId, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName) {
+
+        public Response(Long id, Long memberCategoryId, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName, String bankName) {
             this.id = id;
             this.memberCategoryId = memberCategoryId;
             this.date = date;
@@ -81,6 +83,7 @@ public class TransactionHistoryDto {
             this.memo = memo;
             this.amount = amount;
             this.branchName = branchName;
+            this.bankName = bankName;
         }
     }
 
