@@ -1,6 +1,7 @@
 package DabuOps.tikkle.userauth.service;
 
 import DabuOps.tikkle.account.entity.Account;
+import DabuOps.tikkle.account.entity.Account.AccountState;
 import DabuOps.tikkle.account.repository.AccountRepository;
 import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.repository.MemberRepository;
@@ -97,38 +98,49 @@ public class UserAuthService {
         return accountList;
     }
 
-    public List<AccountTransactionDto> requestTransactionHistories(Long accountId, Long memberId) {
+    public List<AccountTransactionDto> requestTransactionHistories(Long memberId) {
+        //멤버가 가진 모든 활성 계좌를 찾아서
         Member obtainMember = memberRepository.findById(memberId).get();
-        Account obtainAccount = accountRepository.findById(accountId).get();
+        List<Account> obtainAccounts =
+            accountRepository.findAllByMemberIdAndStateIs(obtainMember.getId(), AccountState.ACTIVE);
         String accessToken = obtainMember.getAccessToken();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(accessToken);
 
-        UriComponentsBuilder builder = UriComponentsBuilder
-            .fromHttpUrl(openBankingApiUrl + "v2.0/account/transaction_list")
-            .queryParam("bank_tran_id", InstitutionCode+"U"+generateInstitutionGrantNumber(accountId))
-            .queryParam("fintech_use_num", obtainAccount.getFintechUseNum())
-            .queryParam("inquiry_type", "A")
-            .queryParam("inquiry_base", "T")
-            .queryParam("from_time", obtainAccount.getLastDateTimeInquiryTransactionHistory())
-            .queryParam("to_time", LocalDateTime.now())
-            .queryParam("sort_order", "D")
-            .queryParam("tran_dtime", LocalDateTime.now());
+        List<AccountTransactionDto> transactionHistories = new ArrayList<AccountTransactionDto>();
+        //계정마다 거래 내역 조회를 실행해주고
+        for(Account account : obtainAccounts) {
+            UriComponentsBuilder builder = UriComponentsBuilder
+                .fromHttpUrl(openBankingApiUrl + "v2.0/account/transaction_list")
+                .queryParam("bank_tran_id",
+                    InstitutionCode + "U" + generateInstitutionGrantNumber(account.getId()))
+                .queryParam("fintech_use_num", account.getFintechUseNum())
+                .queryParam("inquiry_type", "A")
+                .queryParam("inquiry_base", "T")
+                .queryParam("from_time", account.getLastDateTimeInquiryTransactionHistory())
+                .queryParam("to_time", LocalDateTime.now())
+                .queryParam("sort_order", "D")
+                .queryParam("tran_dtime", LocalDateTime.now());
 
-        HttpEntity<?> request = new HttpEntity<>(headers);
-        ResponseEntity<AccountTransactionListDto> response =
-            restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, AccountTransactionListDto.class);
-        //멤버카테고리 아이디 구현 필요
-        Long testMemberCategoryId = 0L;
-        for(AccountTransactionDto accountTransactionDto : response.getBody().getRes_list()){
-            TransactionHistoryDto.Post post =
-                mapper.accountTransactionDtoToTransactionHistoryPostDto(accountTransactionDto, response.getBody().getBank_name());
-            transactionHistoryService.createTransactionHistory(transactionHistoryMapper.transactionHistoryPostDtoToTransactionHistory(post),testMemberCategoryId);
+            HttpEntity<?> request = new HttpEntity<>(headers);
+            ResponseEntity<AccountTransactionListDto> response =
+                restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request,
+                    AccountTransactionListDto.class);
+            //조회한 거래 내역을 하나로 만들어서 반환함
+            transactionHistories.addAll(response.getBody().getRes_list());
         }
+        //멤버카테고리 아이디 구현 필요
+//        Long testMemberCategoryId = 0L;
+//        for(AccountTransactionDto accountTransactionDto : response.getBody().getRes_list()){
+//            TransactionHistoryDto.Post post =
+//                mapper.accountTransactionDtoToTransactionHistoryPostDto(accountTransactionDto, response.getBody().getBank_name());
+//            transactionHistoryService.createTransactionHistory(
+//                transactionHistoryMapper.transactionHistoryPostDtoToTransactionHistory(post),testMemberCategoryId);
+//        }
 
-        return response.getBody().getRes_list();
+        return transactionHistories;
     }
     /**
      * 이용기관 부여번호는 하루동안의 유일성을 보장받아야함
