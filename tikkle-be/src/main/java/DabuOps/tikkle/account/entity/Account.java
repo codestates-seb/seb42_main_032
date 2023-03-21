@@ -17,10 +17,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Builder
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Account extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +39,6 @@ public class Account extends Auditable {
     private Long balance;
 
     @Column
-    @Builder.Default
     @Enumerated(value = EnumType.STRING)
     private AccountState state = AccountState.ACTIVE;
 
@@ -62,9 +61,7 @@ public class Account extends Auditable {
         AccountState(String string) { this.string = string; }
     }
 
-    @Builder
-    public Account(Long id, String name, String number, String bankName, Long balance,
-        AccountState state, Member member) {
+    public Account(Long id, String name, String number, String bankName, Long balance, AccountState state, Member member, String fintechUseNum) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -72,7 +69,11 @@ public class Account extends Auditable {
         this.balance = balance;
         this.state = state;
         this.member = member;
+        this.fintechUseNum = fintechUseNum;
     }
+
+    @Builder
+
 
     public Account(String fintechUseNum) {
         this.fintechUseNum = fintechUseNum;

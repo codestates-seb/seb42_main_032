@@ -23,6 +23,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
     public TransactionHistory createTransactionHistory(TransactionHistory transactionHistory, Long memberCategoryId) {
         MemberCategory memberCategory = memberCategoryService.findMemberCategory(memberCategoryId);
         transactionHistory.setMemberCategory(memberCategory);
+        transactionHistory.setStatus(TransactionHistory.Status.ACTIVE);
 
         return transactionHistoryRepository.save(transactionHistory);
     }

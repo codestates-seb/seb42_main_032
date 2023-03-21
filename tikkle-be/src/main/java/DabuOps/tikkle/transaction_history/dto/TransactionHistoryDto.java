@@ -3,6 +3,7 @@ package DabuOps.tikkle.transaction_history.dto;
 import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,7 +14,9 @@ public class TransactionHistoryDto {
     @NoArgsConstructor
     public static class Post {
         private Long memberCategoryId;
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate date;
+        @DateTimeFormat(pattern = "HH:mm:ss")
         private LocalTime time;
         private TransactionHistory.InoutType inoutType;
         private String memo;
@@ -37,7 +40,9 @@ public class TransactionHistoryDto {
     @NoArgsConstructor
     public static class Patch {
         private Long memberCategoryId;
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate date;
+        @DateTimeFormat(pattern = "HH:mm:ss")
         private LocalTime time;
         private String memo;
         private int amount;
