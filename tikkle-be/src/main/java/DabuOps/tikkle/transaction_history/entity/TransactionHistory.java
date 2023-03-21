@@ -43,6 +43,9 @@ public class TransactionHistory {
     @Column(name = "STATUS")
     private Status status;
 
+    @Column(name = "BANK_NAME")
+    private String bankName;
+
     public enum InoutType {
         INCOME("수입"),
         SPEND("지출");

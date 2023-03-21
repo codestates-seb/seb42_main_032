@@ -64,8 +64,9 @@ public class TransactionHistoryController {
         List<List> monthlyInfo = transactionHistoryService.findMonthlyTransactionHistories(date, memberId);
         List<TransactionHistory> transactionHistories = monthlyInfo.get(0);
         List dailySummary = monthlyInfo.get(1);
+        List<TransactionHistoryDto.Response> responses = mapper.transactionHistoriesToTransactionHistoryResponseDto(transactionHistories);
 
-        return new ResponseEntity<>(new MonthlyTransactionHistoriesDto<>(transactionHistories, dailySummary), HttpStatus.OK);
+        return new ResponseEntity<>(new MonthlyTransactionHistoriesDto<>(responses, dailySummary), HttpStatus.OK);
     }
 
     @DeleteMapping("/{transaction_history_id}")
