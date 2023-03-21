@@ -29,12 +29,12 @@ const Calendar = ({ date }: { date: Date }) => {
     axios
       .get('http://localhost:8080/dailySummary')
       .then((res) => {
-        setDailySummary(res.data);
         setLoading(false);
+        setDailySummary(res.data.slice(1));
       })
       .catch((err) => console.log(err));
   }, []);
-  console.log(dailySummary);
+  console.log(dailySummary[1]);
 
   // 현재 날짜를 불러올 수 있도록 Date 타입의 상태로 생성하고, 초기값을 Date 객체로 설정
   // ! 초기값은 'Home' 페이지에서 설정함.
@@ -74,13 +74,15 @@ const Calendar = ({ date }: { date: Date }) => {
   for (let i = 1; i <= lastDateOfMonth.getDate(); i++) {
     dateArr.push(i);
   }
-
+  // dateArr= [1,2,3,4, .. 31]
+  // dailySummary = [[0,0], [1000, 123000]]
   // 일자를 나타내는 칸 렌더링
-  const renderDate = dateArr.map((date, idx) => {
+
+  const renderDate = dailySummary.map((daily, idx) => {
     return (
       // w-52 === 13rem
       // h-24 === 6rem
-      <Box key={date} as="td" w={52} h={24}>
+      <Box key={idx} as="td" w={52} h={24}>
         <Box
           fontSize={[12, 16, 18]}
           h="50%"
@@ -88,17 +90,13 @@ const Calendar = ({ date }: { date: Date }) => {
           justifyContent="center"
           alignItems="center"
         >
-          {date}
+          {idx + 1}
         </Box>
         <Box fontSize={[8, 10, 12]}>
-          {/* 받아온 데이터로 지출 레이블 표시 */}
-          <Text color={'blue'}>
-            {/* {dailySummary !== undefined ? dailySummary[idx][0] : 0} */}
-          </Text>
           {/* 받아온 데이터로 수입 레이블 표시 */}
-          <Text color={'red'}>
-            {/* {dailySummary !== undefined ? dailySummary[idx][1] : 0} */}
-          </Text>
+          <Text color={'blue'}>+{daily !== undefined ? daily[0] : 0}</Text>
+          {/* 받아온 데이터로 지출 레이블 표시 */}
+          <Text color={'red'}>-{daily !== undefined ? daily[1] : 0}</Text>
         </Box>
       </Box>
     );
