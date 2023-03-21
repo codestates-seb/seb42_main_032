@@ -35,9 +35,8 @@ public class UserAuthController {
     @PostMapping("/transaction_histories/api")
     public String inquiryTransactionHistories(@RequestParam("account-id") Long accountId, @LoginMember LogInMemberDto logInMemberDto) {
         List<AccountTransactionDto> transactionDtoList = userAuthService.requestTransactionHistories(accountId, logInMemberDto.getMemberId());
-        //help
 
-        return "사용자 인증이 완료되었습니다.";
+        return "조회 완료";
     }
 
 

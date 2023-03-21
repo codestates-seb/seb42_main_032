@@ -4,11 +4,15 @@ import DabuOps.tikkle.account.entity.Account;
 import DabuOps.tikkle.account.repository.AccountRepository;
 import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.repository.MemberRepository;
+import DabuOps.tikkle.transaction_history.dto.TransactionHistoryDto;
+import DabuOps.tikkle.transaction_history.mapper.TransactionHistoryMapper;
+import DabuOps.tikkle.transaction_history.service.TransactionHistoryService;
 import DabuOps.tikkle.userauth.dto.AccountInfoDto;
 import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
 import DabuOps.tikkle.userauth.dto.AccountTransactionListDto;
 import DabuOps.tikkle.userauth.dto.ResList;
 import DabuOps.tikkle.userauth.dto.TokenResponseDto;
+import DabuOps.tikkle.userauth.mapper.AccountTransactionMapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,6 +36,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class UserAuthService {
     private final MemberRepository memberRepository;
     private final AccountRepository accountRepository;
+    private final TransactionHistoryService transactionHistoryService;
+    private final TransactionHistoryMapper transactionHistoryMapper;
+    private final AccountTransactionMapper mapper;
     private final RestTemplate restTemplate;
     //이용기관코드 = 테스팅할 사용자 것을 적어야함
     private final String InstitutionCode = "M202300547";
@@ -101,7 +108,7 @@ public class UserAuthService {
 
         UriComponentsBuilder builder = UriComponentsBuilder
             .fromHttpUrl(openBankingApiUrl + "v2.0/account/transaction_list")
-            .queryParam("bank_tran_id", InstitutionCode+"U"+generateInstitutionGrantNumber(memberId))
+            .queryParam("bank_tran_id", InstitutionCode+"U"+generateInstitutionGrantNumber(accountId))
             .queryParam("fintech_use_num", obtainAccount.getFintechUseNum())
             .queryParam("inquiry_type", "A")
             .queryParam("inquiry_base", "T")
@@ -113,6 +120,13 @@ public class UserAuthService {
         HttpEntity<?> request = new HttpEntity<>(headers);
         ResponseEntity<AccountTransactionListDto> response =
             restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, AccountTransactionListDto.class);
+        //멤버카테고리 아이디 구현 필요
+        Long testMemberCategoryId = 0L;
+        for(AccountTransactionDto accountTransactionDto : response.getBody().getRes_list()){
+            TransactionHistoryDto.Post post =
+                mapper.accountTransactionDtoToTransactionHistoryPostDto(accountTransactionDto, response.getBody().getBank_name());
+            transactionHistoryService.createTransactionHistory(transactionHistoryMapper.transactionHistoryPostDtoToTransactionHistory(post),testMemberCategoryId);
+        }
 
         return response.getBody().getRes_list();
     }
@@ -121,11 +135,11 @@ public class UserAuthService {
      * 각 회원별 거래 내역 조회수로 하루동안의 유일성 보장
      */
     private String generateInstitutionGrantNumber(Long accountId){
-        //id로 멤버 찾기
+        //id로 계좌 찾기
         Account obtainAccount = accountRepository.findById(accountId).get();
         LocalDate today = LocalDate.now();
         String generatedNumber;
-        //호출한 멤버의 마지막 거래 내역 조회날짜가 어제면 거래내역 조횟수를 1로 초기화
+        //호출한 계좌의 마지막 거래 내역 조회날짜가 어제면 거래내역 조횟수를 1로 초기화
         if(obtainAccount.getLastDateTimeInquiryTransactionHistory().toLocalDate().isBefore(today)) {
             obtainAccount.setCallTransactionHistories(1);
         }
