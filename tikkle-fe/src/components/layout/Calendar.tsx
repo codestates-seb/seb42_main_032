@@ -93,11 +93,11 @@ const Calendar = ({ date }: { date: Date }) => {
         <Box fontSize={[8, 10, 12]}>
           {/* 받아온 데이터로 지출 레이블 표시 */}
           <Text color={'blue'}>
-            {dailySummary !== undefined ? dailySummary[idx][0] : 0}
+            {/* {dailySummary !== undefined ? dailySummary[idx][0] : 0} */}
           </Text>
           {/* 받아온 데이터로 수입 레이블 표시 */}
           <Text color={'red'}>
-            {dailySummary !== undefined ? dailySummary[idx][1] : 0}
+            {/* {dailySummary !== undefined ? dailySummary[idx][1] : 0} */}
           </Text>
         </Box>
       </Box>

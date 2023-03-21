@@ -1,11 +1,12 @@
 // TODO 거래내역 박스
 // TODO 무한 스크롤 구현하기
 
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { MdFastfood } from 'react-icons/md';
 import { BiCoffeeTogo } from 'react-icons/bi';
 import { IoLogoGameControllerA } from 'react-icons/io';
+import Modal from '../transaction/Modal';
 
 export interface Transaction {
   date: Date;
@@ -76,6 +77,11 @@ const ContentContainer = styled.div`
 
 // 날짜+요일별 거래내역 박스
 const Transaction: FC<Props> = ({ transactions, date }) => {
+  // 거래내역 클릭 시 상세 정보 모달 띄우기
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
   //헤더의 Month
@@ -116,7 +122,7 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
       {transactionThisMonth.map((transaction, index) => {
         const IconComponent = categoryIcons[transaction.category];
         return (
-          <TransactionContainer key={index}>
+          <TransactionContainer key={index} onClick={toggleModal}>
             <div>
               <div className="transaction-date-box">
                 {transaction.date.getDate()}일{' '}
@@ -126,7 +132,7 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
                 <CategoryIconWrapper category={transaction.category}>
                   <IconComponent className="transaciton-icon" />
                 </CategoryIconWrapper>
-
+                {showModal && <Modal></Modal>}
                 <div className="transaction-content-box">
                   <div className="transaction-amount-box">
                     <strong>
