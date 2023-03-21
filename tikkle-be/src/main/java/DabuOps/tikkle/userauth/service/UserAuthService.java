@@ -125,7 +125,8 @@ public class UserAuthService {
         for(AccountTransactionDto accountTransactionDto : response.getBody().getRes_list()){
             TransactionHistoryDto.Post post =
                 mapper.accountTransactionDtoToTransactionHistoryPostDto(accountTransactionDto, response.getBody().getBank_name());
-            transactionHistoryService.createTransactionHistory(transactionHistoryMapper.transactionHistoryPostDtoToTransactionHistory(post),testMemberCategoryId);
+            transactionHistoryService.createTransactionHistory(
+                transactionHistoryMapper.transactionHistoryPostDtoToTransactionHistory(post),testMemberCategoryId);
         }
 
         return response.getBody().getRes_list();
