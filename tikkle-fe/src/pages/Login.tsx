@@ -5,10 +5,9 @@
  * 액세스 토큰이 유효하다는 것은 만료되지 않은 액세스 토큰이 recoil 상태로 존재한다는 것을 의미합니다
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 import { tokenState } from '../util/store';
 import { useRecoilState } from 'recoil';
 
@@ -89,13 +88,24 @@ const OauthLoginButton = styled.div`
 function Login() {
   const [accessToken, setAccessToken] = useRecoilState(tokenState);
 
+  // '/login' 경로로 바로 접속할 경우 recoil-persist가 동작하지 않는 버그가 있어,
+  // 해당 키가 로컬스토리지에 없다면 수동으로 생성
+  if (localStorage.getItem('recoil-persist') === null) {
+    localStorage.setItem(
+      'recoil-persist',
+      JSON.stringify({ tokenState: null })
+    );
+  }
+
   // TODO 현재 무한로딩 오류 발생 중, 수정 필요
   useEffect(() => {
     // 토큰이 유효할 때만 페이지 이동 로직 수행
     if (accessToken !== null) {
       axios
         .get(
-          `${process.env.REACT_APP_SERVER}:8080/login?accessToken=${accessToken}`
+          `${
+            import.meta.env.REACT_APP_SERVER
+          }:8080/login?accessToken=${accessToken}`
         )
         .then((res) => {
           console.log(typeof res);
@@ -103,14 +113,14 @@ function Login() {
         })
         .catch((err) => console.log(err));
     } else {
-      // 토큰이 유효하지 않으면 URL에 발행된 토큰이 있는지 확인하고,
-      // 있다면 토큰을 저장
+      // 토큰이 유효하지 않으면 URL에 발행된 토큰이 위치할 부분만 잘라냄
       const parsedHash = new URLSearchParams(window.location.hash.substring(1));
 
-      // URL에서 읽은 액세스 토큰 저장
-      const parsedAccessToken = parsedHash.get('access_token');
-      setAccessToken(parsedAccessToken);
+      // 잘라낸 부분이 access_token 값이 맞다면 뽑아내서 저장
+      setAccessToken(parsedHash.get('access_token'));
     }
+
+    // 액세스 토큰의 값이 변경될 때마다 useEffect 구문 재실행
   }, [accessToken]);
 
   // 저장된 토큰이 없거나 만료되었다면 페이지 이동이 되지 않기 때문에 로그인 버튼 클릭 가능
