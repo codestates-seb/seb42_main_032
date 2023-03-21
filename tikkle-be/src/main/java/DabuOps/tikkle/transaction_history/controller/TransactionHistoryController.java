@@ -7,6 +7,9 @@ import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
 import DabuOps.tikkle.transaction_history.mapper.TransactionHistoryMapper;
 import DabuOps.tikkle.transaction_history.repository.TransactionHistoryRepository;
 import DabuOps.tikkle.transaction_history.service.TransactionHistoryService;
+import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
+import DabuOps.tikkle.userauth.mapper.AccountTransactionMapper;
+import DabuOps.tikkle.userauth.service.UserAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,9 @@ public class TransactionHistoryController {
     private final TransactionHistoryRepository transactionHistoryRepository;
     private final MemberCategoryService memberCategoryService;
     private final TransactionHistoryMapper mapper;
+
+    private final UserAuthService userAuthService;
+    private final AccountTransactionMapper accountTransactionMapper;
 
     @PostMapping()
     public ResponseEntity postTransactionHistory(@Valid @RequestBody TransactionHistoryDto.Post requestBody) {
@@ -74,5 +80,10 @@ public class TransactionHistoryController {
         transactionHistoryService.deleteTransactionHistory(transactionHistoryId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping()
+    public ResponseEntity updateTransactionHistoiesFromOpenApi() {
+        List<AccountTransactionDto> accountTransactionDtoList = userAuthService.requestTransactionHistories()
     }
 }

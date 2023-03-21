@@ -20,6 +20,7 @@ import java.util.Optional;
 public class TransactionHistoryServiceImpl implements TransactionHistoryService{
     private final TransactionHistoryRepository transactionHistoryRepository;
     private final MemberCategoryService memberCategoryService;
+
     public TransactionHistory createTransactionHistory(TransactionHistory transactionHistory, Long memberCategoryId) {
         MemberCategory memberCategory = memberCategoryService.findMemberCategory(memberCategoryId);
         transactionHistory.setMemberCategory(memberCategory);
@@ -100,5 +101,8 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
         transactionHistory.setStatus(TransactionHistory.Status.INACTIVE);
     }
 
-    public TransactionHistory getTransactionHistoriesfromOpenApi(TransactionHistory transactionHistory)
+    public TransactionHistory getTransactionHistoriesfromOpenApi(TransactionHistory transactionHistory) {
+        String branchName = transactionHistory.getBranchName();
+
+    }
 }
