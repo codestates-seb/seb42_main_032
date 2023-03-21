@@ -70,6 +70,10 @@ const ContentContainer = styled.div`
     margin-left: 20px;
     text-align: left;
   }
+
+  .transaction-content-box:hover {
+    cursor: pointer;
+  }
   .transaciton-bank-box {
     color: grey;
   }
@@ -132,8 +136,8 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
                 <CategoryIconWrapper category={transaction.category}>
                   <IconComponent className="transaciton-icon" />
                 </CategoryIconWrapper>
-                {showModal && <Modal></Modal>}
-                <div className="transaction-content-box">
+                <div className="transaction-content-box" onClick={toggleModal}>
+                  {showModal && <Modal></Modal>}
                   <div className="transaction-amount-box">
                     <strong>
                       원
