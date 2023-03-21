@@ -1,16 +1,38 @@
 package DabuOps.tikkle.userauth.dto;
 
+import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class ModifiedTransactionHistoryDto {
-    private String bank_name;
-    private String tran_date;
-    private String tran_time;
-    private String inout_type;
-    private String tran_type;
-    private String printed_content;
-    private String tran_amt;
-    private String after_balance_amt;
-    private String branch_name;
+    private Long memberCategoryId;
+    private LocalDate date;
+    private LocalTime time;
+    private TransactionHistory.InoutType inoutType;
+    private String memo;
+    private int amount;
+    private String branchName;
+
+    private String bankName;
+
+    @Builder
+    public ModifiedTransactionHistoryDto(Long memberCategoryId, LocalDate date, LocalTime time,
+        TransactionHistory.InoutType inoutType, String memo,
+        int amount, String branchName, String bankName) {
+        this.memberCategoryId = memberCategoryId;
+        this.date = date;
+        this.time = time;
+        this.inoutType = inoutType;
+        this.memo = memo;
+        this.amount = amount;
+        this.branchName = branchName;
+        this.bankName = bankName;
+    }
 }

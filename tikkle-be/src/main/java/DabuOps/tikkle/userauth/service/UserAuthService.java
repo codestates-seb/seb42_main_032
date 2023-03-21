@@ -11,6 +11,7 @@ import DabuOps.tikkle.transaction_history.service.TransactionHistoryService;
 import DabuOps.tikkle.userauth.dto.AccountInfoDto;
 import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
 import DabuOps.tikkle.userauth.dto.AccountTransactionListDto;
+import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
 import DabuOps.tikkle.userauth.dto.ResList;
 import DabuOps.tikkle.userauth.dto.TokenResponseDto;
 import DabuOps.tikkle.userauth.mapper.AccountTransactionMapper;
@@ -98,7 +99,7 @@ public class UserAuthService {
         return accountList;
     }
 
-    public List<AccountTransactionDto> requestTransactionHistories(Long memberId) {
+    public List<ModifiedTransactionHistoryDto> requestTransactionHistories(Long memberId) {
         //멤버가 가진 모든 활성 계좌를 찾아서
         Member obtainMember = memberRepository.findById(memberId).get();
         List<Account> obtainAccounts =
@@ -109,7 +110,8 @@ public class UserAuthService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(accessToken);
 
-        List<AccountTransactionDto> transactionHistories = new ArrayList<AccountTransactionDto>();
+        List<ModifiedTransactionHistoryDto> transactionHistories
+            = new ArrayList<ModifiedTransactionHistoryDto>();
         //계정마다 거래 내역 조회를 실행해주고
         for(Account account : obtainAccounts) {
             UriComponentsBuilder builder = UriComponentsBuilder
@@ -129,7 +131,9 @@ public class UserAuthService {
                 restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request,
                     AccountTransactionListDto.class);
             //조회한 거래 내역을 하나로 만들어서 반환함
-            transactionHistories.addAll(response.getBody().getRes_list());
+            for(AccountTransactionDto accountTransactionDto : response.getBody().getRes_list()){
+                transactionHistories.add(mapper.accountTransactionDtoToModifiedTransactionHistoryDto(accountTransactionDto, account.getBankName()));
+            }
         }
         //멤버카테고리 아이디 구현 필요
 //        Long testMemberCategoryId = 0L;

@@ -4,6 +4,7 @@ import DabuOps.tikkle.transaction_history.dto.TransactionHistoryDto;
 import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
 import DabuOps.tikkle.transaction_history.entity.TransactionHistory.InoutType;
 import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
+import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -28,6 +29,25 @@ public class AccountTransactionMapper {
         post.bankName(bankName);
 
         return post.build();
+    }
+
+    public ModifiedTransactionHistoryDto accountTransactionDtoToModifiedTransactionHistoryDto(
+        AccountTransactionDto accountTransactionDto, String bankName) {
+        if ( accountTransactionDto == null ) {
+            return null;
+        }
+        ModifiedTransactionHistoryDto.ModifiedTransactionHistoryDtoBuilder modified
+            = ModifiedTransactionHistoryDto.builder();
+
+        modified.date(stringToDate(accountTransactionDto.getTran_date()));
+        modified.time(stringToTime(accountTransactionDto.getTran_time()));
+        modified.inoutType(stringToInoutType(accountTransactionDto.getInout_type()));
+        modified.memo(accountTransactionDto.getPrinted_content());
+        modified.amount(Integer.parseInt(accountTransactionDto.getTran_amt()));
+        modified.branchName(accountTransactionDto.getBranch_name());
+        modified.bankName(bankName);
+
+        return modified.build();
     }
 
     private LocalDate stringToDate(String date){

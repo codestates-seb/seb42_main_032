@@ -26,7 +26,6 @@ public class TransactionHistoryDto {
         private String bankName;
 
         @Builder
-
         public Post(Long memberCategoryId, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName, String bankName) {
             this.memberCategoryId = memberCategoryId;
             this.date = date;

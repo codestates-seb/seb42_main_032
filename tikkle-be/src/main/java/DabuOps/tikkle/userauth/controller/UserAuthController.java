@@ -5,6 +5,7 @@ import DabuOps.tikkle.oauth.resolver.LoginMember;
 import DabuOps.tikkle.transaction_history.service.TransactionHistoryService;
 import DabuOps.tikkle.userauth.dto.AccountInfoDto;
 import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
+import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
 import DabuOps.tikkle.userauth.dto.TokenResponseDto;
 import DabuOps.tikkle.userauth.service.UserAuthService;
 import java.util.List;
@@ -34,7 +35,7 @@ public class UserAuthController {
 
     @PostMapping("/transaction_histories/api")
     public String inquiryTransactionHistories(@LoginMember LogInMemberDto logInMemberDto) {
-        List<AccountTransactionDto> transactionDtoList = userAuthService.requestTransactionHistories(logInMemberDto.getMemberId());
+        List<ModifiedTransactionHistoryDto> transactionDtoList = userAuthService.requestTransactionHistories(logInMemberDto.getMemberId());
 
         return "조회 완료";
     }
