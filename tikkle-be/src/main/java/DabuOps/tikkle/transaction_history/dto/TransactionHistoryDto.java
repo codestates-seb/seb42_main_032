@@ -23,8 +23,11 @@ public class TransactionHistoryDto {
         private int amount;
         private String branchName;
 
+        private String bankName;
+
         @Builder
-        public Post(Long memberCategoryId, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName) {
+
+        public Post(Long memberCategoryId, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName, String bankName) {
             this.memberCategoryId = memberCategoryId;
             this.date = date;
             this.time = time;
@@ -32,6 +35,7 @@ public class TransactionHistoryDto {
             this.memo = memo;
             this.amount = amount;
             this.branchName = branchName;
+            this.bankName = bankName;
         }
     }
 
