@@ -33,6 +33,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@chakra-ui/system", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:2.5.1"],\
             ["@emotion/react", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:11.10.6"],\
             ["@emotion/styled", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:11.10.6"],\
+            ["@types/node", "npm:18.15.3"],\
             ["@types/react", "npm:18.0.28"],\
             ["@types/react-dom", "npm:18.0.11"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -50,6 +51,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-is", "npm:18.2.0"],\
             ["react-router-dom", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:6.9.0"],\
             ["recoil", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:0.7.7"],\
+            ["recoil-persist", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:4.2.0"],\
             ["styled-components", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:5.3.8"],\
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"],\
             ["vite", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:4.1.4"]\
@@ -3500,6 +3502,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-18.14.6-7d0665d471-2f88f482ca.zip/node_modules/@types/node/",\
           "packageDependencies": [\
             ["@types/node", "npm:18.14.6"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:18.15.3", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-18.15.3-d092b0c75c-31b1d92475.zip/node_modules/@types/node/",\
+          "packageDependencies": [\
+            ["@types/node", "npm:18.15.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -8373,6 +8382,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["recoil-persist", [\
+        ["npm:4.2.0", {\
+          "packageLocation": "./.yarn/cache/recoil-persist-npm-4.2.0-8058958608-1c8a6be4bb.zip/node_modules/recoil-persist/",\
+          "packageDependencies": [\
+            ["recoil-persist", "npm:4.2.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:4.2.0", {\
+          "packageLocation": "./.yarn/__virtual__/recoil-persist-virtual-e66f080a46/0/cache/recoil-persist-npm-4.2.0-8058958608-1c8a6be4bb.zip/node_modules/recoil-persist/",\
+          "packageDependencies": [\
+            ["recoil-persist", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:4.2.0"],\
+            ["@types/recoil", null],\
+            ["recoil", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:0.7.7"]\
+          ],\
+          "packagePeers": [\
+            "@types/recoil",\
+            "recoil"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["regenerator-runtime", [\
         ["npm:0.13.11", {\
           "packageLocation": "./.yarn/cache/regenerator-runtime-npm-0.13.11-90bf536060-27481628d2.zip/node_modules/regenerator-runtime/",\
@@ -9043,6 +9074,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@chakra-ui/system", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:2.5.1"],\
             ["@emotion/react", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:11.10.6"],\
             ["@emotion/styled", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:11.10.6"],\
+            ["@types/node", "npm:18.15.3"],\
             ["@types/react", "npm:18.0.28"],\
             ["@types/react-dom", "npm:18.0.11"],\
             ["@types/react-router-dom", "npm:5.3.3"],\
@@ -9060,6 +9092,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-is", "npm:18.2.0"],\
             ["react-router-dom", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:6.9.0"],\
             ["recoil", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:0.7.7"],\
+            ["recoil-persist", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:4.2.0"],\
             ["styled-components", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:5.3.8"],\
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"],\
             ["vite", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:4.1.4"]\
@@ -9399,7 +9432,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["vite", "virtual:0ac2a9d69d342ec48a9f3176407c00aba9dfcd1e3dda6a9beeec7b314cc3789f137da50944bde2586bc32ecb9be3300c6926bc4ae2f906845d35eb0edefb522f#npm:4.1.4"],\
             ["@types/less", null],\
-            ["@types/node", null],\
+            ["@types/node", "npm:18.15.3"],\
             ["@types/sass", null],\
             ["@types/stylus", null],\
             ["@types/sugarss", null],\

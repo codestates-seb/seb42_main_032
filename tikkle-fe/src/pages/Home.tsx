@@ -2,6 +2,8 @@ import Calendar from '../components/layout/Calendar';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import Transaction from '../components/layout/Transaction';
+import { tokenState } from '../util/store';
+import { useRecoilState } from 'recoil';
 
 // transaction 컴포넌트용 거래내역 dummydata
 const transactions: Transaction[] = [
@@ -92,6 +94,10 @@ const Body = styled.div`
 `;
 
 function Home({ selectedDate }: { selectedDate: Date }) {
+  // const [accessToken, setAccessToken] = useRecoilState(tokenState);
+
+  // console.log(`Access Token in Home: ${accessToken}`);
+
   return (
     <HomeContainer>
       <Body>
