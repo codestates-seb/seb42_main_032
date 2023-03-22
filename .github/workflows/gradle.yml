@@ -7,7 +7,7 @@ permissions:
   
 defaults:
   run:
-    working-directory: tikkle-be
+    working-directory: ./tikkle-be
 jobs:
   build:
 
