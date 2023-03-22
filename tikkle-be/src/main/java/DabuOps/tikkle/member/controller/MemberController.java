@@ -48,6 +48,16 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/{member-id}/init")
+    public ResponseEntity initializeMember(@PathVariable("member-id") Long memberId,
+                                           @RequestBody MemberDto.Patch patch) {
+        Member member = mapper.patchDtoToMember(patch);
+        member.setId(memberId);
+        memberService.initMember(member);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{member-id}")
     public ResponseEntity getMember(
         @PathVariable("member-id") long memberId) {

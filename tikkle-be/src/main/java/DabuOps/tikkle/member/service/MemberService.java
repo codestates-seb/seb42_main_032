@@ -11,6 +11,8 @@ public interface MemberService {
 
     Member updateMember(Member member);
 
+    Member initMember(Member member);
+
     Member getMember(Long memberId);
 
     Member getMember(String email);

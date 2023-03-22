@@ -1,6 +1,7 @@
 package DabuOps.tikkle.member.entity;
 
 import DabuOps.tikkle.global.audit.Auditable;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -56,8 +57,9 @@ public class Member extends Auditable {
 
 
     @Builder
-    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay,
-        Integer initDate, String picture, String accessToken) {
+    public Member(Long id, String email, String name, String location, MemberState state,
+        Gender gender,
+        Integer payDay, Integer initDate, String picture, String accessToken) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -68,7 +70,6 @@ public class Member extends Auditable {
         this.initDate = initDate;
         this.picture = picture;
         this.accessToken = accessToken;
-
     }
 
     public static enum Gender{
