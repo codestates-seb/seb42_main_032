@@ -34,7 +34,6 @@ const Calendar = ({ date }: { date: Date }) => {
       })
       .catch((err) => console.log(err));
   }, []);
-  console.log(dailySummary[1]);
 
   // 현재 날짜를 불러올 수 있도록 Date 타입의 상태로 생성하고, 초기값을 Date 객체로 설정
   // ! 초기값은 'Home' 페이지에서 설정함.
@@ -94,9 +93,9 @@ const Calendar = ({ date }: { date: Date }) => {
         </Box>
         <Box fontSize={[8, 10, 12]}>
           {/* 받아온 데이터로 수입 레이블 표시 */}
-          <Text color={'blue'}>+{daily !== undefined ? daily[0] : 0}</Text>
+          <Text color={'blue'}>{daily[0] !== 0 ? `+${daily[0]}` : null}</Text>
           {/* 받아온 데이터로 지출 레이블 표시 */}
-          <Text color={'red'}>-{daily !== undefined ? daily[1] : 0}</Text>
+          <Text color={'red'}>{daily[1] !== 0 ? `-${daily[1]}` : null}</Text>
         </Box>
       </Box>
     );
