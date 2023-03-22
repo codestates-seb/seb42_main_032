@@ -169,7 +169,9 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
   useEffect(() => {
     let observer = new IntersectionObserver(callback, options);
     if (target.current) {
-      observer.observe(target.current as Element);
+      console.log(target.current);
+      observer.observe(target.current);
+      // observer.unobserve(target);
     }
     return () => observer && observer.disconnect();
   }, []);

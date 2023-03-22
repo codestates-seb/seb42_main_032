@@ -60,7 +60,7 @@ const Modal = ({ transaction, toggleModal }: ModalProps) => {
   // TODO 카테고리 수정 시, TODO axios POST 요청으로 변경 사항 보내기
   return (
     <ModalContainer onClick={toggleModal}>
-      <ModalContent>
+      <ModalContent onClick={(e) => e.stopPropagation()}>
         <p>
           <strong>거래내역 상세 조회</strong>
         </p>
@@ -76,11 +76,7 @@ const Modal = ({ transaction, toggleModal }: ModalProps) => {
           <li> 거래 시간: {transaction.time}</li>
           <li className="memo-input">
             메모:
-            <Input
-              value={memo}
-              onChange={(e) => handleChange(e)}
-              onClick={(e) => e.stopPropagation()}
-            ></Input>
+            <Input value={memo} onChange={(e) => handleChange(e)}></Input>
           </li>
           <li> 카테고리: </li>
         </ul>

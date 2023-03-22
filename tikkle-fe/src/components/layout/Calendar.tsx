@@ -24,13 +24,15 @@ const Calendar = ({ date }: { date: Date }) => {
   // 월별 지출, 수입: 데이터 idx === 날짜 / 수입, 지출 이중배열
   const [dailySummary, setDailySummary] = useState<number[][]>([[0, 0]]);
   const [loading, setLoading] = useState<boolean>(true);
+
   // 월별 지출, 수입 데이터 받아오기
+  // TODO async / await을 써야 의도한 순서대로 작동함
   useEffect(() => {
     axios
       .get('http://localhost:8080/dailySummary')
       .then((res) => {
-        setLoading(false);
         setDailySummary(res.data.slice(1));
+        setLoading(false);
       })
       .catch((err) => console.log(err));
   }, []);
