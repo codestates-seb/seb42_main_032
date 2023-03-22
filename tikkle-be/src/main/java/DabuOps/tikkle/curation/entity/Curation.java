@@ -2,15 +2,25 @@ package DabuOps.tikkle.curation.entity;
 
 import DabuOps.tikkle.curation_tag.entity.Tag;
 import DabuOps.tikkle.global.audit.Auditable;
-import DabuOps.tikkle.member_category.entity.MemberCategory;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Entity
+@Builder
+@NoArgsConstructor
+@Getter
+@Setter
 public class Curation extends Auditable {
 
     @Id
@@ -27,4 +37,30 @@ public class Curation extends Auditable {
     @JoinColumn(name = "TAG_ID")
     private Tag tag;
 
+    @Column
+    @Builder.Default
+    @Enumerated(value = EnumType.STRING)
+    private CurationState state = CurationState.Active;
+
+
+
+    @Builder
+    public Curation(Long id, String title, String content, Tag tag, CurationState state) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.tag = tag;
+        this.state = state;
+    }
+
+    public static enum CurationState {
+        Active("활성"),
+        InActive("비활성");
+        @Getter
+        private String state;
+
+        CurationState(String state) {
+            this.state = state;
+        }
+    }
 }
