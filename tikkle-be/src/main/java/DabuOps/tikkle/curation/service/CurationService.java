@@ -1,5 +1,8 @@
 package DabuOps.tikkle.curation.service;
 
-public interface CurationService {
+import org.springframework.stereotype.Service;
+
+@Service
+public class CurationService {
 
 }
