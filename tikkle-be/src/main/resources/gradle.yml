@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Java CI with Gradle
 on:
   push:
     branches:
