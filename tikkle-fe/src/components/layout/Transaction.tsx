@@ -102,12 +102,19 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
     },
   ]);
   // 거래내역 네트워크 요청
+  // TODO 헤더의 month를 params로 입력
   useEffect(() => {
     axios
       .get<Transaction[]>('http://localhost:8080/transactionHistoriesResponse')
       .then((res) => {
         const data: Transaction[] = res.data;
-        setTransactionHistories(data);
+        setTransactionHistories(
+          // new Date 처리를 하지 않으면, date 가 string 타입으로 들어감.
+          data.map((transaction) => ({
+            ...transaction,
+            date: new Date(transaction.date),
+          }))
+        );
       })
       .catch((err) => console.log(err));
   }, []);
@@ -119,10 +126,10 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
   };
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
-  //헤더의 Month
-  let headerMonth = date.getMonth() + 1;
+  // //헤더의 Month
+  // let headerMonth = date.getMonth() + 1;
 
-  //거래내역의 Month
+  // //거래내역의 Month
   // let transactioinMonth = transactions[0].date.getMonth() + 1;
   // console.log(transactions[0].date.getMonth() + 1);
 
@@ -168,7 +175,7 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
                   <IconComponent className="transaciton-icon" />
                 </CategoryIconWrapper> */}
                 <div className="transaction-content-box" onClick={toggleModal}>
-                  {showModal && <Modal transactionId={transaction.id}></Modal>}
+                  {showModal && <Modal transaction={transaction}></Modal>}
                   <div className="transaction-amount-box">
                     <strong>{transaction.amount}원</strong>
                   </div>

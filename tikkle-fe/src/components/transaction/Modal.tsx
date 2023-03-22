@@ -22,10 +22,11 @@ const ModalContent = styled.div`
   border-radius: 5px;
 `;
 
-function Modal() {
+function Modal({ transaction }) {
+  console.log(transaction);
   return (
     <ModalContainer>
-      <ModalContent>모달창!!</ModalContent>
+      <ModalContent>{transaction.amount}</ModalContent>
     </ModalContainer>
   );
 }
