@@ -15,8 +15,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 @AllArgsConstructor
-@Service
-public class TransactionHistoryServiceStub implements TransactionHistoryService{
+//@Service
+public class TransactionHistoryServiceStub{
     private TransactionHistory stubTransactionHistory1;
     private TransactionHistory stubTransactionHistory2;
 

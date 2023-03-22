@@ -18,7 +18,7 @@ public class TransactionHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "MEMBER_CATEGORY_ID")
     private MemberCategory memberCategory;
 
@@ -31,7 +31,7 @@ public class TransactionHistory {
     @Column(name = "INOUT_TYPE")
     private InoutType inoutType;
 
-    @Column(name = "CONTENT")
+    @Column(name = "MEMO")
     private String memo;
 
     @Column(name = "AMOUNT")
@@ -42,6 +42,9 @@ public class TransactionHistory {
 
     @Column(name = "STATUS")
     private Status status;
+
+    @Column(name = "BANK_NAME")
+    private String bankName;
 
     public enum InoutType {
         INCOME("수입"),
@@ -65,7 +68,7 @@ public class TransactionHistory {
 
     @Builder
 
-    public TransactionHistory(long id, MemberCategory memberCategory, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branchName, Status status) {
+    public TransactionHistory(long id, MemberCategory memberCategory, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branchName, Status status, String bankName) {
         this.id = id;
         this.memberCategory = memberCategory;
         this.date = date;
@@ -75,5 +78,6 @@ public class TransactionHistory {
         this.amount = amount;
         this.branchName = branchName;
         this.status = status;
+        this.bankName = bankName;
     }
 }
