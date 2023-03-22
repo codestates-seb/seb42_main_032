@@ -27,8 +27,10 @@ public class CurationService {
     }
 
     public Curation updateCuration(Curation curation, Long memberId){
+
         Curation obtainCuration = findExistCurationById(curation.getId());
         verifyAuthorizedMemberForCuration(memberId);
+
         Optional.ofNullable(curation.getTitle())
             .ifPresent(obtainCuration::setTitle);
         Optional.ofNullable(curation.getContent())
@@ -54,6 +56,11 @@ public class CurationService {
         repository.save(obtainCuration);
     }
 
+    /**
+     * Curation이 존재하는지 검증하는 method
+     * @param id 큐레이션 식별자
+     * @return 찾아낸 큐레이션
+     */
     private Curation findExistCurationById(Long id){
         Optional<Curation> optionalCuration = repository.findById(id);
 
@@ -61,6 +68,9 @@ public class CurationService {
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CURATION_NOT_FOUND));
         return  obtainCuration;
     }
+    /**
+     * 사용자가 권한을 가졌는지 확인하는 method
+     */
     private void verifyAuthorizedMemberForCuration(Long memberId){
         Member obtainMember = memberRepository.findById(memberId).get();
         if(obtainMember.getRole() != MemberRole.Curator)
