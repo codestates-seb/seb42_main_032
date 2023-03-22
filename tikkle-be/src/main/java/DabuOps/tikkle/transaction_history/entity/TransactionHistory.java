@@ -22,6 +22,9 @@ public class TransactionHistory {
     @JoinColumn(name = "MEMBER_CATEGORY_ID")
     private MemberCategory memberCategory;
 
+    @Column(name = "IMAGE")
+    private String image;
+
     @Column(name = "DATE")
     private LocalDate date;
 
@@ -67,10 +70,10 @@ public class TransactionHistory {
     }
 
     @Builder
-
-    public TransactionHistory(long id, MemberCategory memberCategory, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branchName, Status status, String bankName) {
+    public TransactionHistory(long id, MemberCategory memberCategory, String image, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branchName, Status status, String bankName) {
         this.id = id;
         this.memberCategory = memberCategory;
+        this.image = image;
         this.date = date;
         this.time = time;
         this.inoutType = inoutType;

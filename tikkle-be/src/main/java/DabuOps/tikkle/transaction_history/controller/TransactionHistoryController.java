@@ -8,6 +8,7 @@ import DabuOps.tikkle.transaction_history.mapper.TransactionHistoryMapper;
 import DabuOps.tikkle.transaction_history.repository.TransactionHistoryRepository;
 import DabuOps.tikkle.transaction_history.service.TransactionHistoryService;
 import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
+import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
 import DabuOps.tikkle.userauth.mapper.AccountTransactionMapper;
 import DabuOps.tikkle.userauth.service.UserAuthService;
 import lombok.RequiredArgsConstructor;
@@ -82,11 +83,13 @@ public class TransactionHistoryController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-//    @PostMapping("/{member_id}/request")
-//    public ResponseEntity updateTransactionHistoriesFromOpenApi(@PathVariable("member_id")Long memberId) {
-//        List<AccountTransactionDto> accountTransactionDtoList = userAuthService.requestTransactionHistories(memberId);
-//        for(AccountTransactionDto dto : accountTransactionDtoList) {
-//            TransactionHistoryDto.ApiRequest transactionHistory = accountTransactionMapper.accountTransactionDtoToTransactionHistoryPostDto(dto, );
-//        }
-//    }
+    @PostMapping("/{member_id}/request")
+    public ResponseEntity updateTransactionHistoriesFromOpenApi(@PathVariable("member_id")Long memberId) {
+        List<ModifiedTransactionHistoryDto> accountTransactionDtoList = userAuthService.requestTransactionHistories(memberId);
+        for(ModifiedTransactionHistoryDto dto : accountTransactionDtoList) {
+            TransactionHistory transactionHistory = mapper.modifiedDtoToTransactionHistory(dto);
+            TransactionHistory savedTransactionHistory = transactionHistoryService.categorizeTransactionHistory(transactionHistory, memberId);
+        }
+        return new ResponseEntity(HttpStatus.CREATED);
+    }
 }
