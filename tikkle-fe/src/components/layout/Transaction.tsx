@@ -86,6 +86,18 @@ const ContentContainer = styled.div`
 
 // 날짜+요일별 거래내역 박스
 const Transaction: FC<Props> = ({ transactions, date }) => {
+  // modal에 띄울 transaction history 상태 관리
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>({
+      amount: 0,
+      branchName: '',
+      date: new Date(date),
+      id: 0,
+      inoutType: '',
+      memberCategoryId: 0,
+      memo: '',
+      time: '',
+    });
   // 거래내역 상태 관리
   const [transactionHistories, setTransactionHistories] = useState<
     Transaction[]
@@ -161,7 +173,7 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
 
   return (
     <Container className="transaction-history-box" ref={target}>
-      {transactionHistories.map((transaction, index) => {
+      {transactionHistories.map((transaction, idx) => {
         const IconComponent = categoryIcons[transaction.memberCategoryId];
         return (
           <TransactionContainer key={transaction.id} onClick={toggleModal}>
@@ -174,8 +186,10 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
                 {/* <CategoryIconWrapper category={transaction.memberCategoryId}>
                   <IconComponent className="transaciton-icon" />
                 </CategoryIconWrapper> */}
-                <div className="transaction-content-box" onClick={toggleModal}>
-                  {showModal && <Modal transaction={transaction}></Modal>}
+                <div
+                  className="transaction-content-box"
+                  onClick={() => setSelectedTransaction(transaction)}
+                >
                   <div className="transaction-amount-box">
                     <strong>{transaction.amount}원</strong>
                   </div>
@@ -188,6 +202,14 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
           </TransactionContainer>
         );
       })}
+      {selectedTransaction && showModal && (
+        <Modal
+          transaction={selectedTransaction}
+          onClose={() => setSelectedTransaction(null)}
+          onClick={toggleModal}
+          toggleModal={toggleModal}
+        ></Modal>
+      )}
     </Container>
   );
 };
