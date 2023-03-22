@@ -83,13 +83,31 @@ const OauthLoginButton = styled.div`
  * 컴포넌트 코드 부분
  */
 
+// 회원 정보 타입
+interface userInfoType {
+  createdAt: Date;
+  modifiedAt: Date;
+  id: number;
+  email: string;
+  name: string;
+  location: null | string;
+  state: string;
+  gender: null | string;
+  payDay: null | Date;
+
+  // initDate는 초기값이 1이기 때문에 number 타입도 허용
+  initDate: null | number | Date;
+
+  picture: string;
+  accessToken: null | string;
+}
 //  ToDo 저장된 액세스 토큰이 존재할 경우, 사용자의 현재 상태에 따라 유저/카테고리/예산 설정 페이지 중 하나로 이동
 //  ToDo 저장된 액세스 토큰이 존재하며, 회원가입 절차도 모두 마친 경우 홈 페이지로 이동
 function Login() {
   const [accessToken, setAccessToken] = useRecoilState(tokenState);
 
   // 사용자 정보 임시 저장
-  const [userInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState<userInfoType>();
 
   // 로그인 후 사용자가 이동해야 할 페이지 저장
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
@@ -109,22 +127,34 @@ function Login() {
     );
   }
 
+  // 로그인 로직
   useEffect(() => {
     // 사용자 요청 후 응답 온 정보를 userInfo에 저장
     const getUserInfo = async () => {
-      setUserInfo(
-        (
-          await axios.get(
-            `${
-              import.meta.env.VITE_SERVER
-            }:8080/login?accessToken=${accessToken}`
-          )
-        ).data
-      );
+      const fetchedUserInfo = (
+        await axios.get(
+          `${import.meta.env.VITE_SERVER}/login?accessToken=${accessToken}`
+        )
+      ).data;
+
+      // 사용자 정보 저장 시 날짜 형식 데이터들은 모두 Date로 형변환 후 저장
+      setUserInfo({
+        ...fetchedUserInfo,
+        createdAt: new Date(fetchedUserInfo.createdAt),
+        modifiedAt: new Date(fetchedUserInfo.modifiedAt),
+        payDay:
+          fetchedUserInfo.payDay === null
+            ? null
+            : new Date(fetchedUserInfo.payDay),
+        initDate:
+          fetchedUserInfo.initDate === 1
+            ? 1
+            : new Date(fetchedUserInfo.initDate),
+      });
     };
 
-    // 토큰이 유효할 때만 페이지 이동 로직 수행
     if (accessToken !== null) {
+      // 토큰이 유효할 때만 사용자 정보 요청
       getUserInfo();
     } else {
       // 토큰이 유효하지 않으면 URL에 발행된 토큰이 위치할 부분만 잘라냄
@@ -136,6 +166,15 @@ function Login() {
 
     // 액세스 토큰의 값이 변경될 때마다 useEffect 구문 재실행
   }, [accessToken]);
+
+  // 페이지 이동 로직
+  useEffect(() => {
+    // 사용자 정보에 payday(급여일), initDate(예산 시작일) 중 하나라도 설정되지 않았다면
+    // 회원정보 설정 페이지로 이동
+    if (userInfo?.payDay === null || userInfo?.initDate === 1) {
+      window.location.href = `${import.meta.env.VITE_CLIENT}/${currentPage}`;
+    }
+  }, [userInfo]);
 
   // 저장된 토큰이 없거나 만료되었다면 페이지 이동이 되지 않기 때문에 로그인 버튼 클릭 가능
   const handleOAuthLogin = () => {
