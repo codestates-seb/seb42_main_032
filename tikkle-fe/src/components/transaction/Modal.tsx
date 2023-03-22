@@ -30,11 +30,20 @@ const ModalContent = styled.div`
   .memo-input {
     display: flex;
   }
+
+  .modal-content-ul {
+    padding: 10px;
+    list-style: disc;
+    list-style-position: inside;
+  }
+
+  .modal-content-ul li {
+    margin-top: 10px;
+  }
 `;
 interface ModalProps {
   transaction: Transaction;
   onClose: () => void;
-  onClick: () => void;
   toggleModal: () => void;
 }
 
@@ -52,13 +61,13 @@ const Modal = ({ transaction, toggleModal }: ModalProps) => {
         <p>
           <strong>거래내역 상세 조회</strong>
         </p>
-        <ul>
+        <ul className="modal-content-ul">
           <li>
-            금액: {transaction.inoutType === 'SPEND' ? '-' : '+'}
+            {transaction.inoutType === 'SPEND' ? '출금: -' : '입금: +'}
             {transaction.amount} 원
           </li>
           <li>
-            거래처: {transaction.branchName} &#8594; {transaction.branchName}
+            거래처: {transaction.bankName} &#8594; {transaction.branchName}
           </li>
           <li> 거래 날짜: {transaction.date.toISOString()}</li>
           <li> 거래 시간: {transaction.time}</li>
@@ -70,6 +79,7 @@ const Modal = ({ transaction, toggleModal }: ModalProps) => {
               onClick={(e) => e.stopPropagation()}
             ></Input>
           </li>
+          <li> 카테고리: </li>
         </ul>
       </ModalContent>
     </ModalContainer>

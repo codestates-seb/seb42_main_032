@@ -19,6 +19,7 @@ export interface Transaction {
   memberCategoryId: number;
   memo: string;
   time: string;
+  bankName: string;
 }
 
 export interface Props {
@@ -86,7 +87,7 @@ const ContentContainer = styled.div`
 
 // 날짜+요일별 거래내역 박스
 const Transaction: FC<Props> = ({ transactions, date }) => {
-  // modal에 띄울 transaction history 상태 관리
+  // Modal에 띄울 transaction history 상태 관리
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>({
       amount: 0,
@@ -97,6 +98,7 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
       memberCategoryId: 0,
       memo: '',
       time: '',
+      bankName: '',
     });
   // 거래내역 상태 관리
   const [transactionHistories, setTransactionHistories] = useState<
@@ -111,6 +113,7 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
       memberCategoryId: 0,
       memo: '',
       time: '',
+      bankName: '',
     },
   ]);
   // 거래내역 네트워크 요청
@@ -171,6 +174,7 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
     return () => observer && observer.disconnect();
   }, []);
 
+  //TODO 아이콘 처리
   return (
     <Container className="transaction-history-box" ref={target}>
       {transactionHistories.map((transaction, idx) => {
@@ -178,10 +182,10 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
         return (
           <TransactionContainer key={transaction.id} onClick={toggleModal}>
             <div>
-              {/* <div className="transaction-date-box">
+              <div className="transaction-date-box">
                 {transaction.date.getDate()}일{' '}
                 {daysOfWeek[transaction.date.getDay()]}요일
-              </div> */}
+              </div>
               <ContentContainer>
                 {/* <CategoryIconWrapper category={transaction.memberCategoryId}>
                   <IconComponent className="transaciton-icon" />
@@ -194,7 +198,7 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
                     <strong>{transaction.amount}원</strong>
                   </div>
                   <div className="transaciton-bank-box">
-                    {transaction.branchName} &#8594; {transaction.branchName}
+                    {transaction.bankName} &#8594; {transaction.branchName}
                   </div>
                 </div>
               </ContentContainer>
@@ -206,7 +210,6 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
         <Modal
           transaction={selectedTransaction}
           onClose={() => setSelectedTransaction(null)}
-          onClick={toggleModal}
           toggleModal={toggleModal}
         ></Modal>
       )}
