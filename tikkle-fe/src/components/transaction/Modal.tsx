@@ -55,6 +55,9 @@ const Modal = ({ transaction, toggleModal }: ModalProps) => {
     setMemo(e.target.value);
   };
   console.log(transaction);
+
+  // TODO 카테고리 드롭다운 수정 컴포넌트 만들기
+  // TODO 카테고리 수정 시, TODO axios POST 요청으로 변경 사항 보내기
   return (
     <ModalContainer onClick={toggleModal}>
       <ModalContent>
