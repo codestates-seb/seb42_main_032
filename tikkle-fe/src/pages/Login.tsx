@@ -8,7 +8,7 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { tokenState } from '../util/store';
+import { tokenState, currentPageState } from '../util/store';
 import { useRecoilState } from 'recoil';
 
 /**
@@ -83,10 +83,13 @@ const OauthLoginButton = styled.div`
  * 컴포넌트 코드 부분
  */
 
+// 사용자의 현재 상태를 판별하는 함수(유저/카테고리/예산 설정 페이지 중 어떤 페이지로 이동해야 하는지)
+const currentState;
 //  ToDo 저장된 액세스 토큰이 존재할 경우, 사용자의 현재 상태에 따라 유저/카테고리/예산 설정 페이지 중 하나로 이동
 //  ToDo 저장된 액세스 토큰이 존재하며, 회원가입 절차도 모두 마친 경우 홈 페이지로 이동
 function Login() {
   const [accessToken, setAccessToken] = useRecoilState(tokenState);
+  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
   // '/login' 경로로 바로 접속할 경우 recoil-persist가 동작하지 않는 버그가 있어,
   // 해당 키가 로컬스토리지에 없다면 수동으로 생성
@@ -97,19 +100,20 @@ function Login() {
     );
   }
 
-  // TODO 현재 무한로딩 오류 발생 중, 수정 필요
   useEffect(() => {
     // 토큰이 유효할 때만 페이지 이동 로직 수행
     if (accessToken !== null) {
       axios
         .get(
-          `${
-            import.meta.env.REACT_APP_SERVER
-          }:8080/login?accessToken=${accessToken}`
+          `${import.meta.env.VITE_SERVER}:8080/login?accessToken=${accessToken}`
         )
         .then((res) => {
-          console.log(typeof res);
           console.log(res);
+          axios
+            .get(`${import.meta.env.VITE_SERVER}:8080/members/1`)
+            .then((res) => {
+              console.log(res);
+            });
         })
         .catch((err) => console.log(err));
     } else {
@@ -127,7 +131,7 @@ function Login() {
   const handleOAuthLogin = () => {
     window.location.href =
       'https://accounts.google.com/o/oauth2/auth?' +
-      'client_id=338499705230-mkcb14qnk7piqv7jlor03nbkmp29iog1.apps.googleusercontent.com&' +
+      `client_id=${import.meta.env.VITE_GCLIENT_ID}&` +
       'redirect_uri=http://localhost:5173/login&' +
       'response_type=token&' +
       'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';

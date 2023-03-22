@@ -29,3 +29,9 @@ export const tokenState = atom<string | null>({
   // 토큰을 localStorage에 저장하려면 아래 구문을 atom마다 적어주어야 함
   effects_UNSTABLE: [persistAtom],
 });
+
+// 로그인 후 사용자가 이동해야 할 페이지를 저장하는 상태
+export const currentPageState = atom({
+  key: 'currentPageState',
+  default: 'User'
+})
