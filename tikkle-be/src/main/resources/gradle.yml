@@ -43,13 +43,12 @@ jobs:
           aws deploy create-deployment --application-name TIKKLE
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name TIKKLE-group
-
-    env:
-      DB_ID: ${{secrets.DB_ID}}
-      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-      G_CLIENT_ID: ${{secrets.G_CLIENT_ID}}
-      G_CLIENT_SECRET: ${{secrets.G_CLIENT_SECRET}}
-      K_CLIENT_ID: ${{secrets.K_CLIENT_ID}}
-      K_CLIENT_SECRET: ${{secrets.K_CLIENT_SECRET}}
-      K_REDIRECT_URI: ${{secrets.K_REDIRECT_URI}}
-      OPENBANKING_URL: ${{secrets.OPENBANKING_URL}}
+env:
+  DB_ID: ${{secrets.DB_ID}}
+  DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+  G_CLIENT_ID: ${{secrets.G_CLIENT_ID}}
+  G_CLIENT_SECRET: ${{secrets.G_CLIENT_SECRET}}
+  K_CLIENT_ID: ${{secrets.K_CLIENT_ID}}
+  K_CLIENT_SECRET: ${{secrets.K_CLIENT_SECRET}}
+  K_REDIRECT_URI: ${{secrets.K_REDIRECT_URI}}
+  OPENBANKING_URL: ${{secrets.OPENBANKING_URL}}
