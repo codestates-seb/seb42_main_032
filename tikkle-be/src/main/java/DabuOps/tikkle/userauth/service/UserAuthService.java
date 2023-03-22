@@ -5,18 +5,18 @@ import DabuOps.tikkle.account.entity.Account.AccountState;
 import DabuOps.tikkle.account.repository.AccountRepository;
 import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.repository.MemberRepository;
-import DabuOps.tikkle.transaction_history.dto.TransactionHistoryDto;
-import DabuOps.tikkle.transaction_history.mapper.TransactionHistoryMapper;
-import DabuOps.tikkle.transaction_history.service.TransactionHistoryService;
+import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
+import DabuOps.tikkle.transaction_history.entity.TransactionHistory.InoutType;
 import DabuOps.tikkle.userauth.dto.AccountInfoDto;
 import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
 import DabuOps.tikkle.userauth.dto.AccountTransactionListDto;
 import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
 import DabuOps.tikkle.userauth.dto.ResList;
 import DabuOps.tikkle.userauth.dto.TokenResponseDto;
-import DabuOps.tikkle.userauth.mapper.AccountTransactionMapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,9 +38,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class UserAuthService {
     private final MemberRepository memberRepository;
     private final AccountRepository accountRepository;
-    private final TransactionHistoryService transactionHistoryService;
-    private final TransactionHistoryMapper transactionHistoryMapper;
-    private final AccountTransactionMapper mapper;
     private final RestTemplate restTemplate;
 
     //이용기관코드 = 테스팅할 사용자 것을 적어야함
@@ -133,18 +130,9 @@ public class UserAuthService {
                     AccountTransactionListDto.class);
             //조회한 거래 내역을 하나로 만들어서 반환함
             for(AccountTransactionDto accountTransactionDto : response.getBody().getRes_list()){
-                transactionHistories.add(mapper.accountTransactionDtoToModifiedTransactionHistoryDto(accountTransactionDto, account.getBankName()));
+                transactionHistories.add(accountTransactionDtoToModifiedTransactionHistoryDto(accountTransactionDto, account.getBankName()));
             }
         }
-        //멤버카테고리 아이디 구현 필요
-//        Long testMemberCategoryId = 0L;
-//        for(AccountTransactionDto accountTransactionDto : response.getBody().getRes_list()){
-//            TransactionHistoryDto.Post post =
-//                mapper.accountTransactionDtoToTransactionHistoryPostDto(accountTransactionDto, response.getBody().getBank_name());
-//            transactionHistoryService.createTransactionHistory(
-//                transactionHistoryMapper.transactionHistoryPostDtoToTransactionHistory(post),testMemberCategoryId);
-//        }
-
         return transactionHistories;
     }
     /**
@@ -168,5 +156,41 @@ public class UserAuthService {
         generatedNumber = String.format("%09d", obtainAccount.getCallTransactionHistories());
         accountRepository.save(obtainAccount);
         return generatedNumber;
+    }
+
+    private ModifiedTransactionHistoryDto accountTransactionDtoToModifiedTransactionHistoryDto(
+        AccountTransactionDto accountTransactionDto, String bankName) {
+        if ( accountTransactionDto == null ) {
+            return null;
+        }
+        ModifiedTransactionHistoryDto.ModifiedTransactionHistoryDtoBuilder modified
+            = ModifiedTransactionHistoryDto.builder();
+
+        modified.date(stringToDate(accountTransactionDto.getTran_date()));
+        modified.time(stringToTime(accountTransactionDto.getTran_time()));
+        modified.inoutType(stringToInoutType(accountTransactionDto.getInout_type()));
+        modified.memo(accountTransactionDto.getPrinted_content());
+        modified.amount(Integer.parseInt(accountTransactionDto.getTran_amt()));
+        modified.branchName(accountTransactionDto.getBranch_name());
+        modified.bankName(bankName);
+
+        return modified.build();
+    }
+
+    private LocalDate stringToDate(String date){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate localDate = LocalDate.parse(date,dateTimeFormatter);
+        return localDate;
+    }
+    private LocalTime stringToTime(String time){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HHmmss");
+        LocalTime localTime = LocalTime.parse(time,dateTimeFormatter);
+        return localTime;
+    }
+
+    private TransactionHistory.InoutType stringToInoutType(String inout){
+        if(inout.equals("입금"))
+            return InoutType.INCOME;
+        return InoutType.SPEND;
     }
 }
