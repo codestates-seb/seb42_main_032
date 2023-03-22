@@ -1,27 +1,49 @@
 package DabuOps.tikkle.member.service;
 
+import DabuOps.tikkle.budget.entity.Budget;
+import DabuOps.tikkle.budget.repository.BudgetRepository;
+import DabuOps.tikkle.budget.service.BudgetService;
+import DabuOps.tikkle.category.CategoryService;
+import DabuOps.tikkle.category.entity.Category;
+import DabuOps.tikkle.category.repository.CategoryRepository;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
 import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.entity.Member.MemberState;
 import DabuOps.tikkle.member.repository.MemberRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import DabuOps.tikkle.member_category.entity.MemberCategory;
+import DabuOps.tikkle.member_category.repository.MemberCategoryRepository;
+import DabuOps.tikkle.member_category.service.MemberCategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.PrePersist;
 
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberCategoryRepository memberCategoryRepository;
+    private final CategoryRepository categoryRepository;
+    private final MemberCategoryService memberCategoryService;
+    private final BudgetService budgetService;
+    private final BudgetRepository budgetRepository;
 
     @Override
     public Member createMember(Member member) {
         // 동일한 이메일이 존재하는지 확인.
         verifyExistEmail(member.getEmail());
-
-        return memberRepository.save(member);
+        member.setPicture("이미지"); // 임시 이미지 필드 채워주고
+        return memberRepository.save(member); // 세이브 해주고~
     }
+
 
     public Member createMemberByOauth2(Member member) {
         // 동일한 이메일이 존재하는지 확인.
@@ -50,6 +72,24 @@ public class MemberServiceImpl implements MemberService {
             .ifPresent(obtainedMember::setInitDate);
 
         return memberRepository.save(obtainedMember);
+    }
+
+    public Member initMember(Member member) {
+        Member initializedMember = findExistMemberById(member.getId());
+
+        initializedMember.setInitDate(member.getInitDate());
+        initializedMember.setPayDay(member.getPayDay());
+        Member savedMember = memberRepository.save(initializedMember);
+
+        // Category 리스트 가져오기
+        List<Category> categories = categoryRepository.findAll();
+
+        for(Category category : categories) {
+            MemberCategory memberCategory = memberCategoryService.createAutoMemberCategory(member, category); // 멤버와 카테고리로 멤버카테고리 생성
+            Budget budget = budgetService.createAutoBudget(memberCategory); // 예산도 생성
+        }
+
+        return savedMember;
     }
 
     @Override

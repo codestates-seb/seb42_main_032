@@ -1,0 +1,41 @@
+{
+  "transactionHistoriesResponse": [
+    {
+      "id": 1,
+      "memberCategoryId": 1,
+      "date": "2023-03-01",
+      "time": "23:55:01",
+      "inoutType": "SPEND",
+      "memo": "메모",
+      "amount": 25000,
+      "branchName": "GS25 동작엠코점"
+    },
+    {
+      "id": 2,
+      "memberCategoryId": 1,
+      "date": "2023-03-01",
+      "time": "23:57:01",
+      "inoutType": "SPEND",
+      "memo": "메모",
+      "amount": 5000,
+      "branchName": "GS25 동작엠코점"
+    },
+    {
+      "id": 3,
+      "memberCategoryId": 1,
+      "date": "2023-03-02",
+      "time": "23:57:01",
+      "inoutType": "INCOME",
+      "memo": "메모",
+      "amount": 300000,
+      "branchName": "코드스테이츠"
+    }
+  ],
+  "dailySummary": [
+    [0, 0],
+    [0, 10000],
+    [500000, 24000],
+    [0, 81000],
+    [0, 12000]
+  ]
+}

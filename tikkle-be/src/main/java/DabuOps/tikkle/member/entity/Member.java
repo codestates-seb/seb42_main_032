@@ -2,7 +2,6 @@ package DabuOps.tikkle.member.entity;
 
 import DabuOps.tikkle.global.audit.Auditable;
 import java.time.LocalDateTime;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,8 +13,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Builder
@@ -42,20 +39,27 @@ public class Member extends Auditable {
     private MemberState state = MemberState.ACTIVE;
 
     @Column
+    @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
     @Column
     private Integer payDay;
 
     @Column
-    private Integer initDate;
+    @Builder.Default
+    private Integer initDate = 1;
 
     @Column(nullable = true)
     private String picture = "이미지";
 
+    @Column
+    private String accessToken;
+
+
     @Builder
-    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay,
-        Integer initDate, String picture) {
+    public Member(Long id, String email, String name, String location, MemberState state,
+        Gender gender,
+        Integer payDay, Integer initDate, String picture, String accessToken) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -65,10 +69,7 @@ public class Member extends Auditable {
         this.payDay = payDay;
         this.initDate = initDate;
         this.picture = picture;
-    }
-
-    public Member(String email, String name, String picture) {
-
+        this.accessToken = accessToken;
     }
 
     public static enum Gender{

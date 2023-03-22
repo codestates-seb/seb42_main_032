@@ -2,6 +2,7 @@ package DabuOps.tikkle.account.entity;
 
 import DabuOps.tikkle.global.audit.Auditable;
 import DabuOps.tikkle.member.entity.Member;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -47,6 +48,18 @@ public class Account extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @Column
+    private String fintechUseNum;
+
+    @Column
+    @Builder.Default
+    private LocalDateTime lastDateTimeInquiryTransactionHistory = LocalDateTime.now();
+
+    @Column
+    @Setter
+    @Builder.Default
+    private Integer callTransactionHistories = 0;
+
     public void setMember(Member member) {
         this.member = member;
     }
@@ -58,10 +71,10 @@ public class Account extends Auditable {
         private String string;
         AccountState(String string) { this.string = string; }
     }
-
     @Builder
     public Account(Long id, String name, String number, String bankName, Long balance,
-        AccountState state, Member member) {
+        AccountState state, Member member, String fintechUseNum,
+        LocalDateTime lastDateTimeInquiryTransactionHistory, Integer callTransactionHistories) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -69,5 +82,8 @@ public class Account extends Auditable {
         this.balance = balance;
         this.state = state;
         this.member = member;
+        this.fintechUseNum = fintechUseNum;
+        this.lastDateTimeInquiryTransactionHistory = lastDateTimeInquiryTransactionHistory;
+        this.callTransactionHistories = callTransactionHistories;
     }
 }
