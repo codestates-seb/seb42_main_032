@@ -1,34 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import './App.css';
+import { Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import BudgetSetting from './pages/BudgetSetting';
+import UserSetting from './pages/UserSetting';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import UserOut from './pages/UserOut';
+import BudgetView from './pages/BudgetView';
+import CategoryEdit from './pages/CategoryEdit';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Header selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+      <Routes>
+        <Route path="/" element={<Home selectedDate={selectedDate} />} />
+        <Route path="/home" element={<Home selectedDate={selectedDate} />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/budgetsetting" element={<BudgetSetting />} />
+        <Route path="/budgetview" element={<BudgetView />} />
+        <Route path="/budget" element={<BudgetView />} />
+        <Route path="/usersetting" element={<UserSetting />} />
+        <Route path="/userout" element={<UserOut />} />
+      </Routes>
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
