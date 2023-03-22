@@ -5,6 +5,7 @@ import DabuOps.tikkle.curation_tag.entity.Tag;
 import DabuOps.tikkle.curation_tag.repository.TagRepository;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
+import DabuOps.tikkle.member.repository.MemberRepository;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class TagService {
     private final TagRepository repository;
+
+    private final MemberRepository memberRepository;
 
     private Tag findExistCurationById(Long tagId){
         Optional<Tag> optionalTag = repository.findById(tagId);

@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CurationService {
     private final CurationRepository repository;
-    private final TagRepository tagRepository;
     private final MemberRepository memberRepository;
 
     public Curation createCuration(Curation curation, Long memberId){
