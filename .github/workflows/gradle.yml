@@ -23,7 +23,7 @@ jobs:
       - name: Add permission
         run: chmod +x gradlew
       - name: Build with Gradle Wrapper
-        run: ./gradlew build
+        run: ./gradlew build -Pspring.profiles.active=application-prod
         working-directory: ./tikkle-be
 
       # build한 후 프로젝트를 압축합니다.
