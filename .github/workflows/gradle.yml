@@ -55,7 +55,7 @@ jobs:
 
     env:
       DB_ID: ${{secrets.DB_ID}}
-      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+      DB_PASSWORD: ${{secrets.DB_SECRET}}
       G_CLIENT_ID: ${{secrets.G_CLIENT_ID}}
       G_CLIENT_SECRET: ${{secrets.G_CLIENT_SECRET}}
       K_CLIENT_ID: ${{secrets.K_CLIENT_ID}}
