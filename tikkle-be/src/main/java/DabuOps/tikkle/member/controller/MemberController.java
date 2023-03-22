@@ -7,6 +7,7 @@ import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.mapper.MemberMapper;
 import DabuOps.tikkle.member.service.MemberService;
 import java.net.URI;
+import javax.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -46,11 +48,33 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/{member-id}/init")
+    public ResponseEntity initializeMember(@PathVariable("member-id") Long memberId,
+                                           @RequestBody MemberDto.Patch patch) {
+        Member member = mapper.patchDtoToMember(patch);
+        member.setId(memberId);
+        memberService.initMember(member);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{member-id}")
     public ResponseEntity getMember(
         @PathVariable("member-id") long memberId) {
 
         Member member = memberService.getMember(memberId);
+        MemberDto.Response response = mapper.memberToResponseDto(member);
+
+        return new ResponseEntity(
+            new SingleResponseDto<>(response),
+            HttpStatus.OK);
+    }
+
+    @GetMapping()
+    public ResponseEntity getMemberByEmail(
+        @RequestParam String email) {
+
+        Member member = memberService.getMember(email);
         MemberDto.Response response = mapper.memberToResponseDto(member);
 
         return new ResponseEntity(
