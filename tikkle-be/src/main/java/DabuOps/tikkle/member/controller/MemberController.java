@@ -57,6 +57,17 @@ public class MemberController {
             new SingleResponseDto<>(response),
             HttpStatus.OK);
     }
+    @GetMapping("/{member-email}")
+    public ResponseEntity getMemberByEmail(
+        @PathVariable("member-email") String email) {
+
+        Member member = memberService.getMember(email);
+        MemberDto.Response response = mapper.memberToResponseDto(member);
+
+        return new ResponseEntity(
+            new SingleResponseDto<>(response),
+            HttpStatus.OK);
+    }
 
 
     @DeleteMapping("/{member-id}")
