@@ -3,11 +3,6 @@ package DabuOps.tikkle.curation.dto;
 import DabuOps.tikkle.curation.entity.Curation.CurationState;
 import DabuOps.tikkle.curation_tag.entity.Tag;
 import DabuOps.tikkle.global.audit.Auditable;
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,13 +13,13 @@ public class CurationDto {
     public static class Post{
         private String title;
         private String content;
-        private Tag tag;
+        private Long tagId;
 
         @Builder
-        public Post(String title, String content, Tag tag) {
+        public Post(String title, String content, Long tagId) {
             this.title = title;
             this.content = content;
-            this.tag = tag;
+            this.tagId = tagId;
         }
     }
     @Getter
@@ -32,13 +27,13 @@ public class CurationDto {
     public static class Patch{
         private String title;
         private String content;
-        private Tag tag;
+        private Long tagId;
 
         @Builder
-        public Patch(String title, String content, Tag tag) {
+        public Patch(String title, String content, Long tagId) {
             this.title = title;
             this.content = content;
-            this.tag = tag;
+            this.tagId = tagId;
         }
     }
     @Getter
@@ -47,8 +42,16 @@ public class CurationDto {
         private Long id;
         private String title;
         private String content;
-        private Tag tag;
+        private Long tagId;
         private CurationState state;
+        @Builder
+        public Response(Long id, String title, String content, Long tagId, CurationState state) {
+            this.id = id;
+            this.title = title;
+            this.content = content;
+            this.tagId = tagId;
+            this.state = state;
+        }
     }
 
 }

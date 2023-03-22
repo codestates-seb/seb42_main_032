@@ -14,8 +14,11 @@ public enum ExceptionCode {
     ACCOUNT_NOT_FOUND(404, "Account Not Found"),
     ACCOUNT_NUMBER_EXIST(409, "Account Not Found"),
     BUDGET_NOT_FOUND(404, "Budget Not Found"),
-    BUDGET_IS_INACTIVE(403, "Budget is Inactive");
-
+    BUDGET_IS_INACTIVE(403, "Budget is Inactive"),
+    CURATION_NOT_FOUND(404, "Curation Not Found"),
+    CURATION_IS_INACTIVE(403, "Curation is Inactive"),
+    TAG_NOT_FOUND(404, "Tag Not Found"),
+    TAG_IS_INACTIVE(403, "Tag is Inactive");
     @Getter
     private int status;
 

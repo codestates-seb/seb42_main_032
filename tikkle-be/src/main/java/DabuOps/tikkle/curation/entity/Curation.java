@@ -34,13 +34,13 @@ public class Curation extends Auditable {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "TAG_ID")
+    @JoinColumn(name = "TAG_ID", nullable = true)
     private Tag tag;
 
     @Column
     @Builder.Default
     @Enumerated(value = EnumType.STRING)
-    private CurationState state = CurationState.Active;
+    private CurationState state = CurationState.ACTIVE;
 
 
 
@@ -54,8 +54,8 @@ public class Curation extends Auditable {
     }
 
     public static enum CurationState {
-        Active("활성"),
-        InActive("비활성");
+        ACTIVE("활성"),
+        DELETED("비활성");
         @Getter
         private String state;
 
