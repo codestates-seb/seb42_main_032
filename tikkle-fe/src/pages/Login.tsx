@@ -5,7 +5,7 @@
  * 액세스 토큰이 유효하다는 것은 만료되지 않은 액세스 토큰이 recoil 상태로 존재한다는 것을 의미합니다
  */
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { tokenState, currentPageState } from '../util/store';
@@ -83,39 +83,49 @@ const OauthLoginButton = styled.div`
  * 컴포넌트 코드 부분
  */
 
-// 사용자의 현재 상태를 판별하는 함수(유저/카테고리/예산 설정 페이지 중 어떤 페이지로 이동해야 하는지)
-const currentState;
 //  ToDo 저장된 액세스 토큰이 존재할 경우, 사용자의 현재 상태에 따라 유저/카테고리/예산 설정 페이지 중 하나로 이동
 //  ToDo 저장된 액세스 토큰이 존재하며, 회원가입 절차도 모두 마친 경우 홈 페이지로 이동
 function Login() {
   const [accessToken, setAccessToken] = useRecoilState(tokenState);
+
+  // 사용자 정보 임시 저장
+  const [userInfo, setUserInfo] = useState({});
+
+  // 로그인 후 사용자가 이동해야 할 페이지 저장
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
+  console.log(currentPage);
+
+  console.log(userInfo);
 
   // '/login' 경로로 바로 접속할 경우 recoil-persist가 동작하지 않는 버그가 있어,
   // 해당 키가 로컬스토리지에 없다면 수동으로 생성
   if (localStorage.getItem('recoil-persist') === null) {
     localStorage.setItem(
       'recoil-persist',
-      JSON.stringify({ tokenState: null })
+      JSON.stringify({
+        tokenState: null,
+        currentPageState: 'usersetting',
+      })
     );
   }
 
   useEffect(() => {
+    // 사용자 요청 후 응답 온 정보를 userInfo에 저장
+    const getUserInfo = async () => {
+      setUserInfo(
+        (
+          await axios.get(
+            `${
+              import.meta.env.VITE_SERVER
+            }:8080/login?accessToken=${accessToken}`
+          )
+        ).data
+      );
+    };
+
     // 토큰이 유효할 때만 페이지 이동 로직 수행
     if (accessToken !== null) {
-      axios
-        .get(
-          `${import.meta.env.VITE_SERVER}:8080/login?accessToken=${accessToken}`
-        )
-        .then((res) => {
-          console.log(res);
-          axios
-            .get(`${import.meta.env.VITE_SERVER}:8080/members/1`)
-            .then((res) => {
-              console.log(res);
-            });
-        })
-        .catch((err) => console.log(err));
+      getUserInfo();
     } else {
       // 토큰이 유효하지 않으면 URL에 발행된 토큰이 위치할 부분만 잘라냄
       const parsedHash = new URLSearchParams(window.location.hash.substring(1));
