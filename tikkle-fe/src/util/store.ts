@@ -33,6 +33,6 @@ export const tokenState = atom<string | null>({
 // 로그인 후 사용자가 이동해야 할 페이지를 저장하는 상태
 export const currentPageState = atom({
   key: 'currentPageState',
-  default: 'User',
+  default: 'usersetting',
   effects_UNSTABLE: [persistAtom]
 })
