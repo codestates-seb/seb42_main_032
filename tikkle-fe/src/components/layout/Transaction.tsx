@@ -142,7 +142,7 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
       {transactionThisMonth.map((transaction, index) => {
         const IconComponent = categoryIcons[transaction.category];
         return (
-          <TransactionContainer key={index}>
+          <TransactionContainer key={index} onClick={toggleModal}>
             <div>
               <div className="transaction-date-box">
                 {transaction.date.getDate()}일{' '}
@@ -152,14 +152,10 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
                 <CategoryIconWrapper category={transaction.category}>
                   <IconComponent className="transaciton-icon" />
                 </CategoryIconWrapper>
-
                 <div className="transaction-content-box" onClick={toggleModal}>
                   {showModal && <Modal></Modal>}
                   <div className="transaction-amount-box">
                     <strong>
-                      {transaction.amount
-                        .toString()
-                        .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}
                       원
                     </strong>
                   </div>
