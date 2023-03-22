@@ -43,15 +43,15 @@ public class UserAuthService {
     //이용기관코드 = 테스팅할 사용자 것을 적어야함
     private final String InstitutionCode = "M202300547";
 
-    @Value("${{secrets.OPENBANKING_URL}}")
+    @Value("${webClient.baseUrl}")
     private String openBankingApiUrl;
-    @Value("${{secrets.K_CLIENT_ID}}")
+    @Value("${openbanking.api.client-id}")
     private String clientId;
 
-    @Value("{secrets.K_CLIENT_SECRET}")
+    @Value("${openbanking.api.client-secret}")
     private String clientSecret;
 
-    @Value("{secrets.K_REDIRECT_URI}")
+    @Value("${openbanking.api.redirect-uri}")
     private String redirectUri;
 
     public TokenResponseDto requestToken(String authorizationCode, Long memberId) {
