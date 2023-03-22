@@ -1,11 +1,14 @@
-//TODO 거래내역 박스
-import { FC } from 'react';
+// TODO 거래내역 박스
+// TODO 무한 스크롤 구현하기
+
+import { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { MdFastfood } from 'react-icons/md';
 import { BiCoffeeTogo } from 'react-icons/bi';
 import { IoLogoGameControllerA } from 'react-icons/io';
+import Modal from '../transaction/Modal';
 
-interface Transaction {
+export interface Transaction {
   date: Date;
   bankInfo: string;
   payee: string;
@@ -13,8 +16,9 @@ interface Transaction {
   amount: number;
 }
 
-interface TransactionList {
+export interface Props {
   transactions: Transaction[];
+  date: Date;
 }
 
 // 카테고리별 아이콘 설정하기 <카테고리명: 아이콘이름>
@@ -66,22 +70,64 @@ const ContentContainer = styled.div`
     margin-left: 20px;
     text-align: left;
   }
+
+  .transaction-content-box:hover {
+    cursor: pointer;
+  }
   .transaciton-bank-box {
     color: grey;
   }
 `;
 
 // 날짜+요일별 거래내역 박스
-const Transaction: FC<TransactionList> = ({ transactions }) => {
+const Transaction: FC<Props> = ({ transactions, date }) => {
+  // 거래내역 클릭 시 상세 정보 모달 띄우기
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
+  //헤더의 Month
+  let headerMonth = date.getMonth() + 1;
+
+  //거래내역의 Month
+  // let transactioinMonth = transactions[0].date.getMonth() + 1;
+  // console.log(transactions[0].date.getMonth() + 1);
+
+  // 헤더에서 선택한 달과 일치하는 거래내역만 가져오기
+  const transactionThisMonth = transactions.filter(
+    (el) => el.date.getMonth() + 1 === headerMonth
+  );
+
+  //TODO 무한스크롤
+  const options = {
+    root: null,
+    rootMargin: '10px',
+    threshold: 0.5,
+  };
+
+  const callback = () => {
+    console.log('관측되었습니다.');
+  };
+
+  let target = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let observer = new IntersectionObserver(callback, options);
+    if (target.current) {
+      observer.observe(target.current as Element);
+    }
+    return () => observer && observer.disconnect();
+  }, []);
+
   return (
-    <Container className="transaction-history-box">
-      {transactions.map((transaction, index) => {
+    <Container className="transaction-history-box" ref={target}>
+      {transactionThisMonth.map((transaction, index) => {
         const IconComponent = categoryIcons[transaction.category];
         return (
-          <TransactionContainer>
-            <div key={index}>
+          <TransactionContainer key={index} onClick={toggleModal}>
+            <div>
               <div className="transaction-date-box">
                 {transaction.date.getDate()}일{' '}
                 {daysOfWeek[transaction.date.getDay()]}요일
@@ -90,13 +136,10 @@ const Transaction: FC<TransactionList> = ({ transactions }) => {
                 <CategoryIconWrapper category={transaction.category}>
                   <IconComponent className="transaciton-icon" />
                 </CategoryIconWrapper>
-
-                <div className="transaction-content-box">
+                <div className="transaction-content-box" onClick={toggleModal}>
+                  {showModal && <Modal></Modal>}
                   <div className="transaction-amount-box">
                     <strong>
-                      {transaction.amount
-                        .toString()
-                        .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}
                       원
                     </strong>
                   </div>

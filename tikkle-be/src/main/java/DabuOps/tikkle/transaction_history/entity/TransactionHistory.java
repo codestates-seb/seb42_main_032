@@ -29,7 +29,6 @@ public class TransactionHistory {
     private LocalTime time;
 
     @Column(name = "INOUT_TYPE")
-    @Enumerated(EnumType.STRING)
     private InoutType inoutType;
 
     @Column(name = "CONTENT")
@@ -39,22 +38,33 @@ public class TransactionHistory {
     private int amount;
 
     @Column(name = "BRANCH_NAME")
-    private String branch_name;
+    private String branchName;
+
+    @Column(name = "STATUS")
+    private Status status;
 
     public enum InoutType {
         INCOME("수입"),
         SPEND("지출");
 
-        private String string;
+        @Getter
+        private String type;
 
-        InoutType(String string) {
-            this.string = string;
+        InoutType(String type) {
+            this.type = type;
         }
     }
 
-    @Builder
+    public enum Status {
+        ACTIVE("활성화"),
+        INACTIVE("비활성화");
 
-    public TransactionHistory(long id, MemberCategory memberCategory, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branch_name) {
+        private String string;
+        Status(String string) { this.string = string; }
+    }
+
+    @Builder
+    public TransactionHistory(long id, MemberCategory memberCategory, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branchName, Status status) {
         this.id = id;
         this.memberCategory = memberCategory;
         this.date = date;
@@ -62,6 +72,7 @@ public class TransactionHistory {
         this.inoutType = inoutType;
         this.memo = memo;
         this.amount = amount;
-        this.branch_name = branch_name;
+        this.branchName = branchName;
+        this.status = status;
     }
 }

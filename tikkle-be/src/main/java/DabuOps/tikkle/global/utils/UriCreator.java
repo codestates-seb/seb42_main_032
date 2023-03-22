@@ -11,4 +11,18 @@ public class UriCreator {
             .buildAndExpand(resourceId)
             .toUri();
     }
+    public static URI createURIWithoutResourceId(String url) {
+        return UriComponentsBuilder
+                .newInstance()
+                .path(url)
+                .buildAndExpand()
+                .toUri();
+    }
+    public static URI validateToken(String url, String accessToken){
+        return UriComponentsBuilder
+            .newInstance()
+            .path(url + "{access-token}")
+            .buildAndExpand()
+            .toUri();
+    }
 }

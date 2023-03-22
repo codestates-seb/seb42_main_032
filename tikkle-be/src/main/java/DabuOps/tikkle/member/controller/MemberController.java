@@ -10,7 +10,7 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
+//import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -30,7 +30,7 @@ public class MemberController {
     @PostMapping
     public ResponseEntity postMember(@RequestBody MemberDto.Post post){
         Member member = memberService.createMember(mapper.postDtoToMember(post));
-        URI location = UriCreator.createURI("/members", 1L);
+        URI location = UriCreator.createURIWithoutResourceId("/members");
         return ResponseEntity.created(location).build();
     }
 

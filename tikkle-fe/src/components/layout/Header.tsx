@@ -1,7 +1,8 @@
 //@ts-ignore
 
 //TODO 헤더 구현
-import React, { Dispatch, SetStateAction } from 'react';
+
+import React, { Dispatch, SetStateAction, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   ChevronLeftIcon,
@@ -19,14 +20,20 @@ import {
   MenuOptionGroup,
   MenuDivider,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+
+import { Link, useLocation } from 'react-router-dom';
 
 const HeaderContainer = styled.header`
+  z-index: 100;
   background-color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  /* position을 fixed로 설정하면 헤더 외 요소의 상단부를 가리게 되므로 주석 처리  */
+  /* 헤더는 항상 표시되어야 하므로 필요함 */
   position: fixed;
+
   top: 0;
   left: 0;
   width: 100%;
@@ -155,27 +162,38 @@ const Header: React.FunctionComponent<HeaderProps> = ({
     setSelectedDate(nextDate);
   };
 
+  const location = useLocation();
+  const [selectedPath, setSeletctedPath] = useState<String>('');
+
+  useEffect(() => {
+    setSeletctedPath(location.pathname.split('/')[1]);
+  }, [location.pathname.split('/')[1]]);
+
   return (
     <HeaderContainer>
-      <Link to="/">
+      <Link to="/home">
         <img className="header-logo__img" src="tikkle-logo.svg" alt="logo" />{' '}
       </Link>
+      {selectedPath === 'home' ? (
+        <SelectMonthContainer>
+          <ChevronLeftIcon
+            className="header-monthbutton"
+            boxSize={30}
+            onClick={handlePrevMonth}
+          />
+          <span>
+            {selectedDate.getFullYear()} 년 {selectedDate.getMonth() + 1} 월
+          </span>
+          <ChevronRightIcon
+            className="header-monthbutton"
+            boxSize={30}
+            onClick={handleNextMonth}
+          />
+        </SelectMonthContainer>
+      ) : (
+        ''
+      )}
 
-      <SelectMonthContainer>
-        <ChevronLeftIcon
-          className="header-monthbutton"
-          boxSize={30}
-          onClick={handlePrevMonth}
-        />
-        <span>
-          {selectedDate.getFullYear()} 년 {selectedDate.getMonth() + 1} 월
-        </span>
-        <ChevronRightIcon
-          className="header-monthbutton"
-          boxSize={30}
-          onClick={handleNextMonth}
-        />
-      </SelectMonthContainer>
       <HeaderContentWrap>
         <BeforeLogin>
           <BellIcon boxSize={25} />
@@ -191,14 +209,16 @@ const Header: React.FunctionComponent<HeaderProps> = ({
               <ChevronDownIcon boxSize={25} />
             </MenuButton>
             <MenuList className="header-menulist">
-              <MenuItem as={Button}>
+              <MenuItem as={Link} to="/usersetting">
                 <div className="header-menulistbutton">회원정보</div>
               </MenuItem>
-              <MenuItem as={Button}>
+              <MenuItem as={Link} to={'/budgetsetting'}>
                 <div className="header-menulistbutton">예산 설정</div>
               </MenuItem>
-              <MenuItem as={Button}>
-                <div className="header-menulistbutton">예산 조회</div>
+              <MenuItem as={Link} to={'/budgetview'}>
+                <Link to="budget">
+                  <div className="header-menulistbutton">예산 조회</div>
+                </Link>
               </MenuItem>
               <MenuItem as={Button}>
                 <div className="header-menulistbutton">거래내역 조회</div>
