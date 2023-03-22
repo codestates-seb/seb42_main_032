@@ -20,9 +20,11 @@ import java.util.Optional;
 public class TransactionHistoryServiceImpl implements TransactionHistoryService{
     private final TransactionHistoryRepository transactionHistoryRepository;
     private final MemberCategoryService memberCategoryService;
+
     public TransactionHistory createTransactionHistory(TransactionHistory transactionHistory, Long memberCategoryId) {
         MemberCategory memberCategory = memberCategoryService.findMemberCategory(memberCategoryId);
         transactionHistory.setMemberCategory(memberCategory);
+        transactionHistory.setStatus(TransactionHistory.Status.ACTIVE);
 
         return transactionHistoryRepository.save(transactionHistory);
     }
@@ -99,11 +101,8 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
         transactionHistory.setStatus(TransactionHistory.Status.INACTIVE);
     }
 
-    public static void main(String[] args) {
-        List<List<Integer>> daily = new ArrayList<>();
-        for (int i = 0; i <= LocalDate.now().getDayOfMonth(); i++) {
-            daily.add(Arrays.asList(0, 0));
-        }
-        System.out.println(daily);
-    }
+//    public TransactionHistory getTransactionHistoriesfromOpenApi(TransactionHistory transactionHistory) {
+//        String branchName = transactionHistory.getBranchName();
+//
+//    }
 }

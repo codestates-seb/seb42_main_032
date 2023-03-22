@@ -1,12 +1,22 @@
 package DabuOps.tikkle.userauth.service;
 
 import DabuOps.tikkle.account.entity.Account;
+import DabuOps.tikkle.account.entity.Account.AccountState;
 import DabuOps.tikkle.account.repository.AccountRepository;
 import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.repository.MemberRepository;
+import DabuOps.tikkle.transaction_history.dto.TransactionHistoryDto;
+import DabuOps.tikkle.transaction_history.mapper.TransactionHistoryMapper;
+import DabuOps.tikkle.transaction_history.service.TransactionHistoryService;
 import DabuOps.tikkle.userauth.dto.AccountInfoDto;
+import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
+import DabuOps.tikkle.userauth.dto.AccountTransactionListDto;
+import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
 import DabuOps.tikkle.userauth.dto.ResList;
 import DabuOps.tikkle.userauth.dto.TokenResponseDto;
+import DabuOps.tikkle.userauth.mapper.AccountTransactionMapper;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +38,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class UserAuthService {
     private final MemberRepository memberRepository;
     private final AccountRepository accountRepository;
+    private final TransactionHistoryService transactionHistoryService;
+    private final TransactionHistoryMapper transactionHistoryMapper;
+    private final AccountTransactionMapper mapper;
     private final RestTemplate restTemplate;
+
+    //이용기관코드 = 테스팅할 사용자 것을 적어야함
+    private final String InstitutionCode = "M202300547";
+
     @Value("${{secrets.OPENBANKING_URL}}")
     private String openBankingApiUrl;
     @Value("${{secrets.K_CLIENT_ID}}")
@@ -82,22 +99,74 @@ public class UserAuthService {
         }
         return accountList;
     }
-}
 
-//    public Mono<AccountTransactionListDto> requestTransactionHistory(AccountTransactionRequestDto accountTransactionRequestDto
-//    , String accessToken){
-//        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-//        formData.add("bank_tran_id", accountTransactionRequestDto.getBank_tran_id());
-//        formData.add("fintech_use_num", accountTransactionRequestDto.getFintech_use_num());
-//        formData.add("inquiry_type", accountTransactionRequestDto.getInquiry_type());
-//        formData.add("inquiry_base", accountTransactionRequestDto.getInquiry_base());
-//        formData.add("from_date", accountTransactionRequestDto.getFrom_date());
-//        formData.add("to_date", accountTransactionRequestDto.getTo_date());
-//        formData.add("tran_dtime", accountTransactionRequestDto.getTran_dtime());
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.setBearerAuth(accessToken);
-//
-//        return null;
-//    }
+    public List<ModifiedTransactionHistoryDto> requestTransactionHistories(Long memberId) {
+        //멤버가 가진 모든 활성 계좌를 찾아서
+        Member obtainMember = memberRepository.findById(memberId).get();
+        List<Account> obtainAccounts =
+            accountRepository.findAllByMemberIdAndStateIs(obtainMember.getId(), AccountState.ACTIVE);
+        String accessToken = obtainMember.getAccessToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(accessToken);
+
+        List<ModifiedTransactionHistoryDto> transactionHistories
+            = new ArrayList<ModifiedTransactionHistoryDto>();
+        //계정마다 거래 내역 조회를 실행해주고
+        for(Account account : obtainAccounts) {
+            UriComponentsBuilder builder = UriComponentsBuilder
+                .fromHttpUrl(openBankingApiUrl + "v2.0/account/transaction_list")
+                .queryParam("bank_tran_id",
+                    InstitutionCode + "U" + generateInstitutionGrantNumber(account.getId()))
+                .queryParam("fintech_use_num", account.getFintechUseNum())
+                .queryParam("inquiry_type", "A")
+                .queryParam("inquiry_base", "T")
+                .queryParam("from_time", account.getLastDateTimeInquiryTransactionHistory())
+                .queryParam("to_time", LocalDateTime.now())
+                .queryParam("sort_order", "D")
+                .queryParam("tran_dtime", LocalDateTime.now());
+
+            HttpEntity<?> request = new HttpEntity<>(headers);
+            ResponseEntity<AccountTransactionListDto> response =
+                restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request,
+                    AccountTransactionListDto.class);
+            //조회한 거래 내역을 하나로 만들어서 반환함
+            for(AccountTransactionDto accountTransactionDto : response.getBody().getRes_list()){
+                transactionHistories.add(mapper.accountTransactionDtoToModifiedTransactionHistoryDto(accountTransactionDto, account.getBankName()));
+            }
+        }
+        //멤버카테고리 아이디 구현 필요
+//        Long testMemberCategoryId = 0L;
+//        for(AccountTransactionDto accountTransactionDto : response.getBody().getRes_list()){
+//            TransactionHistoryDto.Post post =
+//                mapper.accountTransactionDtoToTransactionHistoryPostDto(accountTransactionDto, response.getBody().getBank_name());
+//            transactionHistoryService.createTransactionHistory(
+//                transactionHistoryMapper.transactionHistoryPostDtoToTransactionHistory(post),testMemberCategoryId);
+//        }
+
+        return transactionHistories;
+    }
+    /**
+     * 이용기관 부여번호는 하루동안의 유일성을 보장받아야함
+     * 각 회원별 거래 내역 조회수로 하루동안의 유일성 보장
+     */
+    private String generateInstitutionGrantNumber(Long accountId){
+        //id로 계좌 찾기
+        Account obtainAccount = accountRepository.findById(accountId).get();
+        LocalDate today = LocalDate.now();
+        String generatedNumber;
+        //호출한 계좌의 마지막 거래 내역 조회날짜가 어제면 거래내역 조횟수를 1로 초기화
+        if(obtainAccount.getLastDateTimeInquiryTransactionHistory().toLocalDate().isBefore(today)) {
+            obtainAccount.setCallTransactionHistories(1);
+        }
+        else{
+            //아니면 거래내역 조회수를 +1
+            obtainAccount.setCallTransactionHistories(obtainAccount.getCallTransactionHistories() + 1);
+        }
+        //이용기관 부여번호 9자리 생성(하루동안의 유일성 보장)
+        generatedNumber = String.format("%09d", obtainAccount.getCallTransactionHistories());
+        accountRepository.save(obtainAccount);
+        return generatedNumber;
+    }
+}
