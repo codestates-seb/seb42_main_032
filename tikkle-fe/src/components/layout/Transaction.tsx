@@ -7,6 +7,7 @@ import { MdFastfood } from 'react-icons/md';
 import { BiCoffeeTogo } from 'react-icons/bi';
 import { IoLogoGameControllerA } from 'react-icons/io';
 import Modal from '../transaction/Modal';
+import axios from 'axios';
 
 export interface Transaction {
   date: Date;
@@ -81,6 +82,21 @@ const ContentContainer = styled.div`
 
 // 날짜+요일별 거래내역 박스
 const Transaction: FC<Props> = ({ transactions, date }) => {
+  // 거래내역 상태 관리
+  const [transactionHistories, setTransactionHistories] = useState<
+    { date: Date }[]
+  >([]);
+  // 거래내역 네트워크 요청
+  useEffect(() => {
+    axios
+      .get('http://localhost:8080/transactionHistoriesResponse')
+      .then((res) => {
+        setTransactionHistories(res.data);
+        console.log(transactionHistories);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+  // console.log(transactionHistories[0].date.getMonth());
   // 거래내역 클릭 시 상세 정보 모달 띄우기
   const [showModal, setShowModal] = useState<boolean>(false);
   const toggleModal = () => {
