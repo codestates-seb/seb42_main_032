@@ -29,15 +29,15 @@ public class UserAuthService {
     private final MemberRepository memberRepository;
     private final AccountRepository accountRepository;
     private final RestTemplate restTemplate;
-    @Value("{openbanking.api.url}")
+    @Value("${{secrets.OPENBANKING_URL}}")
     private String openBankingApiUrl;
-    @Value("{K_CLIENT_ID}")
+    @Value("${{secrets.K_CLIENT_ID}}")
     private String clientId;
 
-    @Value("{K_CLIENT_SECRET}")
+    @Value("{secrets.K_CLIENT_SECRET}")
     private String clientSecret;
 
-    @Value("{K_REDIRECT_URI}")
+    @Value("{secrets.K_REDIRECT_URI}")
     private String redirectUri;
 
     public TokenResponseDto requestToken(String authorizationCode, Long memberId) {
