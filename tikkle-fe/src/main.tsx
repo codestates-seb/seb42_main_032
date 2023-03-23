@@ -4,13 +4,17 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
 import { ChakraProvider } from '@chakra-ui/react';
+import { RecoilRoot } from 'recoil';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ChakraProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ChakraProvider>
+    {/* Recoil 사용을 위해 최상위에서 RecoilRoot 컴포넌트로 감싸줘야 함 */}
+    <RecoilRoot>
+      <ChakraProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ChakraProvider>
+    </RecoilRoot>
   </React.StrictMode>
 );

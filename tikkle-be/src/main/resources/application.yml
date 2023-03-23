@@ -33,15 +33,10 @@ logging:
 mail:
   address:
     admin: admin@gmail.com
-jwt:
-  key:
-    secret: ${JWT_SECRET_KEY}
-  access-token-expiration-minutes: 30
-  refresh-token-expiration-minutes: 180
 webClient:
-  baseUrl: {openbanking.api.url}
+  baseUrl: ${OPENBANKING_URL}
 openbanking:
   api:
-    client-id: {K_CLIENT_ID}
-    client-secret: {K_CLIENT_SECRET}
-    redirect-uri: {K_REDIRECT_URI}
+    client-id: ${K_CLIENT_ID}
+    client-secret: ${K_CLIENT_SECRET}
+    redirect-uri: ${K_REDIRECT_URI}

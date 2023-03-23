@@ -2121,6 +2121,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^18.15.3":
+  version: 18.15.3
+  resolution: "@types/node@npm:18.15.3"
+  checksum: 31b1d92475a82c30de29aa6c0771b18a276552d191283b4423ba2d61b3f01159bf0d02576c0b7cc834b043997893800db6bb47f246083ed85aa45e79c80875d7
+  languageName: node
+  linkType: hard
+
 "@types/parse-json@npm:^4.0.0":
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
@@ -6194,6 +6201,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"recoil-persist@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "recoil-persist@npm:4.2.0"
+  peerDependencies:
+    recoil: ^0.7.2
+  checksum: 1c8a6be4bb914b383429603e910aba80734311d8657ddf9f94a39513da0eb41fd6a2b74439f93658daf465d2e66a2d890e9f6b2f8a047e4fb99dc5b31f301515
+  languageName: node
+  linkType: hard
+
 "recoil@npm:^0.7.7":
   version: 0.7.7
   resolution: "recoil@npm:0.7.7"
@@ -6822,6 +6838,7 @@ __metadata:
     "@chakra-ui/system": ^2.5.1
     "@emotion/react": ^11.10.6
     "@emotion/styled": ^11.10.6
+    "@types/node": ^18.15.3
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
     "@types/react-router-dom": ^5.3.3
@@ -6839,6 +6856,7 @@ __metadata:
     react-is: ^18.2.0
     react-router-dom: ^6.9.0
     recoil: ^0.7.7
+    recoil-persist: ^4.2.0
     styled-components: ^5.3.8
     typescript: ^4.9.3
     vite: ^4.1.0

@@ -9,7 +9,6 @@ import DabuOps.tikkle.transaction_history.repository.TransactionHistoryRepositor
 import DabuOps.tikkle.transaction_history.service.TransactionHistoryService;
 import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
 import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
-import DabuOps.tikkle.userauth.mapper.AccountTransactionMapper;
 import DabuOps.tikkle.userauth.service.UserAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,8 +32,6 @@ public class TransactionHistoryController {
     private final TransactionHistoryMapper mapper;
 
     private final UserAuthService userAuthService;
-    private final AccountTransactionMapper accountTransactionMapper;
-
     @PostMapping()
     public ResponseEntity postTransactionHistory(@Valid @RequestBody TransactionHistoryDto.Post requestBody) {
         Long memberCategoryId = requestBody.getMemberCategoryId();
