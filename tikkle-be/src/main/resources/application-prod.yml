@@ -1,9 +1,9 @@
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: ${secrets.DB_URL}
-    username: ${secrets.DB_ID}
-    password: ${secrets.DB_SECRET}
+    url: ${DB_URL}
+    username: ${DB_ID}
+    password: ${DB_SECRET}
   jpa:
     show-sql: true
     properties:
@@ -17,15 +17,15 @@ spring:
       client:
         registration:
           google:
-            clientId: ${secrets.G_CLIENT_ID}
-            clientSecret: ${secrets.G_CLIENT_SECRET}
+            clientId: ${G_CLIENT_ID}
+            clientSecret: ${G_CLIENT_SECRET}
             scope:
               - email
               - profile
 webClient:
-  baseUrl: ${secrets.OPENBANKING_URL}
+  baseUrl: ${OPENBANKING_URL}
 openbanking:
   api:
-    client-id: ${secrets.K_CLIENT_ID}
-    client-secret: ${secrets.K_CLIENT_SECRET}
-    redirect-uri: ${secrets.K_REDIRECT_URI}
+    client-id: ${K_CLIENT_ID}
+    client-secret: ${K_CLIENT_SECRET}
+    redirect-uri: ${K_REDIRECT_URI}
