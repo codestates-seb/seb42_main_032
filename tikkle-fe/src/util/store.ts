@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
+import { userInfoType } from '../pages/Login';
 
 // localStorage에 'recoil-persist'라는 key로 저장
 const { persistAtom } = recoilPersist({
@@ -38,4 +39,10 @@ export const currentPageState = atom({
 
   // 토큰을 localStorage에 저장하려면 아래 구문을 atom마다 적어주어야 함
   effects: [persistAtom]
+})
+
+export const userInfoState = atom<userInfoType | null>({
+  key: 'userInfoState',
+  default: null,
+  effects: [persistAtom],
 })

@@ -1,14 +1,32 @@
 import { Box, Text, useMediaQuery } from '@chakra-ui/react';
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import BudgetDropdown from '../components/budget_setting/BudgetDropdown';
 import CategoryBudget from '../components/budget_setting/CategoryBudget';
 import MonthlyBudget from '../components/budget_setting/MonthlyBudget';
+import { userInfoState } from '../util/store';
 
 const BudgetSetting = () => {
+  // PC 화면에 대응하기 위해 추가
   const [isLagerThan900px] = useMediaQuery('(min-width: 900px)');
+
+  const [userInfo] = useRecoilState(userInfoState);
+  console.log(userInfo);
 
   // ToDo 카테고리 페이지에서 추가된 카테고리를 기준으로 List 생성
   const [categoryList] = useState([{}]);
+
+  useEffect(() => {
+    const getBudgets = async () => {
+      const fetchedBudgets = await axios.get(
+        `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo?.id}`
+      );
+      console.log(fetchedBudgets);
+    };
+
+    getBudgets();
+  }, []);
 
   return (
     <Box
