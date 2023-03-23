@@ -40,13 +40,12 @@ jobs:
           --deployment-group-name TIKKLE-group
 
       - name: Code Deploy - FrontEnd
-        uses: aws-actions/setup-aws-cli@v1
         with:
           aws_access_key_id: ${{secrets.AWS_ACCESS_KEY}}
           aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws_region: ap-northeast-2
       - name: Upload to S3 Bucket
-        run: aws s3 sync ./tikkle-fe s3://my-bucket --delete
+        run: aws s3 sync ./tikkle-fe s3://seb42-main-032-tikkle
 env:
   DB_ID: ${{secrets.DB_ID}}
   DB_PASSWORD: ${{secrets.DB_SECRET}}
