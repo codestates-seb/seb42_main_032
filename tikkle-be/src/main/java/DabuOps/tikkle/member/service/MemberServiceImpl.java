@@ -86,7 +86,6 @@ public class MemberServiceImpl implements MemberService {
 
         for(Category category : categories) {
             MemberCategory memberCategory = memberCategoryService.createAutoMemberCategory(member, category); // 멤버와 카테고리로 멤버카테고리 생성
-            Budget budget = budgetService.createAutoBudget(memberCategory); // 예산도 생성
         }
 
         return savedMember;

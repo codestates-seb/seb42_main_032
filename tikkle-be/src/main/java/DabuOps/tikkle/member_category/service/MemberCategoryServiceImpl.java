@@ -44,8 +44,6 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
         memberCategory.setImage(category.getImage());
         MemberCategory savedMemberCategory = memberCategoryRepository.save(memberCategory);
 
-        budgetService.createAutoBudget(savedMemberCategory);
-
         return savedMemberCategory;
     }
 

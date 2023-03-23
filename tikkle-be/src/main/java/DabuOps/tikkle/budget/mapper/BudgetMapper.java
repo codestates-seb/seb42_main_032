@@ -9,6 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface BudgetMapper {
+    Budget postDtoToBudget(BudgetDto.Post requestBody);
     Budget patchDtoToBudget(BudgetDto.Patch requestBody);
 
     BudgetDto.Response budgetToResponseDto(Budget budget);
