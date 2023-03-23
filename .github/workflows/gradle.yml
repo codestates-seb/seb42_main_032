@@ -50,12 +50,16 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name TIKKLE-group
           --s3-location bucket=seb42-main-032-tikkle,bundleType=zip,key=tikkle.zip
-env:
-  DB_ID: ${{secrets.DB_ID}}
-  DB_PASSWORD: ${{secrets.DB_SECRET}}
-  G_CLIENT_ID: ${{secrets.G_CLIENT_ID}}
-  G_CLIENT_SECRET: ${{secrets.G_CLIENT_SECRET}}
-  K_CLIENT_ID: ${{secrets.K_CLIENT_ID}}
-  K_CLIENT_SECRET: ${{secrets.K_CLIENT_SECRET}}
-  K_REDIRECT_URI: ${{secrets.K_REDIRECT_URI}}
-  OPENBANKING_URL: ${{secrets.OPENBANKING_URL}}
+          
+      - name: Get parameters from Parameter Store
+        env:
+          aws-region: ap-northeast-2
+        run: |
+          export G_CLIENT_ID=$(aws ssm get-parameter --name "G_CLIENT_ID" --with-decryption --query "Parameter.Value" --output text)
+          export G_CLIENT_SECRET=$(aws ssm get-parameter --name "G_CLIENT_SECRET" --with-decryption --query "Parameter.Value" --output text)
+          export DB_ID=$(aws ssm get-parameter --name "DB_ID" --with-decryption --query "Parameter.Value" --output text)
+          export DB_SECRET=$(aws ssm get-parameter --name "DB_SECRET" --with-decryption --query "Parameter.Value" --output text)
+          export OPENBANKING_URL=$(aws ssm get-parameter --name "OPENBANKING_URL" --with-decryption --query "Parameter.Value" --output text)  
+          export K_REDIRECT_URI=$(aws ssm get-parameter --name "K_REDIRECT_URI" --with-decryption --query "Parameter.Value" --output text)  
+          export K_CLIENT_ID=$(aws ssm get-parameter --name "K_CLIENT_ID" --with-decryption --query "Parameter.Value" --output text)
+          export K_CLIENT_SECRET=$(aws ssm get-parameter --name "K_CLIENT_SECRET" --with-decryption --query "Parameter.Value" --output text)
