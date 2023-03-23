@@ -44,7 +44,7 @@ public class CurationService {
         return obtainCuration;
     }
     public List<Curation> getCurations(Long tagId){
-        List<Curation> curations =  repository.findAllBYTagId(tagId);
+        List<Curation> curations =  repository.findAllByTagId(tagId);
         return curations;
     }
 
