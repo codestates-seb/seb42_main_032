@@ -21,7 +21,15 @@ const SetContainer = styled.div`
   }
 `;
 
-function UserInput({ label, setState, state, setDate, date }) {
+interface UserInputType {
+  label: string;
+  setState: React.Dispatch<React.SetStateAction<number>>;
+  state: string | number;
+  setDate: React.Dispatch<React.SetStateAction<string>>;
+  date: Date | string;
+}
+
+function UserInput({ label, setState, state, setDate, date }: UserInputType) {
   const handleState = (e: any) => {
     setState(e.target.value);
   };
