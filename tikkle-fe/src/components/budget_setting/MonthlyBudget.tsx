@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ReactHTMLElement, useState } from 'react';
 import {
   Box,
   Input,
@@ -24,8 +24,8 @@ const MonthlyBudget = () => {
     setIsEditable(!isEditable);
   };
   // 어떤 타입으로 지정해야 할지 생각해보기
-  const handleTotalBudget = (event) => {
-    setTotalBudget(event.target.value);
+  const handleTotalBudget = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTotalBudget(Number(event.target.value));
   };
 
   return (
