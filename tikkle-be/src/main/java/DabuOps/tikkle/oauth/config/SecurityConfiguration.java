@@ -26,7 +26,7 @@ public class SecurityConfiguration {
             .httpBasic().disable()
 
             .authorizeRequests()
-            .antMatchers("/","/oauth2/**","/login/**","/h2-console/**","/budgets/**","/members/**","/transaction_histories/**","/categories/**","/curations/**","/tags/**","/accounts/**")
+            .antMatchers("/","/oauth2/**","/login/**","/h2-console/**","/budgets/**","/members/**","/transaction_histories/**","/categories/**","/curations/**","/tags/**","/accounts/**", "/init/**")
             .permitAll()
             .anyRequest().authenticated()
 
