@@ -37,7 +37,8 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
 
     // 사용자가 직접 카테고리 만들 때 쓸 메서드
     public MemberCategory createOriginalMemberCategory(MemberCategory memberCategory, Long memberId) {
-        Member member = memberRepository.findById(memberId).get();
+        Member member = memberRepository.findById(memberId)
+                        .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
         memberCategory.setCategory(categoryRepository.findById(21L).get()); // '기타' 카테고리로 고정
         memberCategory.setMember(member);
         memberCategory.setImage(category.getImage());
