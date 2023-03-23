@@ -4,13 +4,16 @@ import DabuOps.tikkle.budget.dto.BudgetDto;
 import DabuOps.tikkle.budget.entity.Budget;
 import DabuOps.tikkle.budget.mapper.BudgetMapper;
 import DabuOps.tikkle.budget.service.BudgetService;
+import DabuOps.tikkle.global.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -22,6 +25,15 @@ public class BudgetController {
     private final BudgetService budgetService;
     private final BudgetMapper mapper;
 
+    @PostMapping
+    public ResponseEntity postBudget(@RequestBody BudgetDto.Post requestBody) {
+        Budget budget = mapper.postDtoToBudget(requestBody);
+        budgetService.createBudget(budget, requestBody.getMemberCategoryId());
+
+        URI location = UriCreator.createURIWithoutResourceId(DEFAULT_URL);
+
+        return ResponseEntity.created(location).build();
+    }
 
     @PatchMapping("/{budget_id}")
     public ResponseEntity patchBudget(@PathVariable("budget_id") Long budgetId,
