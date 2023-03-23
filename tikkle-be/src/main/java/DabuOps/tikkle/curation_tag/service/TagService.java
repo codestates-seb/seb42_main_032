@@ -56,7 +56,7 @@ public class TagService {
 
         Tag obtainTag = findExistTagById(tagId);
 
-        List<Curation> curations = curationRepository.findAllBYTagId(obtainTag.getId());
+        List<Curation> curations = curationRepository.findAllByTagId(obtainTag.getId());
 
         for(Curation curation : curations){
             curation.setTag(null);
