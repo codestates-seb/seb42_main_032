@@ -14,7 +14,8 @@ public enum ExceptionCode {
     ACCOUNT_NOT_FOUND(404, "Account Not Found"),
     ACCOUNT_NUMBER_EXIST(409, "Account Not Found"),
     BUDGET_NOT_FOUND(404, "Budget Not Found"),
-    BUDGET_IS_INACTIVE(403, "Budget is Inactive");
+    BUDGET_IS_INACTIVE(403, "Budget is Inactive"),
+    CANNOT_CHANGE_CATEGORY_NAME(400, "Cannot Change Category Name : 기본 카테고리의 이름은 수정할 수 없습니다.");
 
     @Getter
     private int status;

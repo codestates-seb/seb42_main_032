@@ -18,6 +18,8 @@ public interface TransactionHistoryMapper {
     TransactionHistory transactionHistoryPatchDtoToTransactionHistory(TransactionHistoryDto.Patch requestBody);
 
     @Mapping(target = "memberCategoryId", source = "memberCategory.id")
+    @Mapping(target = "memberCategoryName", source = "memberCategory.name")
+    @Mapping(target = "image", source = "memberCategory.image")
     TransactionHistoryDto.Response transactionHistoryToTransactionHistoryResponseDto(TransactionHistory transactionHistory);
 
     List<TransactionHistoryDto.Response> transactionHistoriesToTransactionHistoryResponseDto(List<TransactionHistory> transactionHistories);

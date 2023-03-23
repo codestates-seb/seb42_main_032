@@ -67,6 +67,9 @@ public class TransactionHistoryDto {
     public static class Response {
         private Long id;
         private Long memberCategoryId;
+
+        private String memberCategoryName;
+        private String image;
         private LocalDate date;
         private LocalTime time;
         private TransactionHistory.InoutType inoutType;
@@ -76,10 +79,11 @@ public class TransactionHistoryDto {
         private String bankName;
 
         @Builder
-
-        public Response(Long id, Long memberCategoryId, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName, String bankName) {
+        public Response(Long id, Long memberCategoryId, String memberCategoryName, String image, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName, String bankName) {
             this.id = id;
             this.memberCategoryId = memberCategoryId;
+            this.memberCategoryName = memberCategoryName;
+            this.image = image;
             this.date = date;
             this.time = time;
             this.inoutType = inoutType;

@@ -2,6 +2,7 @@ package DabuOps.tikkle.member_category.service;
 
 import DabuOps.tikkle.budget.service.BudgetService;
 import DabuOps.tikkle.category.entity.Category;
+import DabuOps.tikkle.category.repository.CategoryRepository;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
 import DabuOps.tikkle.member.entity.Member;
@@ -25,6 +26,8 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
     private final MemberCategoryRepository memberCategoryRepository;
     private final BudgetService budgetService;
 
+    private final CategoryRepository categoryRepository;
+
     private final Category category = Category.builder()
         .id(1L)
         .name("식비")
@@ -35,8 +38,9 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
     // 사용자가 직접 카테고리 만들 때 쓸 메서드
     public MemberCategory createOriginalMemberCategory(MemberCategory memberCategory, Long memberId) {
         Member member = memberRepository.findById(memberId).get();
-        memberCategory.setCategory(category); // '기타' 카테고리로 고정
+        memberCategory.setCategory(categoryRepository.findById(21L).get()); // '기타' 카테고리로 고정
         memberCategory.setMember(member);
+        memberCategory.setImage(category.getImage());
         MemberCategory savedMemberCategory = memberCategoryRepository.save(memberCategory);
 
         budgetService.createAutoBudget(savedMemberCategory);
@@ -50,6 +54,7 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
         memberCategory.setMember(member);
         memberCategory.setCategory(category); // 반복문으로 들어오는 카테고리가 매번 바뀜
         memberCategory.setName(category.getName()); // 일단 이름의 기본값을 카테고리거 가져와서 사용
+        memberCategory.setImage(category.getImage());
 
         return memberCategoryRepository.save(memberCategory);
     }
@@ -57,6 +62,9 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
 
     public MemberCategory updateMemberCategory(MemberCategory memberCategory, Long memberCategoryId) {
         MemberCategory updatedMemberCategory = findMemberCategory(memberCategoryId);
+        if(updatedMemberCategory.getCategory().getId() != 21L) {
+            throw new BusinessLogicException(ExceptionCode.CANNOT_CHANGE_CATEGORY_NAME);
+        }
 
         Optional.ofNullable(memberCategory.getName())
                 .ifPresent(name -> updatedMemberCategory.setName(name));

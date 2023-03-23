@@ -26,7 +26,7 @@ public class MemberCategory extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @Column
+    @Column(name = "IMAGE")
     private String image;
 
     @ManyToOne // CATEGORY n:1 단방향 // MEMBER : CATEGORY (n:m) 매핑
