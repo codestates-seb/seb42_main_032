@@ -37,6 +37,7 @@ fi
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포"    >> /home/ubuntu/action/deploy.log
 sudo nohup java -jar \
+-Dspring.profiles.active=prod \
 -Dspring.datasource.url=$DB_URL \
 -DG_CLIENT_ID=$G_CLIENT_ID \
 -DG_CLIENT_SECRET=$G_CLIENT_SECRET \
