@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CurationRepository extends JpaRepository<Curation, Long> {
-    List<Curation> findAllBYTagId(Long tagId);
+    List<Curation> findAllByTagId(Long tagId);
 }
