@@ -53,14 +53,14 @@ function UserSetting() {
   // username
   const [username, setUsername] = useState('');
   // initial budget
-  const [ibDate, setIbDate] = useState();
-  const [ibAmount, setIbAmount] = useState();
+  const [ibDate, setIbDate] = useState(new Date().toISOString());
+  const [ibAmount, setIbAmount] = useState(0);
   // salary
-  const [salaryDate, setSalaryDate] = useState();
-  const [salaryAmount, setSalaryAmount] = useState();
+  const [salaryDate, setSalaryDate] = useState(new Date().toISOString());
+  const [salaryAmount, setSalaryAmount] = useState(0);
   // fixed expenses
-  const [feDate, setFeDate] = useState();
-  const [feAmount, setFeAmount] = useState();
+  const [feDate, setFeDate] = useState(new Date().toISOString());
+  const [feAmount, setFeAmount] = useState(0);
 
   const handleUserInput = (e: any) => {
     setUsername(e.target.value);

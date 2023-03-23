@@ -1,7 +1,6 @@
 package DabuOps.tikkle.member.entity;
 
 import DabuOps.tikkle.global.audit.Auditable;
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -46,11 +45,19 @@ public class Member extends Auditable {
     private Integer payDay;
 
     @Column
+    private int totalBudget;
+
+    @Column
     @Builder.Default
     private Integer initDate = 1;
 
     @Column(nullable = true)
     private String picture = "이미지";
+
+    @Column
+    @Builder.Default
+    @Enumerated(value = EnumType.STRING)
+    private MemberRole role = MemberRole.Regular;
 
     @Column
     private String accessToken;
@@ -59,7 +66,7 @@ public class Member extends Auditable {
     @Builder
     public Member(Long id, String email, String name, String location, MemberState state,
         Gender gender,
-        Integer payDay, Integer initDate, String picture, String accessToken) {
+        Integer payDay, Integer totalBudget, Integer initDate, String picture, String accessToken) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -67,9 +74,12 @@ public class Member extends Auditable {
         this.state = state;
         this.gender = gender;
         this.payDay = payDay;
+        this.totalBudget = totalBudget;
         this.initDate = initDate;
         this.picture = picture;
         this.accessToken = accessToken;
+        this.role = role;
+
     }
 
     public static enum Gender{
@@ -95,6 +105,17 @@ public class Member extends Auditable {
 
         MemberState(String state) {
             this.state = state;
+        }
+    }
+
+    public static enum MemberRole {
+        Curator("큐레이터"),
+        Regular("일반");
+        @Getter
+        private String role;
+
+        MemberRole(String role) {
+            this.role = role;
         }
     }
 }

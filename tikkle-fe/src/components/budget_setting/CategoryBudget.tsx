@@ -14,10 +14,6 @@ const CategoryBudget = () => {
   const [budget, setBudget] = useState(0);
   const [label] = useState('카테고리명');
 
-  const handleBudget = (e: any) => {
-    setBudget(e.target.value);
-  };
-
   return (
     <Box
       fontFamily="GmarketSansMedium"
@@ -49,7 +45,11 @@ const CategoryBudget = () => {
           </Box>
           {/* Input Container */}
           <InputGroup w="50%">
-            <Input type="number" value={budget} onChange={handleBudget}></Input>
+            <Input
+              type="number"
+              value={budget}
+              onChange={(e: any) => setBudget(e.target.value)}
+            ></Input>
             <InputRightAddon fontSize="0.8rem" children="원" />
           </InputGroup>
         </Box>

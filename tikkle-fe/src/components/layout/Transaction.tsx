@@ -8,7 +8,7 @@ import { BiCoffeeTogo } from 'react-icons/bi';
 import { IoLogoGameControllerA } from 'react-icons/io';
 import Modal from '../transaction/Modal';
 
-export interface Transaction {
+export interface TransactionType {
   date: Date;
   bankInfo: string;
   payee: string;
@@ -17,7 +17,7 @@ export interface Transaction {
 }
 
 export interface Props {
-  transactions: Transaction[];
+  transactions: TransactionType[];
   date: Date;
 }
 
@@ -139,9 +139,7 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
                 <div className="transaction-content-box" onClick={toggleModal}>
                   {showModal && <Modal></Modal>}
                   <div className="transaction-amount-box">
-                    <strong>
-                      원
-                    </strong>
+                    <strong>원</strong>
                   </div>
                   <div className="transaciton-bank-box">
                     {transaction.bankInfo} &#8594; {transaction.payee}

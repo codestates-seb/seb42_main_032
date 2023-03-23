@@ -19,16 +19,10 @@ public class BudgetDto {
         @NotBlank
         private int amount;
 
-        private LocalDate startDate;
-
-        private LocalDate endDate;
-
         @Builder
-        public Post(Long memberCategoryId, int amount, LocalDate startDate, LocalDate endDate) {
+        public Post(Long memberCategoryId, int amount) {
             this.memberCategoryId = memberCategoryId;
             this.amount = amount;
-            this.startDate = startDate;
-            this.endDate = endDate;
         }
     }
 
