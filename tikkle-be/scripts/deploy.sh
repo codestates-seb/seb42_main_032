@@ -1,4 +1,14 @@
 #!/bin/bash
+
+G_CLIENT_ID=$(aws ssm get-parameter --name "G_CLIENT_ID" --with-decryption --query "Parameter.Value" --output text)
+G_CLIENT_SECRET=$(aws ssm get-parameter --name "G_CLIENT_SECRET" --with-decryption --query "Parameter.Value" --output text)
+DB_ID=$(aws ssm get-parameter --name "DB_ID" --with-decryption --query "Parameter.Value" --output text)
+DB_SECRET=$(aws ssm get-parameter --name "DB_SECRET" --with-decryption --query "Parameter.Value" --output text)
+OPENBANKING_URL=$(aws ssm get-parameter --name "OPENBANKING_URL" --with-decryption --query "Parameter.Value" --output text)
+K_REDIRECT_URI=$(aws ssm get-parameter --name "K_REDIRECT_URI" --with-decryption --query "Parameter.Value" --output text)
+K_CLIENT_ID=$(aws ssm get-parameter --name "K_CLIENT_ID" --with-decryption --query "Parameter.Value" --output text)
+K_CLIENT_SECRET=$(aws ssm get-parameter --name "K_CLIENT_SECRET" --with-decryption --query "Parameter.Value" --output text)
+
 BUILD_JAR=$(ls /home/ubuntu/action/build/libs/tikkle-0.0.1-SNAPSHOT.jar)
 JAR_NAME=$(basename $BUILD_JAR)
 
