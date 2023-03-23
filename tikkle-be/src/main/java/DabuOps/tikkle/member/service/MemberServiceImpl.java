@@ -30,11 +30,9 @@ import javax.persistence.PrePersist;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final MemberCategoryRepository memberCategoryRepository;
     private final CategoryRepository categoryRepository;
     private final MemberCategoryService memberCategoryService;
     private final BudgetService budgetService;
-    private final BudgetRepository budgetRepository;
 
     @Override
     public Member createMember(Member member) {
