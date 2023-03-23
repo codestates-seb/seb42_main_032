@@ -121,7 +121,6 @@ function Login() {
     localStorage.setItem(
       'recoil-persist',
       JSON.stringify({
-        tokenState: null,
         currentPageState: 'usersetting',
       })
     );
