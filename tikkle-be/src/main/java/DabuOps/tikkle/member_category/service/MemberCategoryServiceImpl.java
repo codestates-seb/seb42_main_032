@@ -49,11 +49,12 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
 
     // 처음 가입했을 때 멤버 카테고리 자동 생성
     public MemberCategory createAutoMemberCategory(Member member, Category category) {
-        MemberCategory memberCategory = new MemberCategory(); // 리퀘스트 바디를 받는게 아니라서
-        memberCategory.setMember(member);
-        memberCategory.setCategory(category); // 반복문으로 들어오는 카테고리가 매번 바뀜
-        memberCategory.setName(category.getName()); // 일단 이름의 기본값을 카테고리거 가져와서 사용
-        memberCategory.setImage(category.getImage());
+        MemberCategory memberCategory = MemberCategory.builder()
+                .member(member)
+                .category(category)
+                .name(category.getName())
+                .image(category.getImage())
+                .build();
 
         return memberCategoryRepository.save(memberCategory);
     }

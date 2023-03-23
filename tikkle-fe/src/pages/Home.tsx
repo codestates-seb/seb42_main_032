@@ -1,12 +1,12 @@
 import Calendar from '../components/layout/Calendar';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import Transaction from '../components/layout/Transaction';
+import Transaction, { TransactionType } from '../components/layout/Transaction';
 import { tokenState } from '../util/store';
 import { useRecoilState } from 'recoil';
 
 // transaction 컴포넌트용 거래내역 dummydata
-const transactions: Transaction[] = [
+const transactions: TransactionType[] = [
   {
     date: new Date('2023-02-01'),
     bankInfo: '국민은행',
