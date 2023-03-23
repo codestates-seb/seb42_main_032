@@ -49,7 +49,7 @@ jobs:
           aws deploy create-deployment --application-name TIKKLE
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name TIKKLE-group
-          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=tikkle.zip
+          --s3-location bucket=seb42-main-032-tikkle,bundleType=zip,key=tikkle.zip
 env:
   DB_ID: ${{secrets.DB_ID}}
   DB_PASSWORD: ${{secrets.DB_SECRET}}
