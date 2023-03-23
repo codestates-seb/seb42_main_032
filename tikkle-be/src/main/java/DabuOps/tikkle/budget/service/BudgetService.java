@@ -55,6 +55,17 @@ public class BudgetService {
         return budgetRepository.save(budget);
     }
 
+    public Budget createBudget(Budget budget, Long memberCategoryId) {
+        budget.setMemberCategory(memberCategoryRepository.findById(memberCategoryId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_IS_INACTIVE)));
+
+        budget.setCurrent(true);
+        budget.setStartDate(LocalDate.now().withDayOfMonth(budget.getMemberCategory().getMember().getInitDate()));
+        budget.setEndDate(budget.getStartDate().plusMonths(1).minusDays(1));
+
+        return budgetRepository.save(budget);
+    }
+
     public Budget updateBudget(Budget budget, Long budgetId) {
         Budget updatedBudget = findBudget(budgetId);
 
@@ -91,6 +102,7 @@ public class BudgetService {
     public void deleteBudget(Long budgetId) {
         Budget budget = findBudget(budgetId);
 
+        budget.setCurrent(false);
         budget.setStatus(Budget.Status.INACTIVE);
     }
 
