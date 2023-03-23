@@ -18,6 +18,7 @@ public enum ExceptionCode {
     CURATION_NOT_FOUND(404, "Curation Not Found"),
     CURATION_IS_INACTIVE(403, "Curation is Inactive"),
     TAG_NOT_FOUND(404, "Tag Not Found"),
+    TAG_EXISTS(409, "Tag Already Exist."),
     TAG_IS_INACTIVE(403, "Tag is Inactive");
     @Getter
     private int status;
