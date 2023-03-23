@@ -31,12 +31,15 @@ public class MemberDto {
         private Integer payDay;
         private Integer initDate;
 
+        private Integer totalBudget;
+
         @Builder
-        public Patch(String name, String location, Integer payDay, Integer initDate) {
+        public Patch(String name, String location, Integer payDay, Integer initDate, Integer totalBudget) {
             this.name = name;
             this.location = location;
             this.payDay = payDay;
             this.initDate = initDate;
+            this.totalBudget = totalBudget;
         }
     }
     @Getter

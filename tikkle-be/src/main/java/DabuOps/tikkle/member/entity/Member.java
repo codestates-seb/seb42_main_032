@@ -45,6 +45,9 @@ public class Member extends Auditable {
     private Integer payDay;
 
     @Column
+    private int totalBudget;
+
+    @Column
     @Builder.Default
     private Integer initDate = 1;
 
@@ -61,8 +64,9 @@ public class Member extends Auditable {
 
 
     @Builder
-    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay,
-        Integer initDate, String picture, MemberRole role, String accessToken) {
+    public Member(Long id, String email, String name, String location, MemberState state,
+        Gender gender,
+        Integer payDay, Integer totalBudget, Integer initDate, String picture, String accessToken) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -70,6 +74,7 @@ public class Member extends Auditable {
         this.state = state;
         this.gender = gender;
         this.payDay = payDay;
+        this.totalBudget = totalBudget;
         this.initDate = initDate;
         this.picture = picture;
         this.accessToken = accessToken;
