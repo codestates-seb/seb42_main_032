@@ -82,11 +82,6 @@ function UserOut() {
     navigate(-1);
   };
 
-  const handleInput = (e) => {
-    setInput(e.target.value);
-    // setIsCorrect(input === userEmail)
-  };
-
   return (
     <Container>
       <div className="title-container">
@@ -137,7 +132,9 @@ function UserOut() {
               <Box mb="-4vh">
                 <Input
                   type="email"
-                  onChange={(e) => handleInput(e)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setInput(e.target.value)
+                  }
                   colorScheme="purple"
                   borderColor="purple.400"
                   mt="5vh"
