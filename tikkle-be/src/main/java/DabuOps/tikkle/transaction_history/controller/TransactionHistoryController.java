@@ -7,6 +7,9 @@ import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
 import DabuOps.tikkle.transaction_history.mapper.TransactionHistoryMapper;
 import DabuOps.tikkle.transaction_history.repository.TransactionHistoryRepository;
 import DabuOps.tikkle.transaction_history.service.TransactionHistoryService;
+import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
+import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
+import DabuOps.tikkle.userauth.service.UserAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,7 @@ public class TransactionHistoryController {
     private final MemberCategoryService memberCategoryService;
     private final TransactionHistoryMapper mapper;
 
+    private final UserAuthService userAuthService;
     @PostMapping()
     public ResponseEntity postTransactionHistory(@Valid @RequestBody TransactionHistoryDto.Post requestBody) {
         Long memberCategoryId = requestBody.getMemberCategoryId();
@@ -64,8 +68,9 @@ public class TransactionHistoryController {
         List<List> monthlyInfo = transactionHistoryService.findMonthlyTransactionHistories(date, memberId);
         List<TransactionHistory> transactionHistories = monthlyInfo.get(0);
         List dailySummary = monthlyInfo.get(1);
+        List<TransactionHistoryDto.Response> responses = mapper.transactionHistoriesToTransactionHistoryResponseDto(transactionHistories);
 
-        return new ResponseEntity<>(new MonthlyTransactionHistoriesDto<>(transactionHistories, dailySummary), HttpStatus.OK);
+        return new ResponseEntity<>(new MonthlyTransactionHistoriesDto<>(responses, dailySummary), HttpStatus.OK);
     }
 
     @DeleteMapping("/{transaction_history_id}")
@@ -73,5 +78,15 @@ public class TransactionHistoryController {
         transactionHistoryService.deleteTransactionHistory(transactionHistoryId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{member_id}/request")
+    public ResponseEntity updateTransactionHistoriesFromOpenApi(@PathVariable("member_id")Long memberId) {
+        List<ModifiedTransactionHistoryDto> accountTransactionDtoList = userAuthService.requestTransactionHistories(memberId);
+        for(ModifiedTransactionHistoryDto dto : accountTransactionDtoList) {
+            TransactionHistory transactionHistory = mapper.modifiedDtoToTransactionHistory(dto);
+            TransactionHistory savedTransactionHistory = transactionHistoryService.categorizeTransactionHistory(transactionHistory, memberId);
+        }
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }

@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_ID}
+    password: ${DB_SECRET}
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        hbm2ddl:
+          auto: update
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${G_CLIENT_ID}
+            clientSecret: ${G_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+webClient:
+  baseUrl: ${OPENBANKING_URL}
+openbanking:
+  api:
+    client-id: ${K_CLIENT_ID}
+    client-secret: ${K_CLIENT_SECRET}
+    redirect-uri: ${K_REDIRECT_URI}

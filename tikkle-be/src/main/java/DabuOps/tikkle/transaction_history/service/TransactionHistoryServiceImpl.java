@@ -3,6 +3,7 @@ package DabuOps.tikkle.transaction_history.service;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
 import DabuOps.tikkle.member_category.entity.MemberCategory;
+import DabuOps.tikkle.member_category.repository.MemberCategoryRepository;
 import DabuOps.tikkle.member_category.service.MemberCategoryService;
 import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
 import DabuOps.tikkle.transaction_history.repository.TransactionHistoryRepository;
@@ -20,9 +21,13 @@ import java.util.Optional;
 public class TransactionHistoryServiceImpl implements TransactionHistoryService{
     private final TransactionHistoryRepository transactionHistoryRepository;
     private final MemberCategoryService memberCategoryService;
+
+    private final MemberCategoryRepository memberCategoryRepository;
+
     public TransactionHistory createTransactionHistory(TransactionHistory transactionHistory, Long memberCategoryId) {
         MemberCategory memberCategory = memberCategoryService.findMemberCategory(memberCategoryId);
         transactionHistory.setMemberCategory(memberCategory);
+        transactionHistory.setStatus(TransactionHistory.Status.ACTIVE);
 
         return transactionHistoryRepository.save(transactionHistory);
     }
@@ -99,11 +104,155 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
         transactionHistory.setStatus(TransactionHistory.Status.INACTIVE);
     }
 
-    public static void main(String[] args) {
-        List<List<Integer>> daily = new ArrayList<>();
-        for (int i = 0; i <= LocalDate.now().getDayOfMonth(); i++) {
-            daily.add(Arrays.asList(0, 0));
+    public TransactionHistory categorizeTransactionHistory(TransactionHistory transactionHistory, Long memberId) {
+        String branchName = transactionHistory.getBranchName();
+        String stringCategorizeCode = branchName.substring(0,5);
+        int categorizeCode = Integer.parseInt(stringCategorizeCode);
+
+        // code : xxxxx
+        switch (categorizeCode/1000) {
+            case 35 :
+                if(categorizeCode/100 == 352) {
+                    // 352xx : 주거
+                    transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(12L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                break;
+
+            case 36 :
+                if(categorizeCode/10 == 3601) {
+                    // 3601x : 주거
+                    transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(12L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                break;
+
+            case 45 :
+                // 45xxx : 자동차
+                transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(10L, memberId, MemberCategory.Status.INACTIVE));
+                break;
+
+            case 47 :
+                if(categorizeCode/100 == 476) {
+                    if(categorizeCode/10 == 4763) {
+                        // 4763x : 운동
+                        transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(20L, memberId, MemberCategory.Status.INACTIVE));
+                    }
+                        // 476xx : 오락
+                    else transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(4L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                else if (categorizeCode/100 == 478) {
+                    if (categorizeCode == 47852) {
+                        // 47852 : 반려동물
+                        transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(18L, memberId, MemberCategory.Status.INACTIVE));
+                    }
+                    else if (categorizeCode == 47813) {
+                        // 47813 : 미용
+                        transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(8L, memberId, MemberCategory.Status.INACTIVE));
+                    }
+                        // 478xx : 쇼핑
+                    else transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(1L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                else if(categorizeCode/100 == 474 || categorizeCode/100 == 479) {
+                    // 474xx, 479xx : 쇼핑
+                    transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(1L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                else if(categorizeCode == 47221) {
+                    // 47221 : 카페
+                    transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(3L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                    // 47xxx : 생활
+                else transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(15L, memberId, MemberCategory.Status.INACTIVE));
+                break;
+
+            case 49 :
+                    // 49xxx : 대중교통
+                transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(11L, memberId, MemberCategory.Status.INACTIVE));
+                break;
+
+            case 56 :
+                if(categorizeCode/100 == 561) {
+                    // 561xx : 식비
+                    transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(2L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                else if(categorizeCode/10 == 5622) {
+                    // 5622x : 카페
+                    transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(3L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                else if(categorizeCode/10 == 5621) {
+                    // 5621x : 술
+                    transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(5L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                break;
+
+            case 51 :
+            case 55 :
+                    // 51xxx, 55xxx : 여행
+                transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(7L, memberId, MemberCategory.Status.INACTIVE));
+                break;
+
+            case 61 :
+                if(categorizeCode/100 == 612) {
+                    // 612xx : 통신
+                    transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(14L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                break;
+
+            case 64 :
+            case 65 :
+            case 66 :
+                    // 64xxx, 65xxx, 66xxx : 금융
+                transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(9L, memberId, MemberCategory.Status.INACTIVE));
+                break;
+
+            case 68 :
+                    // 68xxx : 주거
+                transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(12L, memberId, MemberCategory.Status.INACTIVE));
+                break;
+
+            case 73 :
+                if(categorizeCode/100 == 731) {
+                    // 731xx : 반려동물
+                    transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(18L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                break;
+
+            case 85 :
+                    // 85xxx : 교육
+                transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(17L, memberId, MemberCategory.Status.INACTIVE));
+                break;
+
+            case 86 :
+                // 86xxx : 건강
+                transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(6L, memberId, MemberCategory.Status.INACTIVE));
+                break;
+
+            case 90 :
+            case 91 :
+                // 90xxx, 91xxx : 문화생활
+                transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(19L, memberId, MemberCategory.Status.INACTIVE));
+                break;
+
+            case 96 :
+                if(categorizeCode/100 == 961) {
+                    // 961xx : 미용
+                    transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(8L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                else if(categorizeCode == 96995) {
+                    // 96995 : 반려동물
+                    transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(18L, memberId, MemberCategory.Status.INACTIVE));
+                }
+                break;
+
+            case 97 :
+                // 97xxx : 자녀/육아
+                transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(16L, memberId, MemberCategory.Status.INACTIVE));
+                break;
+
+            default :
+                // 그 외 : 기타
+                transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(21L, memberId, MemberCategory.Status.INACTIVE));
+                break;
         }
-        System.out.println(daily);
+
+        return transactionHistoryRepository.save(transactionHistory);
     }
 }

@@ -41,19 +41,7 @@ public class MemberServiceImpl implements MemberService {
         // 동일한 이메일이 존재하는지 확인.
         verifyExistEmail(member.getEmail());
         member.setPicture("이미지"); // 임시 이미지 필드 채워주고
-        //member.setMemberCategories(new ArrayList<>()); // 이거 안하면 널포인트예외 나옴
-        Member savedMember = memberRepository.save(member); // 세이브 해주고~
-
-        // Category 리스트 가져오기
-        List<Category> categories = categoryRepository.findAll();
-
-        for(Category category : categories) {
-            MemberCategory memberCategory = memberCategoryService.createAutoMemberCategory(member, category); // 멤버와 카테고리로 멤버카테고리 생성
-            Budget budget = budgetService.createAutoBudget(memberCategory); // 예산도 생성
-            //savedMember.getMemberCategories().add(memberCategory); // 동일 트랜젝션 내에서 실행
-        }
-
-        return savedMember;
+        return memberRepository.save(member); // 세이브 해주고~
     }
 
 
@@ -82,10 +70,30 @@ public class MemberServiceImpl implements MemberService {
             .ifPresent(obtainedMember::setPayDay);
         Optional.ofNullable(member.getInitDate())
             .ifPresent(obtainedMember::setInitDate);
+        Optional.ofNullable(member.getTotalBudget())
+            .ifPresent(obtainedMember::setTotalBudget);
         Optional.ofNullable(member.getGender())
             .ifPresent(obtainedMember::setGender);
 
         return memberRepository.save(obtainedMember);
+    }
+
+    public Member initMember(Member member) {
+        Member initializedMember = findExistMemberById(member.getId());
+
+        initializedMember.setInitDate(member.getInitDate());
+        initializedMember.setPayDay(member.getPayDay());
+        initializedMember.setTotalBudget(member.getTotalBudget());
+        Member savedMember = memberRepository.save(initializedMember);
+
+        // Category 리스트 가져오기
+        List<Category> categories = categoryRepository.findAll();
+
+        for(Category category : categories) {
+            MemberCategory memberCategory = memberCategoryService.createAutoMemberCategory(member, category); // 멤버와 카테고리로 멤버카테고리 생성
+        }
+
+        return savedMember;
     }
 
     @Override
