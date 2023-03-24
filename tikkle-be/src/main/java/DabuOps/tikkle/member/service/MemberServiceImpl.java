@@ -82,6 +82,8 @@ public class MemberServiceImpl implements MemberService {
             .ifPresent(obtainedMember::setPayDay);
         Optional.ofNullable(member.getInitDate())
             .ifPresent(obtainedMember::setInitDate);
+        Optional.ofNullable(member.getGender())
+            .ifPresent(obtainedMember::setGender);
 
         return memberRepository.save(obtainedMember);
     }
