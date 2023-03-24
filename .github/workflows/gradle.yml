@@ -57,15 +57,15 @@ jobs:
           VITE_CLIENT: ${{secrets.VITE_CLIENT}}
           VITE_SERVER: ${{secrets.VITE_SERVER}}
           VITE_GCLIENT_ID: ${{secrets.G_CLIENT_ID}}
-        run: yarn build
+        run: |
+          echo "VITE_CLIENT=${{secrets.VITE_CLIENT}}" >> ./.env
+          echo "VITE_SERVER=${{secrets.VITE_SERVER}}" >> ./.env
+          echo "VITE_GCLIENT_ID=${{secrets.G_CLIENT_ID}}" >> ./.env
+          yarn build
         working-directory: ./tikkle-fe
         
-      - name: Make frontend zip file
-        run: zip -r ./tikkle-fe.zip .
-        shell: bash
-        
       - name: Upload frontend to S3
-        run: aws s3 cp --region ap-northeast-2 ./tikkle-fe.zip s3://seb42-main-032-tikkle/tikkle-fe.zip
+        run: aws s3 cp --recursive --region ap-northeast-2 ./dist s3://seb42-main-032-tikkle/tikkle-fe.zip
         
       - name: Code Deploy
         run: >
