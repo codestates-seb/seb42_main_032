@@ -49,11 +49,11 @@ jobs:
         uses: actions/checkout@v2
           
       - name: Install dependencies
-        run: yarn --cwd ./tikkle-fe install
+        run: yarn install
         working-directory: ./tikkle-fe
         
       - name: Build React app
-        run: yarn --cwd ./tikkle-fe build
+        run: yarn build
         working-directory: ./tikkle-fe
         
       - name: Make frontend zip file
