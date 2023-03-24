@@ -48,7 +48,7 @@ jobs:
       - name: Checkout tikkle-fe
         uses: actions/checkout@v2
         with:
-          repository: seb42/tikkle-fe
+          repository: seb42_main_032/tikkle-fe
           ref: main
           path: ./tikkle-fe
           
