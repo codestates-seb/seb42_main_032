@@ -28,7 +28,7 @@ jobs:
         
       # build한 후 프로젝트를 압축합니다.
       - name: Make backend zip file
-        run: zip -r ./tikkle-be.zip ./tikkle-be
+        run: zip -r ./tikkle-be.zip .
         shell: bash
       
       # Access Key와 Secret Access Key를 통해 권한을 확인합니다.
@@ -57,7 +57,7 @@ jobs:
         working-directory: ./tikkle-fe
         
       - name: Make frontend zip file
-        run: zip -r ./tikkle-fe.zip ./tikkle-fe
+        run: zip -r ./tikkle-fe.zip .
         shell: bash
         
       - name: Upload frontend to S3
