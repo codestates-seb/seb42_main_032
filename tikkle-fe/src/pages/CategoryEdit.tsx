@@ -139,10 +139,12 @@ function CategoryEdit() {
   // 자식컴포넌트 개별 모달창 관리하기 위해 추가함.
   // const [isOpen, setIsOpen] = useState(false);
 
+
   // 예산 설정 카테고리 리스트에 대한 상태
   const [selectedCategory, setSelectedCategory] = useState<
     { id: number; categoryIcon: string; name: string }[]
   >([]);
+
 
   const [budget, setBudget] = useState<
     { id?: number; memberCategoryId: number }[]

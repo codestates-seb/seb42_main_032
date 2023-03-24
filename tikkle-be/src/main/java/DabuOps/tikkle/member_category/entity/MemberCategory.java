@@ -1,5 +1,6 @@
 package DabuOps.tikkle.member_category.entity;
 
+import DabuOps.tikkle.budget.entity.Budget;
 import DabuOps.tikkle.category.entity.Category;
 import DabuOps.tikkle.global.audit.Auditable;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
@@ -8,6 +9,8 @@ import DabuOps.tikkle.member.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -22,6 +25,9 @@ public class MemberCategory extends Auditable {
     @ManyToOne // MEMBER n:1 단방향
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
+
+    @Column(name = "IMAGE")
+    private String image;
 
     @ManyToOne // CATEGORY n:1 단방향 // MEMBER : CATEGORY (n:m) 매핑
     @JoinColumn(name = "CATEGORY_ID")
@@ -52,9 +58,10 @@ public class MemberCategory extends Auditable {
     }
 
     @Builder
-    public MemberCategory(Long id, Member member, Category category, String name, Status status) {
+    public MemberCategory(Long id, Member member, String image, Category category, String name, Status status) {
         this.id = id;
         this.member = member;
+        this.image = image;
         this.category = category;
         this.name = name;
         this.status = status;

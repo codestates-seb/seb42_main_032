@@ -10,8 +10,17 @@ public enum ExceptionCode {
     MEMBER_UNAUTHORIZED(401, "Member Unauthorized"),
     MEMBER_NOT_MATCH(403, "Member Not Match"),
     MEMBER_EMAIL_EXISTS(409, "Email Already Exist."),
-    TRANSACTION_HISTORY_NOT_FOUND(404, "Transaction History Not Found : 존재하지 않는 거래내역입니다.");
-
+    TRANSACTION_HISTORY_NOT_FOUND(404, "Transaction History Not Found : 존재하지 않는 거래내역입니다."),
+    ACCOUNT_NOT_FOUND(404, "Account Not Found"),
+    ACCOUNT_NUMBER_EXIST(409, "Account Not Found"),
+    BUDGET_NOT_FOUND(404, "Budget Not Found"),
+    BUDGET_IS_INACTIVE(403, "Budget is Inactive"),
+    CANNOT_CHANGE_CATEGORY_NAME(400, "Cannot Change Category Name : 기본 카테고리의 이름은 수정할 수 없습니다."),
+    CURATION_NOT_FOUND(404, "Curation Not Found"),
+    CURATION_IS_INACTIVE(403, "Curation is Inactive"),
+    TAG_NOT_FOUND(404, "Tag Not Found"),
+    TAG_EXISTS(409, "Tag Already Exist."),
+    TAG_IS_INACTIVE(403, "Tag is Inactive");
     @Getter
     private int status;
 

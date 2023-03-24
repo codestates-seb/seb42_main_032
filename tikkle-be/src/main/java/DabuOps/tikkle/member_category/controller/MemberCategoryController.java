@@ -33,9 +33,9 @@ public class MemberCategoryController {
     public ResponseEntity postMemberCategory(@PathVariable("member_id") @Positive Long memberId,
                                              @Valid @RequestBody MemberCategoryDto.Post requestBody) {
         MemberCategory memberCategory = mapper.memberCategoryPostDtoToMemberCategory(requestBody);
-        MemberCategory createdMemberCategory = memberCategoryService.createMemberCategory(memberCategory, memberId);
+        MemberCategory createdMemberCategory = memberCategoryService.createOriginalMemberCategory(memberCategory, memberId);
 
-        URI location = UriCreator.createURI(DEFAULT_URL + "/1", 1L);
+        URI location = UriCreator.createURI(DEFAULT_URL + "/{member_id}", memberId);
 
         return ResponseEntity.created(location).build();
     }

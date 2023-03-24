@@ -14,11 +14,13 @@ public class MemberDto {
     public static class Post{
         private String email;
         private String name;
+        private String picture;
 
         @Builder
-        public Post(String email, String name) {
+        public Post(String email, String name, String picture) {
             this.email = email;
             this.name = name;
+            this.picture = picture;
         }
     }
     @Getter
@@ -29,12 +31,19 @@ public class MemberDto {
         private Integer payDay;
         private Integer initDate;
 
+        private Gender gender;
+
+        private Integer totalBudget;
+
         @Builder
-        public Patch(String name, String location, Integer payDay, Integer initDate) {
+        public Patch(String name, String location, Integer payDay,
+            Integer initDate,Integer totalBudget ,Gender gender) {
             this.name = name;
             this.location = location;
             this.payDay = payDay;
             this.initDate = initDate;
+            this.totalBudget = totalBudget;
+            this.gender = gender;
         }
     }
     @Getter
