@@ -70,6 +70,10 @@ public class MemberServiceImpl implements MemberService {
             .ifPresent(obtainedMember::setPayDay);
         Optional.ofNullable(member.getInitDate())
             .ifPresent(obtainedMember::setInitDate);
+        Optional.ofNullable(member.getTotalBudget())
+            .ifPresent(obtainedMember::setTotalBudget);
+        Optional.ofNullable(member.getGender())
+            .ifPresent(obtainedMember::setGender);
 
         return memberRepository.save(obtainedMember);
     }
@@ -80,6 +84,7 @@ public class MemberServiceImpl implements MemberService {
         initializedMember.setInitDate(member.getInitDate());
         initializedMember.setPayDay(member.getPayDay());
         initializedMember.setTotalBudget(member.getTotalBudget());
+        initializedMember.setGender(member.getGender());
         Member savedMember = memberRepository.save(initializedMember);
 
         // Category 리스트 가져오기
