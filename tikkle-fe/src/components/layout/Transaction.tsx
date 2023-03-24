@@ -1,7 +1,7 @@
 // TODO 거래내역 박스
 // TODO 무한 스크롤 구현하기
 
-import { FC, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { MdFastfood } from 'react-icons/md';
 import { BiCoffeeTogo } from 'react-icons/bi';
@@ -17,7 +17,6 @@ export interface TransactionType {
   category: string;
   amount: number;
   branchName: string;
-  date: Date;
   id: number;
   inoutType: string;
   memberCategoryId: number;
@@ -26,10 +25,10 @@ export interface TransactionType {
   bankName: string;
 }
 
-export interface Props {
-  transactions: TransactionType[];
-  date: Date;
-}
+// export interface Props {
+//   transactions: TransactionType[];
+//   date: Date;
+// }
 
 // 카테고리별 아이콘 설정하기 <카테고리명: 아이콘이름>
 const categoryIcons: Record<string, any> = {
@@ -90,10 +89,10 @@ const ContentContainer = styled.div`
 `;
 
 // 날짜+요일별 거래내역 박스
-const Transaction: FC<Props> = ({ transactions, date }) => {
+const Transaction = ({ date }: { date: Date }) => {
   // Modal에 띄울 transaction history 상태 관리
   const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>({
+    useState<TransactionType | null>({
       amount: 0,
       branchName: '',
       date: new Date(date),
@@ -103,10 +102,13 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
       memo: '',
       time: '',
       bankName: '',
+      bankInfo: '',
+      payee: '',
+      category: '',
     });
   // 거래내역 상태 관리
   const [transactionHistories, setTransactionHistories] = useState<
-    Transaction[]
+    TransactionType[]
   >([
     {
       amount: 0,
@@ -118,15 +120,20 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
       memo: '',
       time: '',
       bankName: '',
+      bankInfo: '',
+      payee: '',
+      category: '',
     },
   ]);
   // 거래내역 네트워크 요청
   // TODO 헤더의 month를 params로 입력
   useEffect(() => {
     axios
-      .get<Transaction[]>('http://localhost:8080/transactionHistoriesResponse')
+      .get<TransactionType[]>(
+        'http://localhost:8080/transactionHistoriesResponse'
+      )
       .then((res) => {
-        const data: Transaction[] = res.data;
+        const data: TransactionType[] = res.data;
         setTransactionHistories(
           // new Date 처리를 하지 않으면, date 가 string 타입으로 들어감.
           data.map((transaction) => ({

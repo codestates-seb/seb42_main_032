@@ -5,10 +5,6 @@ import { Text } from '@chakra-ui/react';
 
 // 각 칸의 스타일링을 자유롭게 하기 위해 Box 컴포넌트 사용
 import { Box } from '@chakra-ui/react';
-import { ClassNames } from '@emotion/react';
-import { GiDelicatePerfume } from 'react-icons/gi';
-import Transaction from './Transaction';
-import { Props } from './Transaction';
 import axios from 'axios';
 import Loading from './Loading';
 
