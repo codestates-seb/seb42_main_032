@@ -57,6 +57,7 @@ jobs:
           VITE_CLIENT: ${{secrets.VITE_CLIENT}}
           VITE_SERVER: ${{secrets.VITE_SERVER}}
           VITE_GCLIENT_ID: ${{secrets.G_CLIENT_ID}}
+          AWS_EC2_METADATA_DISABLED: true
         run: |
           echo "VITE_CLIENT=${{secrets.VITE_CLIENT}}" >> ./.env
           echo "VITE_SERVER=${{secrets.VITE_SERVER}}" >> ./.env
@@ -65,7 +66,7 @@ jobs:
         working-directory: ./tikkle-fe
         
       - name: Upload frontend to S3
-        run: aws s3 cp --recursive --region ap-northeast-2 ./dist s3://seb42-main-032-tikkle/tikkle-fe.zip
+        run: aws s3 cp --region ap-northeast-2 dist s3://seb42-main-032-tikkle --delete
         
       - name: Code Deploy
         run: >
