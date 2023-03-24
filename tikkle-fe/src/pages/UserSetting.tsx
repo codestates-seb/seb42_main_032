@@ -4,7 +4,13 @@ import { useState } from 'react';
 import UserInput from '../components/UserInput';
 
 import styled from 'styled-components';
-import { Box, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
+import {
+  Box,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Select,
+} from '@chakra-ui/react';
 
 import { Button } from '@chakra-ui/react';
 import { Icon, AddIcon } from '@chakra-ui/icons';
@@ -12,7 +18,6 @@ import { BsFillPersonFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
-  background-color: #eaeaea;
   display: flex;
   flex-direction: column;
   font-family: 'GmarketSansMedium';
@@ -22,7 +27,7 @@ const Container = styled.div`
     text-align: left;
     margin-top: 10vh;
     margin-bottom: 10vh;
-    background-color: #faf5ff;
+    background-color: #dec8f5;
   }
   .usersetting-title {
     margin-left: 5vh;
@@ -52,19 +57,22 @@ function UserSetting() {
   const navigate = useNavigate();
   // username
   const [username, setUsername] = useState('');
+  //user gender
+  const [userGender, setUserGender] = useState('');
   // initial budget
   const [ibDate, setIbDate] = useState(new Date().toISOString());
   const [ibAmount, setIbAmount] = useState(0);
   // salary
   const [salaryDate, setSalaryDate] = useState(new Date().toISOString());
   const [salaryAmount, setSalaryAmount] = useState(0);
-  // fixed expenses
-  const [feDate, setFeDate] = useState(new Date().toISOString());
-  const [feAmount, setFeAmount] = useState(0);
 
-  // TODO 93번째 줄로 옮기기
+  // TODO axios POST 요청으로 입력된 정보 전송
   const handleUserInput = (e: any) => {
     setUsername(e.target.value);
+  };
+
+  const handleUserGender = (e: any) => {
+    setUserGender(e.target.value);
   };
 
   const handleClick = () => {
@@ -79,7 +87,7 @@ function UserSetting() {
       <SetContainer>
         <Box display="flex" flexDir="column" ml="10vw">
           <Box display="flex" mb="1vh">
-            <p>사용자 이름</p>
+            <p>사용자 정보</p>
           </Box>
           <InputGroup className="input-username">
             <InputLeftElement
@@ -93,8 +101,19 @@ function UserSetting() {
               onKeyUp={(e) => {
                 handleUserInput(e);
               }}
+              placeholder="ex) 홍길동"
             ></Input>
             {/* <InputRightElement children={<CheckIcon color="gray.700" />} /> */}
+            <Select
+              focusBorderColor="purple.400"
+              onClick={(e) => handleUserGender(e)}
+              className="select-usergender"
+              placeholder="성별을 선택하세요"
+              ml="1em"
+            >
+              <option value="female">여성</option>
+              <option value="male">남성</option>
+            </Select>
           </InputGroup>
 
           <Button
@@ -120,13 +139,6 @@ function UserSetting() {
         state={salaryAmount}
         setDate={setSalaryDate}
         date={salaryDate}
-      />
-      <UserInput
-        label={'고정 지출'}
-        setState={setFeAmount}
-        state={feAmount}
-        setDate={setFeDate}
-        date={feDate}
       />
       <Box mb="100px">
         <Button colorScheme="red" size="md" onClick={handleClick}>
