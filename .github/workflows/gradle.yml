@@ -47,10 +47,6 @@ jobs:
       # 프론트엔드 프로젝트의 빌드와 압축, S3 전송을 수행합니다.
       - name: Checkout tikkle-fe
         uses: actions/checkout@v2
-        with:
-          repository: seb42_main_032/tikkle-fe
-          ref: main
-          path: ./tikkle-fe
           
       - name: Install dependencies
         run: yarn --cwd ./tikkle-fe install
