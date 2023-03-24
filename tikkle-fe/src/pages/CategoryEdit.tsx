@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import axios from 'axios';
 import CategoryIcon from '../components/category/CategoryIcon';
-import CategorySelectList from '../components/category/CategorySelectList';
+import AllCategoryList from '../components/category/AllCategoryList';
 import { Button } from '@chakra-ui/react';
 // import { AddIcon } from '@chakra-ui/icons';
 // import CategoryDropdown from '../components/category/CategoryDropdown';
@@ -76,17 +76,9 @@ const SelectedCategory = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* button {
-      padding: 5px 10px;
-      font-size: 1.2rem;
-      text-align: center;
-      box-shadow: 1px 1px 1px;
-      border-radius: 10px;
-      :hover {
-        background-color: #6b46c1;
-        color: white;
-      }
-    } */
+  }
+  .selectedcategory-noselect__div {
+    margin-top: 10rem;
   }
 `;
 
@@ -140,7 +132,7 @@ const CategoryList = styled.div`
 
 function CategoryEdit() {
   // 카테고리 리스트 배열에 대한 상태.
-  const [data, setData] = useState<
+  const [allCategory, setAllCategory] = useState<
     { id: number; name: string; categoryIcon: string }[]
   >([]);
 
@@ -150,6 +142,10 @@ function CategoryEdit() {
   // 예산 설정 카테고리 리스트에 대한 상태
   const [selectedCategory, setSelectedCategory] = useState<
     { id: number; categoryIcon: string; name: string }[]
+  >([]);
+
+  const [budget, setBudget] = useState<
+    { id?: number; memberCategoryId: number }[]
   >([]);
 
   // 모달 창 닫기 이벤트 핸들러
@@ -197,18 +193,35 @@ function CategoryEdit() {
   //   }
   // };
 
-  // 카테고리 리스트 api get 요청
-  const getCategoryList = async () => {
+  // 전체 카테고리 및 예산 설정 카테고리 api 요청
+  const getCategory = async () => {
     try {
-      const res = await axios.get(`http://localhost:3001/data`);
-      setData(res.data);
+      // 전체 카테고리
+      const all = await axios.get(`http://localhost:3001/data`);
+      setAllCategory(all.data);
+
+      // 예산 설정 카테고리
+      const budget = await axios.get(`http://localhost:3002/budgets`);
+      setBudget(budget.data);
+
+      // 예산 설정 카테고리(memberCategoryId) - 전체 카테고리 (id) 매핑
+      const arr = [];
+      for (const i of budget.data) {
+        for (const j of all.data) {
+          if (i.memberCategoryId === j.id) {
+            arr.push(j);
+            break;
+          }
+        }
+      }
+      setSelectedCategory(arr);
     } catch (err) {
       console.log(err);
     }
   };
 
   useEffect(() => {
-    getCategoryList();
+    getCategory();
   }, []);
 
   return (
@@ -220,6 +233,14 @@ function CategoryEdit() {
             <Button colorScheme={'purple'}>적용</Button>
           </div>
           <CategoryLists>
+            {selectedCategory.length < 1 ? (
+              <div className="selectedcategory-noselect__div">
+                <div>선택한 카테고리가 없습니다.</div>
+                <div>전체 카테고리 목록에서 선택해주세요.</div>
+              </div>
+            ) : (
+              ''
+            )}
             {selectedCategory.map((el) => {
               return (
                 <CategoryList key={el.id}>
@@ -233,14 +254,16 @@ function CategoryEdit() {
         <AllCategories>
           <h3>전체 카테고리</h3>
           <CategoryLists>
-            {data &&
-              data.map((el) => {
+            {allCategory &&
+              allCategory.map((el) => {
                 return (
-                  <CategorySelectList
+                  <AllCategoryList
                     key={el.id}
                     data={el}
                     selectedCategory={selectedCategory}
                     setSelectedCategory={setSelectedCategory}
+                    budget={budget}
+                    setBudget={setBudget}
                   />
                 );
                 /* 기본 카테고리 수정 불가
