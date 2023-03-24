@@ -179,7 +179,7 @@ function Login() {
     window.location.href =
       'https://accounts.google.com/o/oauth2/auth?' +
       `client_id=${import.meta.env.VITE_GCLIENT_ID}&` +
-      'redirect_uri=http://localhost:5173/login&' +
+      `redirect_uri=${import.meta.env.VITE_CLIENT}/login&` +
       'response_type=token&' +
       'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
   };
