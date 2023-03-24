@@ -1,4 +1,3 @@
-// import modules
 import {
   Box,
   Input,
@@ -13,10 +12,6 @@ const CategoryBudget = () => {
   // ToDo 네트워크에 연결된 데이터를 수정하도록 변경
   const [budget, setBudget] = useState(0);
   const [label] = useState('카테고리명');
-
-  const handleBudget = (e: any) => {
-    setBudget(e.target.value);
-  };
 
   return (
     <Box
@@ -49,7 +44,11 @@ const CategoryBudget = () => {
           </Box>
           {/* Input Container */}
           <InputGroup w="50%">
-            <Input type="number" value={budget} onChange={handleBudget}></Input>
+            <Input
+              type="number"
+              value={budget}
+              onChange={(e: any) => setBudget(e.target.value)}
+            ></Input>
             <InputRightAddon fontSize="0.8rem" children="원" />
           </InputGroup>
         </Box>

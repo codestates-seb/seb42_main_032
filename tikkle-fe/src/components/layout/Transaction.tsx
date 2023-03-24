@@ -10,7 +10,11 @@ import Modal from '../transaction/Modal';
 import axios from 'axios';
 
 // axios GET 요청으로 불러온 데이터 타입 정의
-export interface Transaction {
+export interface TransactionType {
+  date: Date;
+  bankInfo: string;
+  payee: string;
+  category: string;
   amount: number;
   branchName: string;
   date: Date;
@@ -23,7 +27,7 @@ export interface Transaction {
 }
 
 export interface Props {
-  transactions: Transaction[];
+  transactions: TransactionType[];
   date: Date;
 }
 

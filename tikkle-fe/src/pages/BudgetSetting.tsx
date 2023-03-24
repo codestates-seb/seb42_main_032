@@ -1,14 +1,65 @@
 import { Box, Text, useMediaQuery } from '@chakra-ui/react';
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import BudgetDropdown from '../components/budget_setting/BudgetDropdown';
 import CategoryBudget from '../components/budget_setting/CategoryBudget';
 import MonthlyBudget from '../components/budget_setting/MonthlyBudget';
+import { userInfoState } from '../util/store';
+
+interface BudgetType {
+  id: number;
+  memberCategoryId: number;
+  amount: number;
+  startDate: Date;
+  endDate: Date;
+  spend: number;
+  createdAt: Date;
+}
 
 const BudgetSetting = () => {
+  // PC 화면에 대응하기 위해 추가
   const [isLagerThan900px] = useMediaQuery('(min-width: 900px)');
+
+  const [userInfo] = useRecoilState(userInfoState);
 
   // ToDo 카테고리 페이지에서 추가된 카테고리를 기준으로 List 생성
   const [categoryList] = useState([{}]);
+
+  const [budgets, setBudgets] = useState<BudgetType[]>();
+
+  useEffect(() => {
+    const getBudgets = async () => {
+      // 전체 예산 정보 조회
+      // let fetchedBudgets = await axios.get(
+      //   `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo?.id}`
+      // );
+      //
+
+      // 전체 예산 정보 조회 - 테스트용
+      let fetchedBudgets = (await axios.get(`http://localhost:8080/budgets`))
+        .data;
+
+      // 전체 예산 정보에서 날짜 형식 데이터를 모두 Date 타입으로 형변환
+      fetchedBudgets = fetchedBudgets.map((budget: BudgetType) => {
+        return {
+          ...budget,
+          startDate: new Date(budget.startDate),
+          endDate: new Date(budget.endDate),
+          createdAt: new Date(budget.createdAt),
+        };
+      });
+
+      // 예산 금액을 기준으로 내림차순 정렬
+      fetchedBudgets.sort((a: BudgetType, b: BudgetType) => {
+        return b.amount - a.amount;
+      });
+
+      setBudgets(fetchedBudgets);
+    };
+
+    getBudgets();
+  }, []);
 
   return (
     <Box

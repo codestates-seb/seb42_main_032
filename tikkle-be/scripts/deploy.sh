@@ -1,4 +1,15 @@
 #!/bin/bash
+
+G_CLIENT_ID=$(aws ssm get-parameter --name "G_CLIENT_ID" --with-decryption --query "Parameter.Value" --output text)
+G_CLIENT_SECRET=$(aws ssm get-parameter --name "G_CLIENT_SECRET" --with-decryption --query "Parameter.Value" --output text)
+DB_URL=$(aws ssm get-parameter --name "DB_URL" --with-decryption --query "Parameter.Value" --output text)
+DB_ID=$(aws ssm get-parameter --name "DB_ID" --with-decryption --query "Parameter.Value" --output text)
+DB_SECRET=$(aws ssm get-parameter --name "DB_SECRET" --with-decryption --query "Parameter.Value" --output text)
+OPENBANKING_URL=$(aws ssm get-parameter --name "OPENBANKING_URL" --with-decryption --query "Parameter.Value" --output text)
+K_REDIRECT_URI=$(aws ssm get-parameter --name "K_REDIRECT_URI" --with-decryption --query "Parameter.Value" --output text)
+K_CLIENT_ID=$(aws ssm get-parameter --name "K_CLIENT_ID" --with-decryption --query "Parameter.Value" --output text)
+K_CLIENT_SECRET=$(aws ssm get-parameter --name "K_CLIENT_SECRET" --with-decryption --query "Parameter.Value" --output text)
+
 BUILD_JAR=$(ls /home/ubuntu/action/build/libs/tikkle-0.0.1-SNAPSHOT.jar)
 JAR_NAME=$(basename $BUILD_JAR)
 
@@ -25,4 +36,15 @@ fi
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포"    >> /home/ubuntu/action/deploy.log
-sudo nohup java -jar $DEPLOY_JAR >> /home/ubuntu/deploy.log 2>/home/ubuntu/action/deploy_err.log &
+sudo nohup java -jar \
+-Dspring.profiles.active=prod \
+-Dspring.datasource.url=$DB_URL \
+-DG_CLIENT_ID=$G_CLIENT_ID \
+-DG_CLIENT_SECRET=$G_CLIENT_SECRET \
+-DDB_ID=$DB_ID \
+-DDB_SECRET=$DB_SECRET \
+-DOPENBANKING_URL=$OPENBANKING_URL \
+-DK_REDIRECT_URI=$K_REDIRECT_URI \
+-DK_CLIENT_ID=$K_CLIENT_ID \
+-DK_CLIENT_SECRET=$K_CLIENT_SECRET \
+$DEPLOY_JAR >> /home/ubuntu/deploy.log 2>/home/ubuntu/action/deploy_err.log &

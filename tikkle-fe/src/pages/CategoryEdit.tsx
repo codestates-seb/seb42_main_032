@@ -118,7 +118,7 @@ function CategoryEdit() {
   // 자식컴포넌트 개별 모달창 관리하기 위해 추가함.
   const [isOpen, setIsOpen] = useState(false);
 
-  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState();
 
   const handleCloseEdit = () => {
     setIsOpen(false);
@@ -177,14 +177,14 @@ function CategoryEdit() {
       <ContentContainer>
         <SelectedCategory>
           <h3>예산 설정한 카테고리</h3>
-          {selectedCategory.map((el) => {
+          {/* {selectedCategory.map((el) => {
             return (
               <CategoryList key={el.id}>
                 <CategoryIcon icon={el.categoryIcon} />
                 <div className="category-name__div">{el.name}</div>
               </CategoryList>
             );
-          })}
+          })} */}
         </SelectedCategory>
         <AllCategories>
           <h3>전체 카테고리</h3>
