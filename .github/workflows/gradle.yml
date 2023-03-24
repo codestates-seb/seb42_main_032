@@ -27,29 +27,54 @@ jobs:
         working-directory: ./tikkle-be
         
       # build한 후 프로젝트를 압축합니다.
-      - name: Make zip file
-        run: zip -r ./tikkle.zip .
+      - name: Make backend zip file
+        run: zip -r ./tikkle-be.zip .
         shell: bash
       
-    # Access Key와 Secret Access Key를 통해 권한을 확인합니다.
-    # 아래 코드에 Access Key와 Secret Key를 직접 작성하지 않습니다.
+      # Access Key와 Secret Access Key를 통해 권한을 확인합니다.
+      # 아래 코드에 Access Key와 Secret Key를 직접 작성하지 않습니다.
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }} # 등록한 Github Secret이 자동으로 불려옵니다.
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # 등록한 Github Secret이 자동으로 불려옵니다.
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
     
-    # 압축한 프로젝트를 S3로 전송합니다.
-      - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./tikkle.zip s3://seb42-main-032-tikkle/tikkle.zip
+      # 압축한 백엔드 프로젝트를 S3로 전송합니다.
+      - name: Upload backend to S3
+        run: aws s3 cp --region ap-northeast-2 ./tikkle-be.zip s3://seb42-main-032-tikkle/tikkle-be.zip
+        
+      # 프론트엔드 프로젝트의 빌드와 압축, S3 전송을 수행합니다.
+      - name: Checkout tikkle-fe
+        uses: actions/checkout@v2
+        with:
+          repository: seb42/tikkle-fe
+          ref: main
+          path: ./tikkle-fe
+          
+      - name: Install dependencies
+        run: yarn --cwd ./tikkle-fe install
+        working-directory: ./tikkle-fe
+        
+      - name: Build React app
+        run: yarn --cwd ./tikkle-fe build
+        working-directory: ./tikkle-fe
+        
+      - name: Make frontend zip file
+        run: zip -r ./tikkle-fe.zip ./tikkle-fe/build
+        shell: bash
+        
+      - name: Upload frontend to S3
+        run: aws s3 cp --region ap-northeast-2 ./tikkle-fe.zip s3://seb42-main-032-tikkle/tikkle-fe.zip
         
       - name: Code Deploy
         run: >
           aws deploy create-deployment --application-name TIKKLE
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name TIKKLE-group
-          --s3-location bucket=seb42-main-032-tikkle,bundleType=zip,key=tikkle.zip
+          --s3-location bucket=seb42-main-032-tikkle,key=tikkle-be.zip,bundleType=zip
+          --file-exists-behavior OVERWRITE
+          --description "TIKKLE 배포"
           
       - name: Get parameters from Parameter Store
         env:
