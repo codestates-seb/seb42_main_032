@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 
 import { TbPigMoney } from 'react-icons/tb';
-import { GiReceiveMoney, GiExpense } from 'react-icons/gi';
+import { GiReceiveMoney } from 'react-icons/gi';
 
 const SetContainer = styled.div`
   display: flex;
