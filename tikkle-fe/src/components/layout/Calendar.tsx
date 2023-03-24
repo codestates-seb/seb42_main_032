@@ -5,10 +5,6 @@ import { Text } from '@chakra-ui/react';
 
 // 각 칸의 스타일링을 자유롭게 하기 위해 Box 컴포넌트 사용
 import { Box } from '@chakra-ui/react';
-import { ClassNames } from '@emotion/react';
-import { GiDelicatePerfume } from 'react-icons/gi';
-import Transaction from './Transaction';
-import { Props } from './Transaction';
 import axios from 'axios';
 import Loading from './Loading';
 
@@ -24,17 +20,18 @@ const Calendar = ({ date }: { date: Date }) => {
   // 월별 지출, 수입: 데이터 idx === 날짜 / 수입, 지출 이중배열
   const [dailySummary, setDailySummary] = useState<number[][]>([[0, 0]]);
   const [loading, setLoading] = useState<boolean>(true);
+
   // 월별 지출, 수입 데이터 받아오기
+  // TODO async / await을 써야 의도한 순서대로 작동함
   useEffect(() => {
     axios
       .get('http://localhost:8080/dailySummary')
       .then((res) => {
-        setLoading(false);
         setDailySummary(res.data.slice(1));
+        setLoading(false);
       })
       .catch((err) => console.log(err));
   }, []);
-  console.log(dailySummary[1]);
 
   // 현재 날짜를 불러올 수 있도록 Date 타입의 상태로 생성하고, 초기값을 Date 객체로 설정
   // ! 초기값은 'Home' 페이지에서 설정함.
@@ -94,9 +91,9 @@ const Calendar = ({ date }: { date: Date }) => {
         </Box>
         <Box fontSize={[8, 10, 12]}>
           {/* 받아온 데이터로 수입 레이블 표시 */}
-          <Text color={'blue'}>+{daily !== undefined ? daily[0] : 0}</Text>
+          <Text color={'blue'}>{daily[0] !== 0 ? `+${daily[0]}` : null}</Text>
           {/* 받아온 데이터로 지출 레이블 표시 */}
-          <Text color={'red'}>-{daily !== undefined ? daily[1] : 0}</Text>
+          <Text color={'red'}>{daily[1] !== 0 ? `-${daily[1]}` : null}</Text>
         </Box>
       </Box>
     );

@@ -3,12 +3,11 @@ package DabuOps.tikkle.budget.controller;
 import DabuOps.tikkle.budget.dto.BudgetDto;
 import DabuOps.tikkle.budget.entity.Budget;
 import DabuOps.tikkle.budget.mapper.BudgetMapper;
-import DabuOps.tikkle.budget.service.BudgetService;
+import DabuOps.tikkle.budget.service.BudgetServiceImpl;
 import DabuOps.tikkle.global.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +21,7 @@ import java.util.List;
 @RequestMapping("/budgets")
 public class BudgetController {
     private final String DEFAULT_URL = "/budgets";
-    private final BudgetService budgetService;
+    private final BudgetServiceImpl budgetService;
     private final BudgetMapper mapper;
 
     @PostMapping
