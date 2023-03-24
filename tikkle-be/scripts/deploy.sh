@@ -37,7 +37,6 @@ fi
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포"    >> /home/ubuntu/action/deploy.log
 sudo nohup java -jar \
--Dspring.profiles.active=prod \
 -Dspring.datasource.url=$DB_URL \
 -DG_CLIENT_ID=$G_CLIENT_ID \
 -DG_CLIENT_SECRET=$G_CLIENT_SECRET \
@@ -47,4 +46,5 @@ sudo nohup java -jar \
 -DK_REDIRECT_URI=$K_REDIRECT_URI \
 -DK_CLIENT_ID=$K_CLIENT_ID \
 -DK_CLIENT_SECRET=$K_CLIENT_SECRET \
+-Dspring.profiles.active=prod \
 $DEPLOY_JAR >> /home/ubuntu/deploy.log 2>/home/ubuntu/action/deploy_err.log &
