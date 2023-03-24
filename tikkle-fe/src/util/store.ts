@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
+import { userInfoType } from '../pages/Login';
 
 // localStorage에 'recoil-persist'라는 key로 저장
 const { persistAtom } = recoilPersist({
@@ -28,7 +29,9 @@ export const tokenState = atom<string | null>({
   default: null,
   
   // 서버에서 토큰의 유효기간 검증을 하지 않기 때문에 영구 저장 시 오히려 버그의 원인이 되므로 주석
-  // effects: [persistAtom]
+  // 구글 페이지로 이동했다가 리디렉션 될 시 상태가 날라가서 불가피하게 필요함
+  // ToDo 백엔드에 토큰이 만료된 토큰이라면 401을 반환하도록 수정 요청
+  effects: [persistAtom]
 });
 
 // 로그인 후 사용자가 이동해야 할 페이지를 저장하는 상태
@@ -38,4 +41,10 @@ export const currentPageState = atom({
 
   // 토큰을 localStorage에 저장하려면 아래 구문을 atom마다 적어주어야 함
   effects: [persistAtom]
+})
+
+export const userInfoState = atom<userInfoType | null>({
+  key: 'userInfoState',
+  default: null,
+  effects: [persistAtom],
 })

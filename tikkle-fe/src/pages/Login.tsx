@@ -8,7 +8,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { tokenState, currentPageState } from '../util/store';
+import { tokenState, currentPageState, userInfoState } from '../util/store';
 import { useRecoilState } from 'recoil';
 
 /**
@@ -84,7 +84,7 @@ const OauthLoginButton = styled.div`
  */
 
 // 회원 정보 타입
-interface userInfoType {
+export interface userInfoType {
   createdAt: Date;
   modifiedAt: Date;
   id: number;
@@ -107,13 +107,10 @@ function Login() {
   const [accessToken, setAccessToken] = useRecoilState(tokenState);
 
   // 사용자 정보 임시 저장
-  const [userInfo, setUserInfo] = useState<userInfoType>();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   // 로그인 후 사용자가 이동해야 할 페이지 저장
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
-  console.log(currentPage);
-
-  console.log(userInfo);
 
   // '/login' 경로로 바로 접속할 경우 recoil-persist가 동작하지 않는 버그가 있어,
   // 해당 키가 로컬스토리지에 없다면 수동으로 생성
@@ -121,7 +118,9 @@ function Login() {
     localStorage.setItem(
       'recoil-persist',
       JSON.stringify({
+        accessToken: null,
         currentPageState: 'usersetting',
+        userInfoState: null,
       })
     );
   }
