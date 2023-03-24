@@ -51,8 +51,12 @@ jobs:
       - name: Install dependencies
         run: yarn install
         working-directory: ./tikkle-fe
-        
+      
       - name: Build React app
+        env:
+          VITE_CLIENT: ${{secrets.VITE_CLIENT}}
+          VITE_SERVER: ${{secrets.VITE_SERVER}}
+          VITE_GCLIENT_ID: ${{secrets.VITE_GCLIENT_ID}}
         run: yarn build
         working-directory: ./tikkle-fe
         
