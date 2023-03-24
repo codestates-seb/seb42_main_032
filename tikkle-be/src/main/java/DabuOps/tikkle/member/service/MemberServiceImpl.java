@@ -84,6 +84,7 @@ public class MemberServiceImpl implements MemberService {
         initializedMember.setInitDate(member.getInitDate());
         initializedMember.setPayDay(member.getPayDay());
         initializedMember.setTotalBudget(member.getTotalBudget());
+        initializedMember.setGender(member.getGender());
         Member savedMember = memberRepository.save(initializedMember);
 
         // Category 리스트 가져오기
