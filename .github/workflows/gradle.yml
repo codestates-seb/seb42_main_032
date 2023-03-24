@@ -57,7 +57,7 @@ jobs:
         working-directory: ./tikkle-fe
         
       - name: Make frontend zip file
-        run: zip -r ./tikkle-fe.zip ./tikkle-fe/build
+        run: zip -r ./tikkle-fe.zip ./tikkle-fe/dist
         shell: bash
         
       - name: Upload frontend to S3
