@@ -91,6 +91,11 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
     }
   };
 
+  const getBudget = async () => {
+    const budget = await axios.get(`http://localhost:3002/budgets`);
+    setBudget(budget.data);
+  };
+
   // 카테고리 클릭 이벤트 핸들러
   const handleClickCategory = () => {
     if (!isSelected) {
@@ -100,16 +105,21 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
         }).length === 0
       ) {
         postBudgetCategory();
-        setBudget([...budget, { memberCategoryId: data.id }]);
+        getBudget();
         setIsSelected(true);
         setSelectedCategory([...selectedCategory, data]);
       }
     } else {
-      console.log(budget);
       const budgetId = budget.filter((el) => {
         return el.memberCategoryId === data.id;
       })[0].id;
       deleteBudgetCatrgory(budgetId);
+      setBudget(
+        budget.filter((el) => {
+          return el.id !== budgetId;
+        })
+      );
+      getBudget();
       setIsSelected(false);
 
       // 선택된 전체 카테고리 중 클릭 된 카테고리 id와 같은 요소는 뺌.
