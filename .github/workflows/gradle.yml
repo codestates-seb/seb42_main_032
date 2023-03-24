@@ -66,6 +66,7 @@ jobs:
         working-directory: ./tikkle-fe
         
       - name: Upload frontend to S3
+        working-directory: ./tikkle-fe
         run: aws s3 cp --region ap-northeast-2 dist s3://seb42-main-032-tikkle
         
       - name: Code Deploy
