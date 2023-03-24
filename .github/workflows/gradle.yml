@@ -56,7 +56,7 @@ jobs:
         env:
           VITE_CLIENT: ${{secrets.VITE_CLIENT}}
           VITE_SERVER: ${{secrets.VITE_SERVER}}
-          VITE_GCLIENT_ID: ${{secrets.VITE_GCLIENT_ID}}
+          VITE_GCLIENT_ID: ${{secrets.G_CLIENT_ID}}
         run: yarn build
         working-directory: ./tikkle-fe
         
