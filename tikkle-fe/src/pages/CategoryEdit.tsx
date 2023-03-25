@@ -6,10 +6,9 @@ import axios from 'axios';
 import CategoryIcon from '../components/category/CategoryIcon';
 import AllCategoryList from '../components/category/AllCategoryList';
 import { Button } from '@chakra-ui/react';
-// import { AddIcon } from '@chakra-ui/icons';
-// import CategoryDropdown from '../components/category/CategoryDropdown';
-// import CategoryNameEdit from '../components/category/CategoryNameEdit';
-// import { RiDeleteBin5Line } from 'react-icons/ri';
+import { userInfoState } from '../util/store';
+import { useRecoilValue } from 'recoil';
+import { userInfoType } from './Login';
 
 const BodyContainer = styled.div`
   margin-top: 60px;
@@ -131,6 +130,7 @@ const CategoryList = styled.div`
 `;
 
 function CategoryEdit() {
+  const userInfo = useRecoilValue(userInfoState);
   // 카테고리 리스트 배열에 대한 상태.
   const [allCategory, setAllCategory] = useState<
     { id: number; name: string; categoryIcon: string }[]
@@ -139,12 +139,10 @@ function CategoryEdit() {
   // 자식컴포넌트 개별 모달창 관리하기 위해 추가함.
   // const [isOpen, setIsOpen] = useState(false);
 
-
   // 예산 설정 카테고리 리스트에 대한 상태
   const [selectedCategory, setSelectedCategory] = useState<
     { id: number; categoryIcon: string; name: string }[]
   >([]);
-
 
   const [budget, setBudget] = useState<
     { id?: number; memberCategoryId: number }[]
@@ -198,18 +196,29 @@ function CategoryEdit() {
   // 전체 카테고리 및 예산 설정 카테고리 api 요청
   const getCategory = async () => {
     try {
-      // 전체 카테고리
-      const all = await axios.get(`http://localhost:3001/data`);
-      setAllCategory(all.data);
+      // 전체 카테고리;
+      const all =
+        userInfo &&
+        (await axios.get(
+          // `${import.meta.env.VITE_SERVER}/categories/${userInfo.id}`
+          `http://localhost:3001/data/`
+        ));
+      all && setAllCategory(all.data);
 
       // 예산 설정 카테고리
-      const budget = await axios.get(`http://localhost:3002/budgets`);
-      setBudget(budget.data);
+      const memberBudget =
+        userInfo &&
+        (await axios.get(
+          `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo.id}`
+        ));
+
+      memberBudget && setBudget(memberBudget.data);
+      memberBudget && console.log(memberBudget.data);
 
       // 예산 설정 카테고리(memberCategoryId) - 전체 카테고리 (id) 매핑
       const arr = [];
-      for (const i of budget.data) {
-        for (const j of all.data) {
+      for (const i of budget) {
+        for (const j of all?.data.data) {
           if (i.memberCategoryId === j.id) {
             arr.push(j);
             break;
@@ -224,7 +233,7 @@ function CategoryEdit() {
 
   useEffect(() => {
     getCategory();
-  }, []);
+  }, [userInfo]);
 
   return (
     <BodyContainer /* onClick={handleCloseEdit} */>
@@ -235,7 +244,7 @@ function CategoryEdit() {
             <Button colorScheme={'purple'}>적용</Button>
           </div>
           <CategoryLists>
-            {selectedCategory.length < 1 ? (
+            {selectedCategory && selectedCategory.length < 1 ? (
               <div className="selectedcategory-noselect__div">
                 <div>선택한 카테고리가 없습니다.</div>
                 <div>전체 카테고리 목록에서 선택해주세요.</div>
@@ -243,32 +252,33 @@ function CategoryEdit() {
             ) : (
               ''
             )}
-            {selectedCategory.map((el) => {
-              return (
-                <CategoryList key={el.id}>
-                  <CategoryIcon icon={el.categoryIcon} />
-                  <div className="category-name__div">{el.name}</div>
-                </CategoryList>
-              );
-            })}
+            {selectedCategory &&
+              selectedCategory.map((el) => {
+                return (
+                  <CategoryList key={el.id}>
+                    <CategoryIcon icon={el.categoryIcon} />
+                    <div className="category-name__div">{el.name}</div>
+                  </CategoryList>
+                );
+              })}
           </CategoryLists>
         </SelectedCategory>
         <AllCategories>
           <h3>전체 카테고리</h3>
           <CategoryLists>
-            {allCategory &&
-              allCategory.map((el) => {
-                return (
-                  <AllCategoryList
-                    key={el.id}
-                    data={el}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                    budget={budget}
-                    setBudget={setBudget}
-                  />
-                );
-                /* 기본 카테고리 수정 불가
+            {allCategory.map((el) => {
+              return (
+                <AllCategoryList
+                  key={el.id}
+                  data={el}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  budget={budget}
+                  setBudget={setBudget}
+                  userInfo={userInfo}
+                />
+              );
+              /* 기본 카테고리 수정 불가
                   <CategoryList key={el.id}>
                     <CategoryDropdown
                       categoryIcon={el.categoryIcon}
@@ -294,7 +304,7 @@ function CategoryEdit() {
                   </CategoryList>
                 );
                 */
-              })}
+            })}
           </CategoryLists>
         </AllCategories>
       </ContentContainer>

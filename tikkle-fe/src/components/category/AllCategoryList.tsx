@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { userInfoType } from '../../pages/Login';
 import CategoryIcon from './CategoryIcon';
 
 //  카테고리 수정 페이지에서 전체 카테고리 리스트 컴포넌트
@@ -43,6 +44,7 @@ interface AllCategoryListProps {
   setBudget: Dispatch<
     SetStateAction<{ id?: number; memberCategoryId: number }[]>
   >;
+  userInfo: userInfoType | null;
 }
 
 const AllCategoryList: React.FC<AllCategoryListProps> = ({
@@ -51,6 +53,7 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
   setSelectedCategory,
   budget,
   setBudget,
+  userInfo,
 }) => {
   // 카테고리 선택 여부 상태
   const [isSelected, setIsSelected] = useState(false);
@@ -61,13 +64,15 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
         setIsSelected(true);
       }
     }
-  });
+  }, []);
 
   const postBudgetCategory = async () => {
     try {
-      await axios.post(`http://localhost:3002/budgets`, {
-        memberCategoryId: data.id,
-      });
+      userInfo &&
+        (await axios.post(`${import.meta.env.VITE_SERVER}/budgets`, {
+          memberCategoryId: data.id,
+          amount: 0,
+        }));
     } catch (err) {
       console.log(err);
     }
