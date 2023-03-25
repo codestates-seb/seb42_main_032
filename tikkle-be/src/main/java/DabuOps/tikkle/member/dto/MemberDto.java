@@ -15,12 +15,14 @@ public class MemberDto {
         private String email;
         private String name;
         private String picture;
+        private String accessToken;
 
         @Builder
-        public Post(String email, String name, String picture) {
+        public Post(String email, String name, String picture, String accessToken) {
             this.email = email;
             this.name = name;
             this.picture = picture;
+            this.accessToken = accessToken;
         }
     }
     @Getter

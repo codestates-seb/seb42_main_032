@@ -13,18 +13,26 @@ import DabuOps.tikkle.userauth.dto.AccountTransactionListDto;
 import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
 import DabuOps.tikkle.userauth.dto.ResList;
 import DabuOps.tikkle.userauth.dto.TokenResponseDto;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -41,7 +49,7 @@ public class UserAuthService {
     private final RestTemplate restTemplate;
 
     //이용기관코드 = 테스팅할 사용자 것을 적어야함
-    private final String InstitutionCode = "M202300547";
+    private final String InstitutionCode = "M202300548";
 
     @Value("${webClient.baseUrl}")
     private String openBankingApiUrl;
@@ -64,11 +72,10 @@ public class UserAuthService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(formData, headers);
-
-        ResponseEntity<TokenResponseDto> response = restTemplate.postForEntity(openBankingApiUrl + "/oauth/2.0/token", request, TokenResponseDto.class);
-        TokenResponseDto tokenResponse = response.getBody();
+        TokenResponseDto response = restTemplate.postForObject(openBankingApiUrl + "/oauth/2.0/token", new HttpEntity<>(formData, headers), TokenResponseDto.class);
+        TokenResponseDto tokenResponse = response;
 
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         if (optionalMember.isPresent()) {
@@ -81,20 +88,18 @@ public class UserAuthService {
 
     public List<AccountInfoDto> requestUserInfo(String accessToken, String userSeqNo) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(accessToken);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(openBankingApiUrl + "/v2.0/user/me").queryParam("user_seq_no", userSeqNo);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        HttpEntity<?> request = new HttpEntity<>(headers);
-        ResponseEntity<AccountInfoDto> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, AccountInfoDto.class);
-
-        List<AccountInfoDto> accountList = new ArrayList<>();
-        for (ResList resList : response.getBody().getResList()){
-            Account account = new Account();
-            account.setFintechUseNum(resList.getFintechUseNum());
-        }
-        return accountList;
+        AccountInfoDto response = restTemplate.exchange(
+            openBankingApiUrl + "/v2.0/user/me?user_seq_no=" + userSeqNo,
+            HttpMethod.GET,
+            entity,
+            AccountInfoDto.class
+        ).getBody();
+        return List.of(response);
     }
 
     public List<ModifiedTransactionHistoryDto> requestTransactionHistories(Long memberId) {
