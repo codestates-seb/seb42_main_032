@@ -23,6 +23,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Validated
+@CrossOrigin
 @RequestMapping("/categories")
 public class MemberCategoryController {
     private final String DEFAULT_URL = "/categories";
