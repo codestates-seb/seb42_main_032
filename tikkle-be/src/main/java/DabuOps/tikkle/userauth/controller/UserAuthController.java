@@ -1,5 +1,8 @@
 package DabuOps.tikkle.userauth.controller;
 
+import DabuOps.tikkle.member.entity.Member;
+import DabuOps.tikkle.member.repository.MemberRepository;
+import DabuOps.tikkle.member.service.MemberService;
 import DabuOps.tikkle.oauth.dto.LogInMemberDto;
 import DabuOps.tikkle.oauth.resolver.LoginMember;
 import DabuOps.tikkle.transaction_history.service.TransactionHistoryService;
@@ -13,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,11 +28,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserAuthController {
     private final UserAuthService userAuthService;
     private final TransactionHistoryService transactionHistoryService;
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
+    private final String userSeqNo = "";
 
     @GetMapping("/members/auth")
     public String accountAuth(@RequestParam("code") String authorizationCode, @LoginMember LogInMemberDto logInMemberDto) {
         TokenResponseDto tokenResponse = userAuthService.requestToken(authorizationCode, logInMemberDto.getMemberId());
         List<AccountInfoDto> accountInfoDtoList = userAuthService.requestUserInfo(tokenResponse.getAccessToken(), tokenResponse.getUserSeqNo());
+
+        return "사용자 인증이 완료되었습니다.";
+    }
+    @GetMapping("/members/auth2/{member-id}")
+    public String accountAuth2(@PathVariable("member-id") long memberId) {
+        Member member =  memberService.findExistMemberById(memberId);
+        List<AccountInfoDto> accountInfoDtoList = userAuthService.requestUserInfo(member.getAccessToken(), userSeqNo);
 
         return "사용자 인증이 완료되었습니다.";
     }
