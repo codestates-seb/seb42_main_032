@@ -3,13 +3,14 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import axios from 'axios';
-import CategoryIcon from '../components/category/CategoryIcon';
+import CategoryIcon, {
+  CategoryIdMap,
+} from '../components/category/CategoryIcon';
 import AllCategoryList from '../components/category/AllCategoryList';
 import { Button } from '@chakra-ui/react';
-// import { AddIcon } from '@chakra-ui/icons';
-// import CategoryDropdown from '../components/category/CategoryDropdown';
-// import CategoryNameEdit from '../components/category/CategoryNameEdit';
-// import { RiDeleteBin5Line } from 'react-icons/ri';
+import { userInfoState } from '../util/store';
+import { useRecoilValue } from 'recoil';
+import { userInfoType } from './Login';
 
 const BodyContainer = styled.div`
   margin-top: 60px;
@@ -64,7 +65,7 @@ const SelectedCategory = styled.div`
   padding-right: 20px;
   display: flex;
   flex-direction: column;
-  min-width: 400px;
+  min-width: 40vw;
   min-height: 70vh;
   h3 {
     padding-left: 20px;
@@ -79,6 +80,12 @@ const SelectedCategory = styled.div`
   }
   .selectedcategory-noselect__div {
     margin-top: 10rem;
+  }
+  @media (max-width: 1024px) {
+    border: none;
+    border-bottom: 1px solid black;
+    min-height: 0;
+    padding-bottom: 20px;
   }
 `;
 
@@ -112,7 +119,7 @@ const CategoryList = styled.div`
   border-radius: 5px;
   padding: 10px;
   min-width: 242px;
-  width: fit-content;
+  width: 242px;
   cursor: pointer;
   /* max-width: px; */
   .category-delete__button {
@@ -131,23 +138,22 @@ const CategoryList = styled.div`
 `;
 
 function CategoryEdit() {
+  const userInfo = useRecoilValue(userInfoState);
   // 카테고리 리스트 배열에 대한 상태.
   const [allCategory, setAllCategory] = useState<
-    { id: number; name: string; categoryIcon: string }[]
+    { id: number; name: string; categoryId: number }[]
   >([]);
 
   // 자식컴포넌트 개별 모달창 관리하기 위해 추가함.
   // const [isOpen, setIsOpen] = useState(false);
 
-
   // 예산 설정 카테고리 리스트에 대한 상태
   const [selectedCategory, setSelectedCategory] = useState<
-    { id: number; categoryIcon: string; name: string }[]
+    { id: number; categoryId: number; name: string }[]
   >([]);
 
-
   const [budget, setBudget] = useState<
-    { id?: number; memberCategoryId: number }[]
+    { id?: number; memberCategoryId?: number }[]
   >([]);
 
   // 모달 창 닫기 이벤트 핸들러
@@ -198,18 +204,27 @@ function CategoryEdit() {
   // 전체 카테고리 및 예산 설정 카테고리 api 요청
   const getCategory = async () => {
     try {
-      // 전체 카테고리
-      const all = await axios.get(`http://localhost:3001/data`);
-      setAllCategory(all.data);
+      // 전체 카테고리;
+      const all =
+        userInfo &&
+        (await axios.get(
+          `${import.meta.env.VITE_SERVER}/categories/${userInfo.id}`
+        ));
+      all && setAllCategory(all.data.data);
 
       // 예산 설정 카테고리
-      const budget = await axios.get(`http://localhost:3002/budgets`);
-      setBudget(budget.data);
+      const memberBudget =
+        userInfo &&
+        (await axios.get(
+          `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo.id}`
+        ));
+
+      memberBudget && setBudget(memberBudget.data);
 
       // 예산 설정 카테고리(memberCategoryId) - 전체 카테고리 (id) 매핑
       const arr = [];
-      for (const i of budget.data) {
-        for (const j of all.data) {
+      for (const i of memberBudget?.data) {
+        for (const j of all?.data.data) {
           if (i.memberCategoryId === j.id) {
             arr.push(j);
             break;
@@ -224,7 +239,7 @@ function CategoryEdit() {
 
   useEffect(() => {
     getCategory();
-  }, []);
+  }, [userInfo]);
 
   return (
     <BodyContainer /* onClick={handleCloseEdit} */>
@@ -232,10 +247,9 @@ function CategoryEdit() {
         <SelectedCategory>
           <div className="selectedcategory-header__div">
             <h3>예산 설정 카테고리</h3>
-            <Button colorScheme={'purple'}>적용</Button>
           </div>
           <CategoryLists>
-            {selectedCategory.length < 1 ? (
+            {selectedCategory && selectedCategory.length < 1 ? (
               <div className="selectedcategory-noselect__div">
                 <div>선택한 카테고리가 없습니다.</div>
                 <div>전체 카테고리 목록에서 선택해주세요.</div>
@@ -243,32 +257,33 @@ function CategoryEdit() {
             ) : (
               ''
             )}
-            {selectedCategory.map((el) => {
-              return (
-                <CategoryList key={el.id}>
-                  <CategoryIcon icon={el.categoryIcon} />
-                  <div className="category-name__div">{el.name}</div>
-                </CategoryList>
-              );
-            })}
+            {selectedCategory &&
+              selectedCategory.map((el) => {
+                return (
+                  <CategoryList key={el.id}>
+                    <CategoryIcon icon={CategoryIdMap[el.categoryId]} />
+                    <div className="category-name__div">{el.name}</div>
+                  </CategoryList>
+                );
+              })}
           </CategoryLists>
         </SelectedCategory>
         <AllCategories>
           <h3>전체 카테고리</h3>
           <CategoryLists>
-            {allCategory &&
-              allCategory.map((el) => {
-                return (
-                  <AllCategoryList
-                    key={el.id}
-                    data={el}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                    budget={budget}
-                    setBudget={setBudget}
-                  />
-                );
-                /* 기본 카테고리 수정 불가
+            {allCategory.map((el) => {
+              return (
+                <AllCategoryList
+                  key={el.id}
+                  data={el}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  budget={budget}
+                  setBudget={setBudget}
+                  userInfo={userInfo}
+                />
+              );
+              /* 기본 카테고리 수정 불가
                   <CategoryList key={el.id}>
                     <CategoryDropdown
                       categoryIcon={el.categoryIcon}
@@ -294,7 +309,7 @@ function CategoryEdit() {
                   </CategoryList>
                 );
                 */
-              })}
+            })}
           </CategoryLists>
         </AllCategories>
       </ContentContainer>

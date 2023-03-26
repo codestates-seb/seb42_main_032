@@ -38,6 +38,30 @@ const Icon = styled.div`
   }
 `;
 
+export const CategoryIdMap: { [key: number]: string } = {
+  1: 'AiOutlineShopping',
+  2: 'MdFastfood',
+  3: 'BiCoffeeTogo',
+  4: 'IoLogoGameControllerA',
+  5: 'IoBeer',
+  6: 'MdOutlineLocalHospital',
+  7: 'GiLipstick',
+  8: 'GiAirplaneDeparture',
+  9: 'BiWon',
+  10: 'BsFillCarFrontFill',
+  11: 'IoIosSubway',
+  12: 'BsFillHouseFill',
+  13: 'GiPresent',
+  14: 'BiPhoneCall',
+  15: 'BsCart4',
+  16: 'FaBabyCarriage',
+  17: 'IoMdSchool',
+  18: 'FaDog',
+  19: 'BiCameraMovie',
+  20: 'CiDumbbell',
+  21: 'AiOutlineQuestion',
+};
+
 const CategoryIcon = ({ icon }: { icon: string }) => {
   return (
     <Icon className="react-icons">

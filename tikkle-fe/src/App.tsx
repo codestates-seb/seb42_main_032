@@ -25,6 +25,7 @@ function App() {
         <Route path="/budget" element={<BudgetView />} />
         <Route path="/usersetting" element={<UserSetting />} />
         <Route path="/userout" element={<UserOut />} />
+        <Route path="/categoryedit" element={<CategoryEdit />} />
       </Routes>
       <Footer />
     </div>
