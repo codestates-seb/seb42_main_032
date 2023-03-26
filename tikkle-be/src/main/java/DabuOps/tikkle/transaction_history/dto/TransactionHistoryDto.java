@@ -5,10 +5,7 @@ import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -22,12 +19,13 @@ public class TransactionHistoryDto {
         private LocalDate date;
         @DateTimeFormat(pattern = "HH:mm:ss")
         private LocalTime time;
-        @NotBlank
+
+        @NotNull
         private TransactionHistory.InoutType inoutType;
         private String memo;
         @Min(0)
-        @NotBlank
-        private int amount;
+        @NotNull
+        private Integer amount;
         @NotBlank
         private String branchName;
 
