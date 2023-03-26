@@ -214,13 +214,12 @@ function CategoryEdit() {
         ));
 
       memberBudget && setBudget(memberBudget.data);
-      // memberBudget && console.log(memberBudget.data);
 
       // 예산 설정 카테고리(memberCategoryId) - 전체 카테고리 (id) 매핑
       const arr = [];
-      for (const i of budget) {
-        for (const j of allCategory) {
-          if (i.id === j.id) {
+      for (const i of memberBudget?.data) {
+        for (const j of all?.data.data) {
+          if (i.memberCategoryId === j.id) {
             arr.push(j);
             break;
           }

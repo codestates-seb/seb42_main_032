@@ -57,6 +57,7 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
 }) => {
   // 카테고리 선택 여부 상태
   const [isSelected, setIsSelected] = useState(false);
+  const [budgetId, setBudgetId] = useState();
 
   useEffect(() => {
     for (const el of selectedCategory) {
@@ -68,13 +69,12 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
 
   const postBudgetCategory = async () => {
     try {
-      console.log(data.id);
       await axios({
         url: `${import.meta.env.VITE_SERVER}/budgets`,
         method: 'post',
         data: {
           memberCategoryId: data.id,
-          amount: 123123,
+          amount: 0,
         },
       });
     } catch (err) {
@@ -84,17 +84,7 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
 
   const deleteBudgetCatrgory = async (id?: number) => {
     try {
-      await axios.delete(`http://localhost:3002/budgets/${id}`);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const patchBudgetCategory = async () => {
-    try {
-      await axios.patch(`http://localhost:3002/budgets`, {
-        memberCategoryId: data.id,
-      });
+      await axios.delete(`${import.meta.env.VITE_SERVER}/budgets/${id}`);
     } catch (err) {
       console.log(err);
     }
