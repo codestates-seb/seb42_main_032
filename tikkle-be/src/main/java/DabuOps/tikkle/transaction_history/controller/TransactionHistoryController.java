@@ -9,7 +9,7 @@ import DabuOps.tikkle.transaction_history.repository.TransactionHistoryRepositor
 import DabuOps.tikkle.transaction_history.service.TransactionHistoryService;
 import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
 import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
-import DabuOps.tikkle.userauth.service.UserAuthService;
+//import DabuOps.tikkle.userauth.service.UserAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ public class TransactionHistoryController {
     private final MemberCategoryService memberCategoryService;
     private final TransactionHistoryMapper mapper;
 
-    private final UserAuthService userAuthService;
+    //private final UserAuthService userAuthService;
     @PostMapping()
     public ResponseEntity postTransactionHistory(@Valid @RequestBody TransactionHistoryDto.Post requestBody) {
         Long memberCategoryId = requestBody.getMemberCategoryId();
@@ -80,13 +80,13 @@ public class TransactionHistoryController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/{member_id}/request")
-    public ResponseEntity updateTransactionHistoriesFromOpenApi(@PathVariable("member_id")Long memberId) {
-        List<ModifiedTransactionHistoryDto> accountTransactionDtoList = userAuthService.requestTransactionHistories(memberId);
-        for(ModifiedTransactionHistoryDto dto : accountTransactionDtoList) {
-            TransactionHistory transactionHistory = mapper.modifiedDtoToTransactionHistory(dto);
-            TransactionHistory savedTransactionHistory = transactionHistoryService.categorizeTransactionHistory(transactionHistory, memberId);
-        }
-        return new ResponseEntity(HttpStatus.CREATED);
-    }
+//    @PostMapping("/{member_id}/request")
+//    public ResponseEntity updateTransactionHistoriesFromOpenApi(@PathVariable("member_id")Long memberId) {
+//        List<ModifiedTransactionHistoryDto> accountTransactionDtoList = userAuthService.requestTransactionHistories(memberId);
+//        for(ModifiedTransactionHistoryDto dto : accountTransactionDtoList) {
+//            TransactionHistory transactionHistory = mapper.modifiedDtoToTransactionHistory(dto);
+//            TransactionHistory savedTransactionHistory = transactionHistoryService.categorizeTransactionHistory(transactionHistory, memberId);
+//        }
+//        return new ResponseEntity(HttpStatus.CREATED);
+//    }
 }

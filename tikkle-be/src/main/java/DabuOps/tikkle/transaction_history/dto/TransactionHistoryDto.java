@@ -17,6 +17,8 @@ public class TransactionHistoryDto {
     @Getter
     @NoArgsConstructor
     public static class Post {
+        @NotBlank
+        @Positive
         private Long memberCategoryId;
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate date;

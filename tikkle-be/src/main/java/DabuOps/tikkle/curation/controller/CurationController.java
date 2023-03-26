@@ -9,8 +9,8 @@ import DabuOps.tikkle.global.utils.MultiResponseDto;
 import DabuOps.tikkle.global.utils.ResponseListDto;
 import DabuOps.tikkle.global.utils.SingleResponseDto;
 import DabuOps.tikkle.global.utils.UriCreator;
-import DabuOps.tikkle.oauth.dto.LogInMemberDto;
-import DabuOps.tikkle.oauth.resolver.LoginMember;
+//import DabuOps.tikkle.oauth.dto.LogInMemberDto;
+//import DabuOps.tikkle.oauth.resolver.LoginMember;
 import java.net.URI;
 import java.util.List;
 import javax.validation.constraints.Positive;
@@ -40,42 +40,42 @@ public class CurationController {
     private final CurationService curationService;
     private final CurationMapper mapper;
 
-    @PostMapping
-    public ResponseEntity postCuration(@RequestBody CurationDto.Post post,
-        @LoginMember LogInMemberDto logInMemberDto){
-        Curation curation = curationService.createCuration(mapper.postDtoToCuration(post),
-            logInMemberDto.getMemberId());
-        URI location = UriCreator.createURI("/curations", curation.getId());
-        return ResponseEntity.created(location).build();
-    }
-    @PatchMapping("/{curation-id}")
-    public ResponseEntity patchCuration(@Positive @PathVariable("curation-id") long curationId,
-        @RequestBody CurationDto.Patch patch, @LoginMember LogInMemberDto logInMemberDto){
-        Curation curation = mapper.patchDtoToCuration(patch);
-        curation.setId(curationId);
-        curationService.updateCuration(curation, logInMemberDto.getMemberId());
-        return ResponseEntity.ok().build();
-    }
-    @GetMapping("/{curation-id}")
-    public ResponseEntity getCuration(@Positive @PathVariable("curation-id") long curationId){
-        Curation curation = curationService.getCuration(curationId);
-        CurationDto.Response response = mapper.curationToResponseDto(curation);
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
-    }
-
-    @GetMapping
-    public ResponseEntity getCurations(@Positive @RequestParam long tagId){
-        List<Curation> curations = curationService.getCurations(tagId);
-        return new ResponseEntity<>(new ResponseListDto<>(
-            mapper.curationsToCurationResponses(curations)),HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{curation-id}")
-    public ResponseEntity deleteCuration(@Positive @PathVariable("curation-id") long curationId,
-        @LoginMember LogInMemberDto logInMemberDto){
-        curationService.deleteCuration(curationId, logInMemberDto.getMemberId());
-        return ResponseEntity.noContent().build();
-    }
+//    @PostMapping
+//    public ResponseEntity postCuration(@RequestBody CurationDto.Post post,
+//        @LoginMember LogInMemberDto logInMemberDto){
+//        Curation curation = curationService.createCuration(mapper.postDtoToCuration(post),
+//            logInMemberDto.getMemberId());
+//        URI location = UriCreator.createURI("/curations", curation.getId());
+//        return ResponseEntity.created(location).build();
+//    }
+//    @PatchMapping("/{curation-id}")
+//    public ResponseEntity patchCuration(@Positive @PathVariable("curation-id") long curationId,
+//        @RequestBody CurationDto.Patch patch, @LoginMember LogInMemberDto logInMemberDto){
+//        Curation curation = mapper.patchDtoToCuration(patch);
+//        curation.setId(curationId);
+//        curationService.updateCuration(curation, logInMemberDto.getMemberId());
+//        return ResponseEntity.ok().build();
+//    }
+//    @GetMapping("/{curation-id}")
+//    public ResponseEntity getCuration(@Positive @PathVariable("curation-id") long curationId){
+//        Curation curation = curationService.getCuration(curationId);
+//        CurationDto.Response response = mapper.curationToResponseDto(curation);
+//        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+//    }
+//
+//    @GetMapping
+//    public ResponseEntity getCurations(@Positive @RequestParam long tagId){
+//        List<Curation> curations = curationService.getCurations(tagId);
+//        return new ResponseEntity<>(new ResponseListDto<>(
+//            mapper.curationsToCurationResponses(curations)),HttpStatus.OK);
+//    }
+//
+//    @DeleteMapping("/{curation-id}")
+//    public ResponseEntity deleteCuration(@Positive @PathVariable("curation-id") long curationId,
+//        @LoginMember LogInMemberDto logInMemberDto){
+//        curationService.deleteCuration(curationId, logInMemberDto.getMemberId());
+//        return ResponseEntity.noContent().build();
+//    }
 
 
 
