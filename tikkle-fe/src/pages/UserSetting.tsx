@@ -1,5 +1,5 @@
 //TODO SIGNUP_002 유저 정보 입력 페이지 구현 (사용자 이름, 예산 시작일, 급여일, 고정 지출 등)
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import UserInput from '../components/UserInput';
 
@@ -16,6 +16,9 @@ import { Button } from '@chakra-ui/react';
 import { Icon, AddIcon } from '@chakra-ui/icons';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../util/store';
+import axios from 'axios';
 
 const Container = styled.div`
   display: flex;
@@ -65,6 +68,22 @@ function UserSetting() {
   // salary
   const [salaryDate, setSalaryDate] = useState(new Date().toISOString());
   const [salaryAmount, setSalaryAmount] = useState(0);
+
+  // axios GET, PATCH 요청 parameter에 넣을 member_id
+  const memberId = useRecoilValue(userInfoState)?.id;
+
+  // 기존 입력된 정보와서 input에 보여주기
+  //TODO input에 바로 보여주는 방식에 대해 수정 필요.
+  useEffect(() => {
+    const getUserSetting = async () => {
+      const userData = await axios
+        .get(`${import.meta.env.VITE_SERVER}/members/${memberId}`)
+        .then((res) => {
+          return res.data.data;
+        });
+    };
+    getUserSetting();
+  }, []);
 
   // TODO axios POST 요청으로 입력된 정보 전송
   const handleUserInput = (e: any) => {
