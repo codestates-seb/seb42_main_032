@@ -32,7 +32,7 @@ public class TransactionHistoryController {
     private final TransactionHistoryMapper mapper;
 
     private final UserAuthService userAuthService;
-    @PostMapping()
+    @PostMapping
     public ResponseEntity postTransactionHistory(@Valid @RequestBody TransactionHistoryDto.Post requestBody) {
         Long memberCategoryId = requestBody.getMemberCategoryId();
         TransactionHistory transactionHistory = mapper.transactionHistoryPostDtoToTransactionHistory(requestBody);
