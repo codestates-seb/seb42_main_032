@@ -147,7 +147,7 @@ function CategoryEdit() {
   >([]);
 
   const [budget, setBudget] = useState<
-    { id?: number; memberCategoryId: number }[]
+    { id?: number; memberCategoryId?: number }[]
   >([]);
 
   // 모달 창 닫기 이벤트 핸들러

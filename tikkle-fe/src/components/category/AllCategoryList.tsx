@@ -40,9 +40,9 @@ interface AllCategoryListProps {
   setSelectedCategory: Dispatch<
     SetStateAction<{ id: number; categoryId: number; name: string }[]>
   >;
-  budget: { id?: number; memberCategoryId: number }[];
+  budget: { id?: number; memberCategoryId?: number }[];
   setBudget: Dispatch<
-    SetStateAction<{ id?: number; memberCategoryId: number }[]>
+    SetStateAction<{ id?: number; memberCategoryId?: number }[]>
   >;
   userInfo: userInfoType | null;
 }
@@ -57,16 +57,24 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
 }) => {
   // 카테고리 선택 여부 상태
   const [isSelected, setIsSelected] = useState(false);
-  const [budgetId, setBudgetId] = useState();
 
   useEffect(() => {
-    for (const el of selectedCategory) {
-      if (el.id === data.id) {
+    getBudget().then((memberBudget) => {
+      if (
+        memberBudget &&
+        memberBudget.filter(
+          (el: { id?: number; memberCategoryId?: number }) => {
+            return el.memberCategoryId === data.id;
+          }
+        ).length > 0
+      ) {
         setIsSelected(true);
+        // setSelectedCategory([...selectedCategory, data]);
       }
-    }
+    });
   }, []);
 
+  // 예산 추가
   const postBudgetCategory = async () => {
     try {
       await axios({
@@ -82,6 +90,7 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
     }
   };
 
+  // 예산 삭제
   const deleteBudgetCatrgory = async (id?: number) => {
     try {
       await axios.delete(`${import.meta.env.VITE_SERVER}/budgets/${id}`);
@@ -90,13 +99,16 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
     }
   };
 
+  // 예산 조회
   const getBudget = async () => {
-    const budget =
+    const memberBudget =
       userInfo &&
-      (await axios.get(
-        `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo.id}`
-      ));
-    budget && setBudget(budget.data);
+      (
+        await axios.get(
+          `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo.id}`
+        )
+      ).data;
+    return memberBudget;
   };
 
   // 카테고리 클릭 이벤트 핸들러
@@ -107,22 +119,28 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
           return el.memberCategoryId === data.id;
         }).length === 0
       ) {
-        postBudgetCategory();
-        getBudget();
+        postBudgetCategory().then(() => {
+          getBudget().then((memberBudget) => {
+            setBudget(memberBudget);
+          });
+        });
         setIsSelected(true);
         setSelectedCategory([...selectedCategory, data]);
+      } else {
+        alert('이미 예산 설정에 추가한 카테고리입니다.');
       }
     } else {
       const budgetId = budget.filter((el) => {
         return el.memberCategoryId === data.id;
       })[0].id;
       deleteBudgetCatrgory(budgetId);
-      setBudget(
-        budget.filter((el) => {
+
+      setBudget(() => {
+        const updateBudget = budget.filter((el) => {
           return el.id !== budgetId;
-        })
-      );
-      getBudget();
+        });
+        return updateBudget;
+      });
       setIsSelected(false);
 
       // 선택된 전체 카테고리 중 클릭 된 카테고리 id와 같은 요소는 뺌.
