@@ -65,7 +65,7 @@ const SelectedCategory = styled.div`
   padding-right: 20px;
   display: flex;
   flex-direction: column;
-  min-width: 400px;
+  min-width: 40vw;
   min-height: 70vh;
   h3 {
     padding-left: 20px;
@@ -80,6 +80,12 @@ const SelectedCategory = styled.div`
   }
   .selectedcategory-noselect__div {
     margin-top: 10rem;
+  }
+  @media (max-width: 1024px) {
+    border: none;
+    border-bottom: 1px solid black;
+    min-height: 0;
+    padding-bottom: 20px;
   }
 `;
 
@@ -113,7 +119,7 @@ const CategoryList = styled.div`
   border-radius: 5px;
   padding: 10px;
   min-width: 242px;
-  width: fit-content;
+  width: 242px;
   cursor: pointer;
   /* max-width: px; */
   .category-delete__button {
@@ -241,7 +247,6 @@ function CategoryEdit() {
         <SelectedCategory>
           <div className="selectedcategory-header__div">
             <h3>예산 설정 카테고리</h3>
-            <Button colorScheme={'purple'}>적용</Button>
           </div>
           <CategoryLists>
             {selectedCategory && selectedCategory.length < 1 ? (
