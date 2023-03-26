@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface BudgetRepository extends JpaRepository<Budget, Long> {
     List<Budget> findByMemberCategoryIdInAndCurrentIsTrue(List<Long> memberCategoryIds);
+    Budget findByIdAndStatusIs(Long budgetId, Budget.Status status);
 }

@@ -76,7 +76,7 @@ public class BudgetServiceImpl implements BudgetService{
         Budget findBudget =
                 optionalBudget.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.BUDGET_NOT_FOUND));
-        if(findBudget.getStatus().equals(Budget.Status.INACTIVE)) throw new BusinessLogicException(ExceptionCode.BUDGET_IS_INACTIVE);
+        if(findBudget.getStatus() == Budget.Status.INACTIVE) throw new BusinessLogicException(ExceptionCode.BUDGET_IS_INACTIVE);
 
         return findBudget;
     }
@@ -99,6 +99,7 @@ public class BudgetServiceImpl implements BudgetService{
 
         budget.setCurrent(false);
         budget.setStatus(Budget.Status.INACTIVE);
+        budgetRepository.save(budget);
     }
 
 
