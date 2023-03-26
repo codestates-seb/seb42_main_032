@@ -37,11 +37,14 @@
 //     */
 //    public Object login(String accessToken) throws IOException {
 //
-//        HttpStatus validate = validate(accessToken);
-//        if (validate == HttpStatus.OK){
-//            return getMemberProfile(accessToken);
+//        HttpStatus status = validate(accessToken);
+//        Member member = getMemberProfile(accessToken);
+//
+//        if (status == HttpStatus.UNAUTHORIZED) {
+//            return status;
+//        } else {
+//            return member;
 //        }
-//        return "유효하지 않은 access token 입니다.";
 //    }
 //
 //    /*

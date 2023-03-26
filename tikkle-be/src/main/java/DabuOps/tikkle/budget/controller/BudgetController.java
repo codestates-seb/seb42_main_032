@@ -18,6 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Validated
+@CrossOrigin
 @RequestMapping("/budgets")
 public class BudgetController {
     private final String DEFAULT_URL = "/budgets";

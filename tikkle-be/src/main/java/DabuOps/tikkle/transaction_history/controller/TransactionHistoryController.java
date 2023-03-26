@@ -23,6 +23,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Validated
+@CrossOrigin
 @RequestMapping("/transaction_histories")
 public class TransactionHistoryController {
     private final String DEFAULT_URL = "/transaction_histories";

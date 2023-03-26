@@ -1,22 +1,27 @@
 //TODO CATEGORY_001 카테고리 관리 페이지 구현
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import CategoryDropdown from '../components/category/CategoryDropdown';
-import CategoryNameEdit from '../components/category/CategoryNameEdit';
-import { AddIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
-import { RiDeleteBin5Line } from 'react-icons/ri';
 import axios from 'axios';
 import CategoryIcon from '../components/category/CategoryIcon';
+import AllCategoryList from '../components/category/AllCategoryList';
+import { Button } from '@chakra-ui/react';
+// import { AddIcon } from '@chakra-ui/icons';
+// import CategoryDropdown from '../components/category/CategoryDropdown';
+// import CategoryNameEdit from '../components/category/CategoryNameEdit';
+// import { RiDeleteBin5Line } from 'react-icons/ri';
 
 const BodyContainer = styled.div`
   margin-top: 60px;
   font-family: 'GmarketSansMedium';
-  /* min-height: 70vh; */
+  min-height: 70vh;
 `;
 
 const ContentContainer = styled.div`
   display: flex;
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
 `;
 
 const HeaderWrap = styled.div`
@@ -56,17 +61,30 @@ const AddButton = styled.div`
 const SelectedCategory = styled.div`
   border-right: 1px solid black;
   padding-top: 20px;
+  padding-right: 20px;
+  display: flex;
+  flex-direction: column;
+  min-width: 400px;
+  min-height: 70vh;
   h3 {
     padding-left: 20px;
     margin-bottom: 20px;
     text-align: left;
-    width: 400px;
     font-size: 20px;
+  }
+  .selectedcategory-header__div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .selectedcategory-noselect__div {
+    margin-top: 10rem;
   }
 `;
 
 const AllCategories = styled.div`
   padding-top: 20px;
+  padding-bottom: 20px;
   h3 {
     padding-left: 20px;
     margin-bottom: 20px;
@@ -86,13 +104,16 @@ const CategoryLists = styled.div`
 const CategoryList = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
   margin: 10px;
   font-size: 25px;
   /* border: 1px solid black; */
   box-shadow: 1px 1px 3px;
-  border-radius: 20px;
+  border-radius: 5px;
   padding: 10px;
   min-width: 242px;
+  width: fit-content;
+  cursor: pointer;
   /* max-width: px; */
   .category-delete__button {
     cursor: pointer;
@@ -111,91 +132,141 @@ const CategoryList = styled.div`
 
 function CategoryEdit() {
   // 카테고리 리스트 배열에 대한 상태.
-  const [data, setData] = useState<
+  const [allCategory, setAllCategory] = useState<
     { id: number; name: string; categoryIcon: string }[]
   >([]);
 
   // 자식컴포넌트 개별 모달창 관리하기 위해 추가함.
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
 
-  const [selectedCategory, setSelectedCategory] = useState();
 
-  const handleCloseEdit = () => {
-    setIsOpen(false);
-  };
+  // 예산 설정 카테고리 리스트에 대한 상태
+  const [selectedCategory, setSelectedCategory] = useState<
+    { id: number; categoryIcon: string; name: string }[]
+  >([]);
 
-  const handleClickAdd = () => {
-    const postCategory = async () => {
-      try {
-        await axios.post(`http://localhost:3001/data`, {
-          name: '',
-          categoryIcon: 'AiOutlineQuestion',
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    postCategory();
-    setTimeout(() => {
-      getCategoryList();
-    }, 100);
-  };
-  const handleClickDelete = (el: { id: number; name: string }) => {
-    if (data.length === 1) {
-      return alert('카테고리는 최소 1개는 있어야 합니다.');
-    }
-    if (window.confirm(`'${el.name}' 카테고리를 삭제하시겠습니까?`)) {
-      const delCategory = async () => {
-        try {
-          await axios.delete(`http://localhost:3001/data/${el.id}`);
-          getCategoryList();
-        } catch (err) {
-          console.log(err);
-        }
-      };
-      delCategory();
-    }
-  };
 
-  const getCategoryList = async () => {
+  const [budget, setBudget] = useState<
+    { id?: number; memberCategoryId: number }[]
+  >([]);
+
+  // 모달 창 닫기 이벤트 핸들러
+  // const handleCloseEdit = () => {
+  //   setIsOpen(false);
+  // };
+
+  // const handleClickCategory = () => {
+  //   setSelectedCategory([...selectedCategory, el]);
+  // };
+
+  // 카테고리 추가 버튼 클릭 이벤트 핸들러
+  // const handleClickAdd = () => {
+  //   const postCategory = async () => {
+  //     try {
+  //       await axios.post(`http://localhost:3001/data`, {
+  //         name: '',
+  //         categoryIcon: 'AiOutlineQuestion',
+  //       });
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   postCategory();
+  //   setTimeout(() => {
+  //     getCategoryList();
+  //   }, 100);
+  // };
+
+  // 카테고리 삭제 버튼 클릭 핸들러
+  // const handleClickDelete = (el: { id: number; name: string }) => {
+  //   if (data.length === 1) {
+  //     return alert('카테고리는 최소 1개는 있어야 합니다.');
+  //   }
+  //   if (window.confirm(`'${el.name}' 카테고리를 삭제하시겠습니까?`)) {
+  //     const delCategory = async () => {
+  //       try {
+  //         await axios.delete(`http://localhost:3001/data/${el.id}`);
+  //         getCategoryList();
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //     };
+  //     delCategory();
+  //   }
+  // };
+
+  // 전체 카테고리 및 예산 설정 카테고리 api 요청
+  const getCategory = async () => {
     try {
-      const res = await axios.get(`http://localhost:3001/data`);
-      setData(res.data);
+      // 전체 카테고리
+      const all = await axios.get(`http://localhost:3001/data`);
+      setAllCategory(all.data);
+
+      // 예산 설정 카테고리
+      const budget = await axios.get(`http://localhost:3002/budgets`);
+      setBudget(budget.data);
+
+      // 예산 설정 카테고리(memberCategoryId) - 전체 카테고리 (id) 매핑
+      const arr = [];
+      for (const i of budget.data) {
+        for (const j of all.data) {
+          if (i.memberCategoryId === j.id) {
+            arr.push(j);
+            break;
+          }
+        }
+      }
+      setSelectedCategory(arr);
     } catch (err) {
       console.log(err);
     }
   };
 
   useEffect(() => {
-    getCategoryList();
+    getCategory();
   }, []);
 
-  useEffect(() => {}, [data]);
-
   return (
-    <BodyContainer onClick={handleCloseEdit}>
+    <BodyContainer /* onClick={handleCloseEdit} */>
       <ContentContainer>
         <SelectedCategory>
-          <h3>예산 설정한 카테고리</h3>
-          {/* {selectedCategory.map((el) => {
-            return (
-              <CategoryList key={el.id}>
-                <CategoryIcon icon={el.categoryIcon} />
-                <div className="category-name__div">{el.name}</div>
-              </CategoryList>
-            );
-          })} */}
+          <div className="selectedcategory-header__div">
+            <h3>예산 설정 카테고리</h3>
+            <Button colorScheme={'purple'}>적용</Button>
+          </div>
+          <CategoryLists>
+            {selectedCategory.length < 1 ? (
+              <div className="selectedcategory-noselect__div">
+                <div>선택한 카테고리가 없습니다.</div>
+                <div>전체 카테고리 목록에서 선택해주세요.</div>
+              </div>
+            ) : (
+              ''
+            )}
+            {selectedCategory.map((el) => {
+              return (
+                <CategoryList key={el.id}>
+                  <CategoryIcon icon={el.categoryIcon} />
+                  <div className="category-name__div">{el.name}</div>
+                </CategoryList>
+              );
+            })}
+          </CategoryLists>
         </SelectedCategory>
         <AllCategories>
           <h3>전체 카테고리</h3>
           <CategoryLists>
-            {data &&
-              data.map((el) => {
+            {allCategory &&
+              allCategory.map((el) => {
                 return (
-                  <CategoryList key={el.id}>
-                    <CategoryIcon icon={el.categoryIcon} />
-                    <div className="category-name__div">{el.name}</div>
-                  </CategoryList>
+                  <AllCategoryList
+                    key={el.id}
+                    data={el}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    budget={budget}
+                    setBudget={setBudget}
+                  />
                 );
                 /* 기본 카테고리 수정 불가
                   <CategoryList key={el.id}>

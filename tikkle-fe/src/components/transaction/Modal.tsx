@@ -1,7 +1,7 @@
 // TODO 거래 내역 클릭 시, 상세 정보 나오는 모달창
 
 // axios.get 데이터 받아오기 or Transaction에서 받아서 props로 넘겨 받기
-import Transaction from '../layout/Transaction';
+import Transaction, { TransactionType } from '../layout/Transaction';
 import styled from 'styled-components';
 import { Input } from '@chakra-ui/react';
 import { useState } from 'react';
@@ -42,7 +42,7 @@ const ModalContent = styled.div`
   }
 `;
 interface ModalProps {
-  transaction: Transaction;
+  transaction: TransactionType;
   onClose: () => void;
   toggleModal: () => void;
 }
@@ -50,10 +50,7 @@ interface ModalProps {
 const Modal = ({ transaction, toggleModal }: ModalProps) => {
   // memo 입력 상태 관리
   const [memo, setMemo] = useState<string>(transaction.memo);
-  // TODO memo 수정 시, axios POST 요청으로 변경 사항 보내기
-  const handleChange = (e) => {
-    setMemo(e.target.value);
-  };
+
   console.log(transaction);
 
   // TODO 카테고리 드롭다운 수정 컴포넌트 만들기
@@ -76,7 +73,13 @@ const Modal = ({ transaction, toggleModal }: ModalProps) => {
           <li> 거래 시간: {transaction.time}</li>
           <li className="memo-input">
             메모:
-            <Input value={memo} onChange={(e) => handleChange(e)}></Input>
+            {/* // TODO memo 수정 시, axios POST 요청으로 변경 사항 보내기 */}
+            <Input
+              value={memo}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setMemo(e.target.value)
+              }
+            ></Input>
           </li>
           <li> 카테고리: </li>
         </ul>
