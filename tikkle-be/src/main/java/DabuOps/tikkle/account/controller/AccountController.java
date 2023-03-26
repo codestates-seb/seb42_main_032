@@ -53,9 +53,9 @@ public class AccountController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
-    public ResponseEntity getAccounts() {
-        List<Account> Accounts = accountService.getAccounts(1L);
+    @GetMapping("/{member-id}")
+    public ResponseEntity getAccounts(@Positive @PathVariable("member-id") long id) {
+        List<Account> Accounts = accountService.getAccounts(id);
 
         return new ResponseEntity<>(new ResponseListDto<>(
             mapper.accountsToResponseDtos(Accounts)), HttpStatus.OK);
