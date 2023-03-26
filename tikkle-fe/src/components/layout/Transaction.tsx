@@ -228,6 +228,7 @@ const Transaction = ({ date }: { date: Date }) => {
           transaction={selectedTransaction}
           onClose={() => setSelectedTransaction(null)}
           toggleModal={toggleModal}
+          date={date}
         ></Modal>
       )}
     </Container>
