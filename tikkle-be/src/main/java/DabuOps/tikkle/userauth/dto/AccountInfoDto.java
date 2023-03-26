@@ -28,5 +28,6 @@ public class AccountInfoDto {
     private String userCi;
     private String userName;
     private String resCnt;
-    private List<Map<String, Object>> resList;;
+    private List<Map<String, Object>> resList;
+    private String fintechUserNum;
 }
