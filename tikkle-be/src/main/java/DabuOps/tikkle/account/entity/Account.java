@@ -48,7 +48,7 @@ public class Account extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @Column
+    @Column(unique = true)
     private String fintechUseNum;
 
     @Column
