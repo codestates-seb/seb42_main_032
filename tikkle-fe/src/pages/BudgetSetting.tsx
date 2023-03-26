@@ -7,7 +7,7 @@ import CategoryBudget from '../components/budget_setting/CategoryBudget';
 import MonthlyBudget from '../components/budget_setting/MonthlyBudget';
 import { userInfoState } from '../util/store';
 
-interface BudgetType {
+export interface BudgetType {
   id: number;
   memberCategoryId: number;
   amount: number;
@@ -23,10 +23,11 @@ const BudgetSetting = () => {
 
   const [userInfo] = useRecoilState(userInfoState);
 
-  // ToDo 카테고리 페이지에서 추가된 카테고리를 기준으로 List 생성
-  const [categoryList] = useState([{}]);
+  // ToDo 네트워크 요청으로 저장
+  // const categoryList =
 
   const [budgets, setBudgets] = useState<BudgetType[]>();
+  console.log(budgets);
 
   useEffect(() => {
     const getBudgets = async () => {
@@ -57,7 +58,6 @@ const BudgetSetting = () => {
 
       setBudgets(fetchedBudgets);
     };
-
     getBudgets();
   }, []);
 
@@ -104,9 +104,11 @@ const BudgetSetting = () => {
             </Box>
           </Box>
           <Box display="flex" flexDir="column" w="100%" gap="40px" mb="40px">
-            {categoryList.map(() => (
-              <CategoryBudget />
-            ))}
+            {/* ToDo 카테고리 리스트가 있을 때만 표시하도록 구현 */}
+            {/* 서버 컴포넌트 개념 참고 */}
+            {/* {categoryList.map(() => (
+              // <CategoryBudget budget={} />
+            ))} */}
           </Box>
         </Box>
       </Box>
