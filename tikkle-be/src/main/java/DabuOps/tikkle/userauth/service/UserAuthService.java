@@ -12,7 +12,6 @@ import DabuOps.tikkle.userauth.dto.AccountInfoDto;
 import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
 import DabuOps.tikkle.userauth.dto.AccountTransactionListDto;
 import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
-import DabuOps.tikkle.userauth.dto.ResList;
 import DabuOps.tikkle.userauth.dto.TokenResponseDto;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -26,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -100,6 +100,25 @@ public class UserAuthService {
             entity,
             AccountInfoDto.class
         ).getBody();
+
+        for (Map<String, Object> accountMap : response.getResList()) {
+            Account account = new Account();
+            account.setFintechUseNum((String) accountMap.get("fintech_use_num"));
+
+            // fintech_use_num으로 조회하여 해당 계좌가 이미 존재하는지 확인
+            Optional<Account> existingAccountOptional = accountRepository.findByFintechUseNum((String) accountMap.get("fintech_use_num"));
+
+            if (existingAccountOptional.isPresent()) {
+                // 이미 존재하는 경우 정보 업데이트
+                Account existingAccount = existingAccountOptional.get();
+                existingAccount.setFintechUseNum((String) accountMap.get("fintech_use_num"));
+                accountRepository.save(existingAccount);
+            } else {
+                // 존재하지 않는 경우 새로운 Account 행 추가
+                accountRepository.save(account);
+            }
+        }
+
         return List.of(response);
     }
 
