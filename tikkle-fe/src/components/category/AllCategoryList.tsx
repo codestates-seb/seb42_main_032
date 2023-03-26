@@ -21,7 +21,7 @@ const CategoryList = styled.div`
   margin: 10px;
   font-size: 25px;
   /* border: 1px solid black; */
-  box-shadow: 2px 2px 4px;
+  box-shadow: 1px 1px 3px;
   border-radius: 5px;
   padding: 10px;
   min-width: 242px;
