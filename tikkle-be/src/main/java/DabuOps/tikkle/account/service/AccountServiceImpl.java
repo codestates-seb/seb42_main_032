@@ -17,7 +17,7 @@ public class AccountServiceImpl implements AccountService{
     private final AccountRepository accountRepository;
 
     @Override
-    public Account createAccount(Account account, Long memberId) {
+    public Account createAccount(Account account) {
         //계좌번호가 존재하는지 확인
         verifyExistAccountNumber(account.getNumber());
 
@@ -25,7 +25,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public Account updateAccount(Account account, Long id, Long memberId) {
+    public Account updateAccount(Account account, Long id) {
         //계좌가 존재하는지 검색
         Account obtainAccount = findExistAccountById(id);
         //이름 변경
@@ -39,12 +39,18 @@ public class AccountServiceImpl implements AccountService{
 
         //사용자의 아이디로 계좌를 검색해서 전체 리스트로 반환
         List<Account> accounts = accountRepository.findAllByMemberIdAndStateIs(memberId, AccountState.ACTIVE);
-
         return accounts;
+    }
+    @Override
+    public Account getAccount(Long id) {
+
+        //계좌 식별자로 검색
+        Account obtainAccount = findExistAccountById(id);
+        return obtainAccount;
     }
 
     @Override
-    public void deleteAccount(Long id, Long memberId) {
+    public void deleteAccount(Long id) {
         //계좌 식별자를 검색해서
         Account obtainAccount = findExistAccountById(id);
         // 삭제 상태로 갱신한후 저장
