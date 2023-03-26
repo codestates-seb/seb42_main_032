@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { userInfoType } from '../../pages/Login';
-import CategoryIcon from './CategoryIcon';
+import CategoryIcon, { CategoryIdMap } from './CategoryIcon';
 
 //  카테고리 수정 페이지에서 전체 카테고리 리스트 컴포넌트
 
@@ -35,10 +35,10 @@ const CategoryList = styled.div`
 `;
 
 interface AllCategoryListProps {
-  data: { id: number; categoryIcon: string; name: string };
-  selectedCategory: { id: number; categoryIcon: string; name: string }[];
+  data: { id: number; categoryId: number; name: string };
+  selectedCategory: { id: number; categoryId: number; name: string }[];
   setSelectedCategory: Dispatch<
-    SetStateAction<{ id: number; categoryIcon: string; name: string }[]>
+    SetStateAction<{ id: number; categoryId: number; name: string }[]>
   >;
   budget: { id?: number; memberCategoryId: number }[];
   setBudget: Dispatch<
@@ -68,11 +68,15 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
 
   const postBudgetCategory = async () => {
     try {
-      userInfo &&
-        (await axios.post(`${import.meta.env.VITE_SERVER}/budgets`, {
+      console.log(data.id);
+      await axios({
+        url: `${import.meta.env.VITE_SERVER}/budgets`,
+        method: 'post',
+        data: {
           memberCategoryId: data.id,
-          amount: 0,
-        }));
+          amount: 123123,
+        },
+      });
     } catch (err) {
       console.log(err);
     }
@@ -97,8 +101,12 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
   };
 
   const getBudget = async () => {
-    const budget = await axios.get(`http://localhost:3002/budgets`);
-    setBudget(budget.data);
+    const budget =
+      userInfo &&
+      (await axios.get(
+        `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo.id}`
+      ));
+    budget && setBudget(budget.data);
   };
 
   // 카테고리 클릭 이벤트 핸들러
@@ -137,7 +145,7 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
         className={isSelected ? 'selected' : ''}
         onClick={handleClickCategory}
       >
-        <CategoryIcon icon={data.categoryIcon} />
+        <CategoryIcon icon={CategoryIdMap[data.categoryId]} />
         <div className="category-name__div">{data.name}</div>
       </CategoryList>
     </Container>

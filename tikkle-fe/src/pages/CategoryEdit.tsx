@@ -3,7 +3,9 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import axios from 'axios';
-import CategoryIcon from '../components/category/CategoryIcon';
+import CategoryIcon, {
+  CategoryIdMap,
+} from '../components/category/CategoryIcon';
 import AllCategoryList from '../components/category/AllCategoryList';
 import { Button } from '@chakra-ui/react';
 import { userInfoState } from '../util/store';
@@ -133,7 +135,7 @@ function CategoryEdit() {
   const userInfo = useRecoilValue(userInfoState);
   // 카테고리 리스트 배열에 대한 상태.
   const [allCategory, setAllCategory] = useState<
-    { id: number; name: string; categoryIcon: string }[]
+    { id: number; name: string; categoryId: number }[]
   >([]);
 
   // 자식컴포넌트 개별 모달창 관리하기 위해 추가함.
@@ -141,7 +143,7 @@ function CategoryEdit() {
 
   // 예산 설정 카테고리 리스트에 대한 상태
   const [selectedCategory, setSelectedCategory] = useState<
-    { id: number; categoryIcon: string; name: string }[]
+    { id: number; categoryId: number; name: string }[]
   >([]);
 
   const [budget, setBudget] = useState<
@@ -200,10 +202,9 @@ function CategoryEdit() {
       const all =
         userInfo &&
         (await axios.get(
-          // `${import.meta.env.VITE_SERVER}/categories/${userInfo.id}`
-          `http://localhost:3001/data/`
+          `${import.meta.env.VITE_SERVER}/categories/${userInfo.id}`
         ));
-      all && setAllCategory(all.data);
+      all && setAllCategory(all.data.data);
 
       // 예산 설정 카테고리
       const memberBudget =
@@ -213,13 +214,13 @@ function CategoryEdit() {
         ));
 
       memberBudget && setBudget(memberBudget.data);
-      memberBudget && console.log(memberBudget.data);
+      // memberBudget && console.log(memberBudget.data);
 
       // 예산 설정 카테고리(memberCategoryId) - 전체 카테고리 (id) 매핑
       const arr = [];
       for (const i of budget) {
-        for (const j of all?.data.data) {
-          if (i.memberCategoryId === j.id) {
+        for (const j of allCategory) {
+          if (i.id === j.id) {
             arr.push(j);
             break;
           }
@@ -256,7 +257,7 @@ function CategoryEdit() {
               selectedCategory.map((el) => {
                 return (
                   <CategoryList key={el.id}>
-                    <CategoryIcon icon={el.categoryIcon} />
+                    <CategoryIcon icon={CategoryIdMap[el.categoryId]} />
                     <div className="category-name__div">{el.name}</div>
                   </CategoryList>
                 );
