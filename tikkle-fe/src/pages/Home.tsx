@@ -2,8 +2,9 @@ import Calendar from '../components/layout/Calendar';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import Transaction, { TransactionType } from '../components/layout/Transaction';
-import { tokenState } from '../util/store';
-import { useRecoilState } from 'recoil';
+import { tokenState, userInfoState } from '../util/store';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import axios from 'axios';
 
 // // transaction 컴포넌트용 거래내역 dummydata
 // const transactions: TransactionType[] = [
@@ -97,6 +98,25 @@ function Home({ selectedDate }: { selectedDate: Date }) {
   // const [accessToken, setAccessToken] = useRecoilState(tokenState);
 
   // console.log(`Access Token in Home: ${accessToken}`);
+
+  // 테스트용 코드
+  let member_id = useRecoilValue(userInfoState)?.id;
+  let headerMonth =
+    selectedDate.getFullYear() +
+    String(selectedDate.getMonth() + 1).padStart(2, '0');
+
+  axios
+    .post(`${import.meta.env.VITE_SERVER}/transaction_histories`, {
+      memberCategoryId: 1,
+      date: '2023-03-19',
+      time: '23:54:01',
+      inoutType: 'SPEND',
+      memo: '메모',
+      amount: 10000,
+      branchName: 'GS25동작엠코점',
+    })
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
 
   return (
     <HomeContainer>

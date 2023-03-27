@@ -26,7 +26,6 @@ function App() {
         <Route path="/budget" element={<BudgetView />} />
         <Route path="/userinfo" element={<UserInfo />} />
         <Route path="/usersetting" element={<UserSetting />} />
-
         <Route path="/userout" element={<UserOut />} />
       </Routes>
       <Footer />

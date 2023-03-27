@@ -152,18 +152,6 @@ const Transaction = ({ date }: { date: Date }) => {
   };
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
-  // //헤더의 Month
-  // let headerMonth = date.getMonth() + 1;
-
-  // //거래내역의 Month
-  // let transactioinMonth = transactions[0].date.getMonth() + 1;
-  // console.log(transactions[0].date.getMonth() + 1);
-
-  // 헤더에서 선택한 달과 일치하는 거래내역만 가져오기
-  // const transactionThisMonth = transactionHistories.filter(
-  //   (el) => el.date.getMonth() === headerMonth
-  // );
-
   //TODO 무한스크롤
   const options = {
     root: null,

@@ -1,6 +1,6 @@
 //TODO SIGNUP_002 유저 정보 입력 페이지 구현 (사용자 이름, 예산 시작일, 급여일, 고정 지출 등)
 import { useEffect, useState } from 'react';
-
+import { userInfoType } from '../pages/Login';
 import UserInput from '../components/UserInput';
 
 import styled from 'styled-components';
@@ -16,7 +16,7 @@ import { Button } from '@chakra-ui/react';
 import { Icon, AddIcon } from '@chakra-ui/icons';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '../util/store';
 import axios from 'axios';
 
@@ -55,85 +55,47 @@ const SetContainer = styled.div`
   }
 `;
 
-interface userInfo {
-  accessToken: string | null;
-  createdAt: Date;
-  email: string;
-  gender: string | null;
-  id: number;
-  initDate: number;
-  location: string | null;
-  modifiedAt: Date;
-  name: string;
-  payDay: number | null;
-  picture: string;
-  role: string;
-  state: string;
-  totalBudget: number;
-}
-
 // TODO 금액 입력 시 콤마 찍혀서 input에 출력
 function UserSetting() {
   const navigate = useNavigate();
-  const initialState = {
-    accessToken: null,
-    createdAt: new Date(),
-    email: 'user@gmail.com',
-    gender: null,
-    id: 0,
-    initDate: 0,
-    location: null,
-    modifiedAt: new Date(),
-    name: 'username',
-    payDay: 0,
-    picture: 'url',
-    role: 'Regular',
-    state: 'Active',
-    totalBudget: 0,
-  };
-  // userInfo
-  const [userInfo, setUserInfo] = useState<userInfo>(initialState);
-  // // username
-  // const [username, setUsername] = useState(userInfo?.name);
-  // //user gender
-  // const [userGender, setUserGender] = useState('');
-  // initial budget
-  const [ibDate, setIbDate] = useState(new Date().toISOString());
-  const [ibAmount, setIbAmount] = useState(0);
-  // salary
-  const [salaryDate, setSalaryDate] = useState(new Date().toISOString());
-  const [salaryAmount, setSalaryAmount] = useState(0);
 
-  // axios GET, PATCH 요청 parameter에 넣을 member_id
+  // userInfo Recoil atom으로 가져오기
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+
+  // initial budget (props로 UserInput에 전달)
+  const [ibDate, setIbDate] = useState(new Date().toISOString());
+  const [ibAmount, setIbAmount] = useState<number>(userInfo?.totalBudget || 0);
+  // salary  (props로 UserInput에 전달)
+  const [salaryDate, setSalaryDate] = useState(new Date().toISOString());
+  const [salaryAmount, setSalaryAmount] = useState<number>(
+    userInfo?.payAmount || 0
+  );
+
+  // axios PATCH 요청 parameter에 넣을 member_id
   const memberId = useRecoilValue(userInfoState)?.id;
 
-  // userInfo 가져오기
-  useEffect(() => {
-    const getUserSetting = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_SERVER}/members/${memberId}`
-        );
-        setUserInfo(res.data.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getUserSetting();
-  }, []);
-  // 기존 입력된 정보와서 input에 보여주기
+  // TODO axios PATCH 요청으로 입력된 정보 전송
 
-  // TODO axios POST 요청으로 입력된 정보 전송
-  const handleUserInput = (e: any) => {
-    const newName = e.target.value;
-    setUserInfo((prevUserInfo) => ({ ...prevUserInfo, name: newName }));
-  };
+  // // name 및 gender 상태변경 핸들러 함수
+  // const handleUserInput = (e: any) => {
+  //   const newName: string = e.target.value;
+  //   const newUserInfo: userInfoType = {
+  //     ...userInfo,
+  //     name: newName,
+  //   };
+  //   setUserInfo(newUserInfo);
+  // };
 
-  const handleUserGender = (e: any) => {
-    const newGender = e.taget.value;
-    setUserInfo((prevUserInfo) => ({ ...prevUserInfo, gender: newGender }));
-  };
+  // const handleUserGender = (e: any) => {
+  //   const newGender: string = e.taget.value;
+  //   const newUserInfo: userInfoType = {
+  //     ...userInfo,
+  //     gender: newGender,
+  //   };
+  //   setUserInfo(newUserInfo);
+  // };
 
+  // 회원탈퇴 버튼 클릭 핸들러
   const handleClick = () => {
     navigate('/userout');
   };
@@ -158,15 +120,15 @@ function UserSetting() {
               type="text"
               size="md"
               focusBorderColor="purple.400"
-              onChange={(e) => {
-                handleUserInput(e);
-              }}
+              // onChange={(e) => {
+              //   handleUserInput(e);
+              // }}
               placeholder="ex) 홍길동"
             ></Input>
             {/* <InputRightElement children={<CheckIcon color="gray.700" />} /> */}
             <Select
               focusBorderColor="purple.400"
-              onClick={(e) => handleUserGender(e)}
+              // onClick={(e) => handleUserGender(e)}
               className="select-usergender"
               placeholder="성별을 선택하세요"
               ml="1em"
@@ -189,16 +151,18 @@ function UserSetting() {
       <UserInput
         label={'예산 시작일'}
         userInfo={userInfo}
+        setUserInfo={setUserInfo}
         setState={setIbAmount}
-        state={ibAmount}
+        state={ibAmount || 0}
         setDate={setIbDate}
         date={ibDate}
       />
       <UserInput
         label={'급여일'}
         userInfo={userInfo}
+        setUserInfo={setUserInfo}
         setState={setSalaryAmount}
-        state={salaryAmount}
+        state={salaryAmount || 0}
         setDate={setSalaryDate}
         date={salaryDate}
       />
