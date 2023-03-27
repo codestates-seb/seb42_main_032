@@ -89,7 +89,7 @@ public class BudgetServiceImpl implements BudgetService{
             memberCategoryIdList.add(memberCategory.getId());
         }
 
-        List<Budget> budgets = budgetRepository.findByMemberCategoryIdInAndCurrentIsTrue(memberCategoryIdList);
+        List<Budget> budgets = budgetRepository.findBudgetsByMemberCategoryIdInAndCurrentIsTrue(memberCategoryIdList);
 
         return budgets;
     }
@@ -116,7 +116,7 @@ public class BudgetServiceImpl implements BudgetService{
                     memberCategoryIdList.add(memberCategory.getId());
                 }
 
-                List<Budget> budgets = budgetRepository.findByMemberCategoryIdInAndCurrentIsTrue(memberCategoryIdList); // 해당 memberCategory의 현재 budget 땡겨오기
+                List<Budget> budgets = budgetRepository.findBudgetsByMemberCategoryIdInAndCurrentIsTrue(memberCategoryIdList); // 해당 memberCategory의 현재 budget 땡겨오기
                 List<Integer> amountList = new ArrayList<>(); // 전월 예산 설정 모은 리스트
                 for(Budget budget : budgets) {
                     budget.setCurrent(false); // 이제 안쓴다!
