@@ -10,6 +10,7 @@ import Footer from './components/layout/Footer';
 import UserOut from './pages/UserOut';
 import BudgetView from './pages/BudgetView';
 import CategoryEdit from './pages/CategoryEdit';
+import UserInfo from './pages/UserInfo';
 
 function App() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -23,8 +24,10 @@ function App() {
         <Route path="/budgetsetting" element={<BudgetSetting />} />
         <Route path="/budgetview" element={<BudgetView />} />
         <Route path="/budget" element={<BudgetView />} />
+        <Route path="/userinfo" element={<UserInfo />} />
         <Route path="/usersetting" element={<UserSetting />} />
         <Route path="/userout" element={<UserOut />} />
+        <Route path="/categoryedit" element={<CategoryEdit />} />
       </Routes>
       <Footer />
     </div>

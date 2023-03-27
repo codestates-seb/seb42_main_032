@@ -14,6 +14,8 @@ public class CorsConfig {
 
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
+
+        corsConfiguration.addAllowedOrigin("http://seb42-main-032-tikkle.s3-website.ap-northeast-2.amazonaws.com/**");
         corsConfiguration.addAllowedOriginPattern("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
