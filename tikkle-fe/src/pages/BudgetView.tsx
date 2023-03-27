@@ -147,35 +147,6 @@ const ViewChangeButtonWrap = styled.div`
   }
 `;
 
-// 카테고리 아이콘
-const categoryIcons: Record<string, any> = {
-  식비: MdFastfood,
-  음료: BiCoffeeTogo,
-  오락: IoLogoGameControllerA,
-};
-
-const CategoryIconWrapper = styled.div<{ category: string }>`
-  max-width: fit-content;
-  padding: 10px;
-  border-radius: 100%;
-  color: white;
-  font-size: 20px;
-  background-color: ${(props) => {
-    switch (props.category) {
-      case '식비':
-        return '#FFC107'; // yellow
-      case '음료':
-        return '#4CAF50'; // green
-      case '오락':
-        return '#9C27B0'; // purple
-      default:
-        return 'inherit';
-    }
-  }};
-`;
-
-const testArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
-
 function BudgetView() {
   const userInfo = useRecoilValue(userInfoState);
   const [unit, setUnit] = useState<boolean>(false);
@@ -184,8 +155,15 @@ function BudgetView() {
   };
   const [totalBudget, setTotalBudget] = useState(0);
   const [budget, setBudget] = useState();
-  const [budgetCategory, setBudgetCategory] =
-    useState<{ id: number; name: string; categoryId: number }[]>();
+  const [budgetCategory, setBudgetCategory] = useState<
+    {
+      id: number;
+      name: string;
+      categoryId: number;
+      amount: number;
+      spend: number;
+    }[]
+  >();
 
   // 유저 총 예산 금액 get
   const getTotalBudget = async () => {
@@ -196,6 +174,7 @@ function BudgetView() {
     setTotalBudget(userTotalBudget);
   };
 
+  // budget 조회
   const getBudget = async () => {
     const memberBudget =
       userInfo &&
@@ -214,7 +193,7 @@ function BudgetView() {
     for (const i of memberBudget) {
       for (const j of all?.data.data) {
         if (i.memberCategoryId === j.id) {
-          budgetCategories.push(j);
+          budgetCategories.push({ ...j, ...i });
           break;
         }
       }
@@ -222,6 +201,26 @@ function BudgetView() {
     setBudgetCategory(budgetCategories);
   };
 
+  const initDate = new Date();
+  userInfo && new Date(initDate.setDate(userInfo.initDate));
+
+  const nextInitDate =
+    initDate && new Date(initDate.setMonth(initDate.getMonth() + 1));
+
+  const today = new Date();
+
+  const dateDiff =
+    nextInitDate &&
+    (nextInitDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
+
+  let totalSpend = 0;
+  const getTotalSpend = () => {
+    for (const el of budgetCategory!) {
+      totalSpend = totalSpend + el.spend;
+    }
+  };
+
+  // const getBudgetTrans;
   useEffect(() => {
     getTotalBudget();
     getBudget();
@@ -232,28 +231,35 @@ function BudgetView() {
       <BudgetWrap>
         <h3>한 달 총 예산</h3>
         <div className="budgetview-total__div">
-          <span className="budgetview-free__span">500,000원 남음</span>
+          <span className="budgetview-free__span">{`${(
+            totalBudget - totalSpend
+          ).toLocaleString('ko-KR')} 원 남음`}</span>
           <Link to="/budgetsetting">
             <span className="budgetview-edit__span">수정하기</span>
           </Link>
         </div>
-        <div className="budgetview-day__div">총 하루 예산 20,000원</div>
+        <div className="budgetview-day__div">{`총 하루 예산 ${(
+          (totalBudget - totalSpend) /
+          dateDiff!
+        ).toLocaleString('ko-KR')} 원`}</div>
         <div>
           <Progress
-            value={30}
+            value={(totalSpend / totalBudget) * 100}
             size="lg"
-            colorScheme="purple"
+            colorScheme={
+              (totalSpend / totalBudget) * 100 < 90 ? 'purple' : 'red'
+            }
             borderRadius={10}
           />
-          <span>30%</span>
+          <span>{`${(totalSpend / totalBudget) * 100}%`}</span>
         </div>
         <div className="budgetview-total__div">
           <span>● 예산</span>
-          <span>{`${totalBudget} 원`}</span>
+          <span>{`${totalBudget.toLocaleString('ko-KR')} 원`}</span>
         </div>
         <div className="budgetview-total__div">
           <span>○ 오늘까지 지출 총액</span>
-          <span>150,000원</span>
+          <span>{`${totalSpend.toLocaleString('ko-KR')} 원`}</span>
         </div>
       </BudgetWrap>
       <CategoryBudgetWrap>
@@ -265,7 +271,7 @@ function BudgetView() {
             {budgetCategory &&
               budgetCategory.map((el) => {
                 return (
-                  <div className="budgetview-categorylist__div">
+                  <div key={el.id} className="budgetview-categorylist__div">
                     <CategoryIcon icon={CategoryIdMap[el.categoryId]} />
                     <div className="budgetview-categorycontent__div">
                       <div className="budgetview-categoryname__div">
@@ -273,13 +279,23 @@ function BudgetView() {
                       </div>
                       <div>
                         <Progress
-                          value={30}
+                          value={
+                            el.amount === 0 ? 0 : (el.spend / el.amount) * 100
+                          }
                           size="md"
-                          colorScheme={'purple'}
+                          colorScheme={
+                            (el.spend / el.amount) * 100 < 90 ? 'purple' : 'red'
+                          }
                           borderRadius={10}
                         />
                         <span>
-                          {unit ? '30,000원 / 100,000원' : '30% / 100%'}
+                          {unit
+                            ? `${el.spend}원 / ${el.amount}원`
+                            : `${
+                                el.amount === 0
+                                  ? '0'
+                                  : (el.spend / el.amount) * 100
+                              }% / 100%`}
                         </span>
                       </div>
                     </div>
