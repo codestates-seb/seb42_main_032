@@ -51,7 +51,7 @@ function UserInput({
         ...userInfo,
         totalBudget: newState,
       };
-      setUserInfo(newUserInfo));
+      setUserInfo(newUserInfo);
     } else if (label === '급여일') {
       const newUserInfo = {
         ...userInfo,
