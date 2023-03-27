@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 
 import { TbPigMoney } from 'react-icons/tb';
-import { GiReceiveMoney, GiExpense } from 'react-icons/gi';
+import { GiReceiveMoney } from 'react-icons/gi';
 
 const SetContainer = styled.div`
   display: flex;
@@ -51,10 +51,8 @@ function UserInput({ label, setState, state, setDate, date }: UserInputType) {
               children={
                 label === '예산 시작일' ? (
                   <Icon as={TbPigMoney} color="gray.700" />
-                ) : label === '급여일' ? (
-                  <Icon as={GiReceiveMoney} color="gray.700" />
                 ) : (
-                  <Icon as={GiExpense} color="gray.700" />
+                  <Icon as={GiReceiveMoney} color="gray.700" />
                 )
               }
             />
@@ -71,10 +69,8 @@ function UserInput({ label, setState, state, setDate, date }: UserInputType) {
               children={
                 label === '예산 시작일' ? (
                   <Icon as={TbPigMoney} color="gray.700" />
-                ) : label === '급여일' ? (
-                  <Icon as={GiReceiveMoney} color="gray.700" />
                 ) : (
-                  <Icon as={GiExpense} color="gray.700" />
+                  <Icon as={GiReceiveMoney} color="gray.700" />
                 )
               }
             />
@@ -82,6 +78,11 @@ function UserInput({ label, setState, state, setDate, date }: UserInputType) {
               type="number"
               focusBorderColor="purple.400"
               onKeyUp={(e) => handleState(e)}
+              placeholder={
+                label === '예산 시작일'
+                  ? '예산 전체 금액을 입력하세요.'
+                  : '급여 금액을 입력하세요.'
+              }
             ></Input>
             <InputRightAddon children="원" />
           </InputGroup>

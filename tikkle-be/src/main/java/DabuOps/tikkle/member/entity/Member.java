@@ -62,7 +62,8 @@ public class Member extends Auditable {
     @Enumerated(value = EnumType.STRING)
     private MemberRole role = MemberRole.Regular;
 
-    @Column
+    @Column(length = 1000)
+    private String accessToken;
 
     private String accessToken;
     @Builder

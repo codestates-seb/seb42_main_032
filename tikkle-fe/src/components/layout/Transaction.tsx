@@ -8,6 +8,8 @@ import { BiCoffeeTogo } from 'react-icons/bi';
 import { IoLogoGameControllerA } from 'react-icons/io';
 import Modal from '../transaction/Modal';
 import axios from 'axios';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../util/store';
 
 // axios GET 요청으로 불러온 데이터 타입 정의
 export interface TransactionType {
@@ -106,6 +108,7 @@ const Transaction = ({ date }: { date: Date }) => {
       payee: '',
       category: '',
     });
+
   // 거래내역 상태 관리
   const [transactionHistories, setTransactionHistories] = useState<
     TransactionType[]
@@ -125,25 +128,38 @@ const Transaction = ({ date }: { date: Date }) => {
       category: '',
     },
   ]);
+
   // 거래내역 네트워크 요청
-  // TODO 헤더의 month를 params로 입력
+
+  // GET 요청 URI parameter 용 memberID, date (month) 받아오기
+  let member_id = useRecoilValue(userInfoState)?.id;
+  let headerMonth =
+    date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0');
+  console.log(headerMonth);
+
   useEffect(() => {
-    axios
-      .get<TransactionType[]>(
-        'http://localhost:8080/transactionHistoriesResponse'
-      )
-      .then((res) => {
-        const data: TransactionType[] = res.data;
-        setTransactionHistories(
-          // new Date 처리를 하지 않으면, date 가 string 타입으로 들어감.
-          data.map((transaction) => ({
-            ...transaction,
-            date: new Date(transaction.date),
-          }))
-        );
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    const getTransactionHistories = async () => {
+      axios
+        .get<TransactionType[]>(
+          `${
+            import.meta.env.VITE_SERVER
+          }/transaction_histories/${member_id}/${headerMonth}`
+        )
+        .then((res) => {
+          const data: TransactionType[] = res.data.transactionHistoriesResponse;
+          console.log(data);
+          setTransactionHistories(
+            // new Date 처리를 하지 않으면, date 가 string 타입으로 들어감.
+            data.map((transaction) => ({
+              ...transaction,
+              date: new Date(transaction.date),
+            }))
+          );
+        })
+        .catch((err) => console.log(err));
+    };
+    getTransactionHistories();
+  }, [headerMonth]);
 
   // 거래내역 클릭 시 상세 정보 모달 띄우기
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -151,18 +167,6 @@ const Transaction = ({ date }: { date: Date }) => {
     setShowModal(!showModal);
   };
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
-
-  // //헤더의 Month
-  // let headerMonth = date.getMonth() + 1;
-
-  // //거래내역의 Month
-  // let transactioinMonth = transactions[0].date.getMonth() + 1;
-  // console.log(transactions[0].date.getMonth() + 1);
-
-  // 헤더에서 선택한 달과 일치하는 거래내역만 가져오기
-  // const transactionThisMonth = transactionHistories.filter(
-  //   (el) => el.date.getMonth() === headerMonth
-  // );
 
   //TODO 무한스크롤
   const options = {
@@ -224,6 +228,7 @@ const Transaction = ({ date }: { date: Date }) => {
           transaction={selectedTransaction}
           onClose={() => setSelectedTransaction(null)}
           toggleModal={toggleModal}
+          date={date}
         ></Modal>
       )}
     </Container>
