@@ -54,14 +54,49 @@ const SetContainer = styled.div`
     top: -80px;
   }
 `;
-// TODO 체크 아이콘 조건부 색상 변경 (green)
+
+interface userInfo {
+  accessToken: string | null;
+  createdAt: Date;
+  email: string;
+  gender: string | null;
+  id: number;
+  initDate: number;
+  location: string | null;
+  modifiedAt: Date;
+  name: string;
+  payDay: number | null;
+  picture: string;
+  role: string;
+  state: string;
+  totalBudget: number;
+}
+
 // TODO 금액 입력 시 콤마 찍혀서 input에 출력
 function UserSetting() {
   const navigate = useNavigate();
-  // username
-  const [username, setUsername] = useState('');
-  //user gender
-  const [userGender, setUserGender] = useState('');
+  const initialState = {
+    accessToken: null,
+    createdAt: new Date(),
+    email: 'user@gmail.com',
+    gender: null,
+    id: 0,
+    initDate: 0,
+    location: null,
+    modifiedAt: new Date(),
+    name: 'username',
+    payDay: 0,
+    picture: 'url',
+    role: 'Regular',
+    state: 'Active',
+    totalBudget: 0,
+  };
+  // userInfo
+  const [userInfo, setUserInfo] = useState<userInfo>(initialState);
+  // // username
+  // const [username, setUsername] = useState(userInfo?.name);
+  // //user gender
+  // const [userGender, setUserGender] = useState('');
   // initial budget
   const [ibDate, setIbDate] = useState(new Date().toISOString());
   const [ibAmount, setIbAmount] = useState(0);
@@ -75,11 +110,14 @@ function UserSetting() {
   // userInfo 가져오기
   useEffect(() => {
     const getUserSetting = async () => {
-      await axios
-        .get(`${import.meta.env.VITE_SERVER}/members/${memberId}`)
-        .then((res) => {
-          setUsername(res.data.data.name);
-        });
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_SERVER}/members/${memberId}`
+        );
+        setUserInfo(res.data.data);
+      } catch (err) {
+        console.log(err);
+      }
     };
     getUserSetting();
   }, []);
@@ -87,11 +125,13 @@ function UserSetting() {
 
   // TODO axios POST 요청으로 입력된 정보 전송
   const handleUserInput = (e: any) => {
-    setUsername(e.target.value);
+    const newName = e.target.value;
+    setUserInfo((prevUserInfo) => ({ ...prevUserInfo, name: newName }));
   };
 
   const handleUserGender = (e: any) => {
-    setUserGender(e.target.value);
+    const newGender = e.taget.value;
+    setUserInfo((prevUserInfo) => ({ ...prevUserInfo, gender: newGender }));
   };
 
   const handleClick = () => {
@@ -114,7 +154,7 @@ function UserSetting() {
               children={<Icon as={BsFillPersonFill} color="gray.700" />}
             />
             <Input
-              value={username}
+              value={userInfo?.name}
               type="text"
               size="md"
               focusBorderColor="purple.400"
@@ -148,6 +188,7 @@ function UserSetting() {
       </SetContainer>
       <UserInput
         label={'예산 시작일'}
+        userInfo={userInfo}
         setState={setIbAmount}
         state={ibAmount}
         setDate={setIbDate}
@@ -155,6 +196,7 @@ function UserSetting() {
       />
       <UserInput
         label={'급여일'}
+        userInfo={userInfo}
         setState={setSalaryAmount}
         state={salaryAmount}
         setDate={setSalaryDate}
