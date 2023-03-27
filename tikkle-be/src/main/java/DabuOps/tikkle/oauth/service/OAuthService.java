@@ -40,10 +40,10 @@ public class OAuthService extends DefaultOAuth2UserService {
         HttpStatus status = validate(accessToken);
         Member member = getMemberProfile(accessToken);
 
-        if (status == HttpStatus.UNAUTHORIZED) {
-            return status;
-        } else {
+        if (status == HttpStatus.OK) {
             return member;
+        } else {
+            return HttpStatus.UNAUTHORIZED;
         }
     }
 
