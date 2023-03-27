@@ -9,6 +9,10 @@ import { IoLogoGameControllerA } from 'react-icons/io';
 import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../util/store';
+import CategoryIcon, {
+  CategoryIdMap,
+} from '../components/category/CategoryIcon';
+import { Link } from 'react-router-dom';
 
 const BodyContainer = styled.div`
   margin-top: 60px;
@@ -173,34 +177,65 @@ const CategoryIconWrapper = styled.div<{ category: string }>`
 const testArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
 function BudgetView() {
+  const userInfo = useRecoilValue(userInfoState);
   const [unit, setUnit] = useState<boolean>(false);
   const handleUnitButton = () => {
     setUnit(!unit);
   };
   const [totalBudget, setTotalBudget] = useState(0);
-  const userInfo = useRecoilValue(userInfoState);
+  const [budget, setBudget] = useState();
+  const [budgetCategory, setBudgetCategory] =
+    useState<{ id: number; name: string; categoryId: number }[]>();
+
+  // 유저 총 예산 금액 get
   const getTotalBudget = async () => {
     const userTotalBudget =
       userInfo &&
       (await axios.get(`${import.meta.env.VITE_SERVER}/members/${userInfo.id}`))
-        .data.data.total_budget;
-    return userTotalBudget;
+        .data.data.totalBudget;
+    setTotalBudget(userTotalBudget);
+  };
+
+  const getBudget = async () => {
+    const memberBudget =
+      userInfo &&
+      (
+        await axios.get(
+          `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo.id}`
+        )
+      ).data;
+
+    const all =
+      userInfo &&
+      (await axios.get(
+        `${import.meta.env.VITE_SERVER}/categories/${userInfo.id}`
+      ));
+    const budgetCategories = [];
+    for (const i of memberBudget) {
+      for (const j of all?.data.data) {
+        if (i.memberCategoryId === j.id) {
+          budgetCategories.push(j);
+          break;
+        }
+      }
+    }
+    setBudgetCategory(budgetCategories);
   };
 
   useEffect(() => {
-    getTotalBudget().then((res) => {
-      setTotalBudget(res);
-    });
-  });
+    getTotalBudget();
+    getBudget();
+  }, []);
 
-  getTotalBudget();
   return (
     <BodyContainer>
       <BudgetWrap>
         <h3>한 달 총 예산</h3>
         <div className="budgetview-total__div">
           <span className="budgetview-free__span">500,000원 남음</span>
-          <span className="budgetview-edit__span">수정하기</span>
+          <Link to="/budgetsetting">
+            <span className="budgetview-edit__span">수정하기</span>
+          </Link>
         </div>
         <div className="budgetview-day__div">총 하루 예산 20,000원</div>
         <div>
@@ -227,29 +262,30 @@ function BudgetView() {
         </div>
         <div className="budgetview-category-contents__div">
           <CategoryBudgetLists>
-            {testArr.map(() => {
-              return (
-                <div className="budgetview-categorylist__div">
-                  <CategoryIconWrapper category={'식비'}>
-                    <MdFastfood size={30} />
-                  </CategoryIconWrapper>
-                  <div className="budgetview-categorycontent__div">
-                    <div className="budgetview-categoryname__div">식비</div>
-                    <div>
-                      <Progress
-                        value={30}
-                        size="md"
-                        colorScheme={'purple'}
-                        borderRadius={10}
-                      />
-                      <span>
-                        {unit ? '30,000원 / 100,000원' : '30% / 100%'}
-                      </span>
+            {budgetCategory &&
+              budgetCategory.map((el) => {
+                return (
+                  <div className="budgetview-categorylist__div">
+                    <CategoryIcon icon={CategoryIdMap[el.categoryId]} />
+                    <div className="budgetview-categorycontent__div">
+                      <div className="budgetview-categoryname__div">
+                        {el.name}
+                      </div>
+                      <div>
+                        <Progress
+                          value={30}
+                          size="md"
+                          colorScheme={'purple'}
+                          borderRadius={10}
+                        />
+                        <span>
+                          {unit ? '30,000원 / 100,000원' : '30% / 100%'}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </CategoryBudgetLists>
           <ViewChangeStickyContainer>
             <ViewChangeButtonWrap onClick={handleUnitButton}>
