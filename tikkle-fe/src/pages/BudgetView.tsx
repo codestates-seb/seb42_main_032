@@ -1,11 +1,14 @@
 //TODO BUDGET_002 예산 조회 화면 구현
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Progress } from '@chakra-ui/react';
 import { MdFastfood } from 'react-icons/md';
 import { BiCoffeeTogo, BiWon } from 'react-icons/bi';
 import { FiPercent } from 'react-icons/fi';
 import { IoLogoGameControllerA } from 'react-icons/io';
+import axios from 'axios';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../util/store';
 
 const BodyContainer = styled.div`
   margin-top: 60px;
@@ -174,6 +177,23 @@ function BudgetView() {
   const handleUnitButton = () => {
     setUnit(!unit);
   };
+  const [totalBudget, setTotalBudget] = useState(0);
+  const userInfo = useRecoilValue(userInfoState);
+  const getTotalBudget = async () => {
+    const userTotalBudget =
+      userInfo &&
+      (await axios.get(`${import.meta.env.VITE_SERVER}/members/${userInfo.id}`))
+        .data.data.total_budget;
+    return userTotalBudget;
+  };
+
+  useEffect(() => {
+    getTotalBudget().then((res) => {
+      setTotalBudget(res);
+    });
+  });
+
+  getTotalBudget();
   return (
     <BodyContainer>
       <BudgetWrap>
@@ -194,7 +214,7 @@ function BudgetView() {
         </div>
         <div className="budgetview-total__div">
           <span>● 예산</span>
-          <span>500,000원</span>
+          <span>{`${totalBudget} 원`}</span>
         </div>
         <div className="budgetview-total__div">
           <span>○ 오늘까지 지출 총액</span>
