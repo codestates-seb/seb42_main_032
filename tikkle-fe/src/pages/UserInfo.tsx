@@ -4,7 +4,7 @@ import { Box, Button, Icon } from '@chakra-ui/react';
 import { TbPigMoney } from 'react-icons/tb';
 import { GiReceiveMoney } from 'react-icons/gi';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '../util/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -54,21 +54,8 @@ const PayContainer = styled.div`
   font-size: larger;
 `;
 function UserInfo() {
-  const [userInfo, setUserInfo] = useState();
-  // axios GET, PATCH 요청 parameter에 넣을 member_id
-  const memberId = useRecoilValue(userInfoState)?.id;
-
-  // userInfo 가져오기
-  useEffect(() => {
-    const getUserSetting = async () => {
-      await axios
-        .get(`${import.meta.env.VITE_SERVER}/members/${memberId}`)
-        .then((res) => {
-          setUserInfo(res.data.data);
-        });
-    };
-    getUserSetting();
-  }, []);
+  // userInfo Recoil atom으로 가져오기
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const navigate = useNavigate();
   // 수정하기 버튼 클릭 시, usersetting 페이지로 이동
@@ -100,7 +87,7 @@ function UserInfo() {
           <p>급여일</p>
           <p>매달 {userInfo?.payDay}일</p>
           <p>급여</p>
-          {/* <p>매달 {userInfo?.totalBudget}원</p> */}
+          <p>매달 {userInfo?.payAmount}원</p>
         </PayContainer>
       </InfoContainer>
       <Box className="box-container">

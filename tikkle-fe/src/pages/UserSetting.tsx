@@ -77,7 +77,7 @@ function UserSetting() {
 
   // TODO axios PATCH 요청으로 입력된 정보 전송
 
-  // // name 및 gender 상태변경 핸들러 함수
+  // name 및 gender 상태변경 핸들러 함수
   // const handleUserInput = (e: any) => {
   //   const newName: string = e.target.value;
   //   const newUserInfo: userInfoType = {
