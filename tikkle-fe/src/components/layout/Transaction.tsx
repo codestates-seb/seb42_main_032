@@ -140,7 +140,7 @@ const Transaction = ({ date }: { date: Date }) => {
   useEffect(() => {
     const getTransactionHistories = async () => {
       axios
-        .get<TransactionType[]>(
+        .get(
           `${
             import.meta.env.VITE_SERVER
           }/transaction_histories/${member_id}/${headerMonth}`
