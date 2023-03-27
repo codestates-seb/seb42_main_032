@@ -10,6 +10,7 @@ import {
 
 import { TbPigMoney } from 'react-icons/tb';
 import { GiReceiveMoney } from 'react-icons/gi';
+import { userInfo } from '../pages/UserSetting';
 
 const SetContainer = styled.div`
   display: flex;
@@ -23,15 +24,41 @@ const SetContainer = styled.div`
 
 interface UserInputType {
   label: string;
+  userInfo: userInfo;
+  setUserInfo: React.Dispatch<React.SetStateAction<userInfo>>;
   setState: React.Dispatch<React.SetStateAction<number>>;
   state: string | number;
   setDate: React.Dispatch<React.SetStateAction<string>>;
   date: Date | string;
 }
 
-function UserInput({ label, setState, state, setDate, date }: UserInputType) {
+function UserInput({
+  label,
+  userInfo,
+  setUserInfo,
+  setState,
+  state,
+  setDate,
+  date,
+}: UserInputType) {
+  
   const handleState = (e: any) => {
-    setState(e.target.value);
+    const newState = e.target.value;
+    setState(newState);
+    
+    if (label === '예산 시작일') {
+      const newUserInfo = {
+        ...userInfo,
+        totalBudget: newState,
+      };
+      setUserInfo(newUserInfo));
+    } else if (label === '급여일') {
+      const newUserInfo = {
+        ...userInfo,
+        payAmount: newState,
+      };
+      setUserInfo(newUserInfo);
+    }
   };
 
   const handleDate = (e: any) => {
