@@ -48,7 +48,7 @@ public class Member extends Auditable {
     private Integer payAmount;
 
     @Column
-    private Integer totalBudget;
+    private Integer totalBudget; //
 
     @Column
     @Builder.Default
