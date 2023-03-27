@@ -45,6 +45,9 @@ public class Member extends Auditable {
     private Integer payDay;
 
     @Column
+    private Integer payAmount;
+
+    @Column
     private int totalBudget;
 
     @Column
@@ -62,8 +65,9 @@ public class Member extends Auditable {
     @Column(length = 1000)
     private String accessToken;
 
+    private String accessToken;
     @Builder
-    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay, int totalBudget, Integer initDate, String picture, MemberRole role, String accessToken) {
+    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay, Integer payAmount, int totalBudget, Integer initDate, String picture, MemberRole role, String accessToken) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -71,13 +75,13 @@ public class Member extends Auditable {
         this.state = state;
         this.gender = gender;
         this.payDay = payDay;
+        this.payAmount = payAmount;
         this.totalBudget = totalBudget;
         this.initDate = initDate;
         this.picture = picture;
         this.role = role;
         this.accessToken = accessToken;
     }
-
 
     public static enum Gender{
         male("남성"),

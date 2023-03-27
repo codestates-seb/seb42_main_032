@@ -31,11 +31,10 @@ public class MemberDto {
         private String name;
         private String location;
         private Integer payDay;
+        private Integer payAmount;
         private Integer initDate;
-
-        private Gender gender;
-
         private Integer totalBudget;
+        private Gender gender;
 
         @Builder
         public Patch(String name, String location, Integer payDay,
@@ -43,11 +42,13 @@ public class MemberDto {
             this.name = name;
             this.location = location;
             this.payDay = payDay;
+            this.payAmount = payAmount;
             this.initDate = initDate;
             this.totalBudget = totalBudget;
             this.gender = gender;
         }
     }
+    
     @Getter
     @Setter
     @NoArgsConstructor
@@ -76,11 +77,12 @@ public class MemberDto {
         private MemberState state;
         private Gender gender;
         private Integer payDay;
+        private Integer payAmount;
+        private Integer totalBudget;
         private Integer initDate;
+
         @Builder
-        public Response(Long memberId, String email, String name, String location,
-            MemberState state, Gender gender, Integer payDay,
-            Integer initDate) {
+        public Response(Long memberId, String email, String name, String location, MemberState state, Gender gender, Integer payDay, Integer payAmount, Integer totalBudget, Integer initDate) {
             this.memberId = memberId;
             this.email = email;
             this.name = name;
@@ -88,6 +90,8 @@ public class MemberDto {
             this.state = state;
             this.gender = gender;
             this.payDay = payDay;
+            this.payAmount = payAmount;
+            this.totalBudget = totalBudget;
             this.initDate = initDate;
         }
     }
