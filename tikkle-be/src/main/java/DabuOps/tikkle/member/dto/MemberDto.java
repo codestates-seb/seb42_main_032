@@ -33,7 +33,6 @@ public class MemberDto {
         private Integer initDate;
         private Integer totalBudget;
         private Gender gender;
-        private Integer totalBudget;
 
         @Builder
         public Patch(String name, String location, Integer payDay,
