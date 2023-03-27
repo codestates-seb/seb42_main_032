@@ -216,9 +216,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
                 <div className="header-menulistbutton">예산 설정</div>
               </MenuItem>
               <MenuItem as={Link} to={'/budgetview'}>
-                <Link to="budget">
-                  <div className="header-menulistbutton">예산 조회</div>
-                </Link>
+                <div className="header-menulistbutton">예산 조회</div>
               </MenuItem>
               <MenuItem as={Button}>
                 <div className="header-menulistbutton">거래내역 조회</div>
