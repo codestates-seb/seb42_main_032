@@ -32,17 +32,22 @@ public class MemberDto {
         private Integer payAmount;
         private Integer initDate;
         private Integer totalBudget;
+        private Gender gender;
+        private Integer totalBudget;
 
         @Builder
-        public Patch(String name, String location, Integer payDay, Integer payAmount, Integer initDate, Integer totalBudget) {
+        public Patch(String name, String location, Integer payDay,
+            Integer initDate,Integer totalBudget ,Gender gender) {
             this.name = name;
             this.location = location;
             this.payDay = payDay;
             this.payAmount = payAmount;
             this.initDate = initDate;
             this.totalBudget = totalBudget;
+            this.gender = gender;
         }
     }
+    
     @Getter
     @Setter
     @NoArgsConstructor
