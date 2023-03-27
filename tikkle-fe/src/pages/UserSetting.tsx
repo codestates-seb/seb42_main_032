@@ -72,18 +72,18 @@ function UserSetting() {
   // axios GET, PATCH 요청 parameter에 넣을 member_id
   const memberId = useRecoilValue(userInfoState)?.id;
 
-  // 기존 입력된 정보와서 input에 보여주기
-  //TODO input에 바로 보여주는 방식에 대해 수정 필요.
+  // userInfo 가져오기
   useEffect(() => {
     const getUserSetting = async () => {
-      const userData = await axios
+      await axios
         .get(`${import.meta.env.VITE_SERVER}/members/${memberId}`)
         .then((res) => {
-          return res.data.data;
+          setUsername(res.data.data.name);
         });
     };
     getUserSetting();
   }, []);
+  // 기존 입력된 정보와서 input에 보여주기
 
   // TODO axios POST 요청으로 입력된 정보 전송
   const handleUserInput = (e: any) => {
@@ -114,10 +114,11 @@ function UserSetting() {
               children={<Icon as={BsFillPersonFill} color="gray.700" />}
             />
             <Input
+              value={username}
               type="text"
               size="md"
               focusBorderColor="purple.400"
-              onKeyUp={(e) => {
+              onChange={(e) => {
                 handleUserInput(e);
               }}
               placeholder="ex) 홍길동"
