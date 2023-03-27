@@ -63,6 +63,7 @@ function UserSetting() {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   // initial budget (props로 UserInput에 전달)
+
   const [ibDate, setIbDate] = useState(new Date().toISOString());
   const [ibAmount, setIbAmount] = useState<number>(userInfo?.totalBudget || 0);
   // salary  (props로 UserInput에 전달)
@@ -96,6 +97,7 @@ function UserSetting() {
   // };
 
   // 회원탈퇴 버튼 클릭 핸들러
+
   const handleClick = () => {
     navigate('/userout');
   };

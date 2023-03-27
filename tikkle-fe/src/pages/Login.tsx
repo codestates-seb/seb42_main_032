@@ -118,7 +118,7 @@ function Login() {
     localStorage.setItem(
       'recoil-persist',
       JSON.stringify({
-        accessToken: null,
+        tokenState: null,
         currentPageState: 'usersetting',
         userInfoState: null,
       })
@@ -129,26 +129,40 @@ function Login() {
   useEffect(() => {
     // 사용자 요청 후 응답 온 정보를 userInfo에 저장
     const getUserInfo = async () => {
-      const fetchedUserInfo = (
-        await axios.get(
-          `${import.meta.env.VITE_SERVER}/login?accessToken=${accessToken}`
-        )
-      ).data;
+      try {
+        const fetchedUserInfo = (
+          await axios.get(
+            `${import.meta.env.VITE_SERVER}/login?accessToken=${accessToken}`
+          )
+        ).data;
 
-      // 사용자 정보 저장 시 날짜 형식 데이터들은 모두 Date로 형변환 후 저장
-      setUserInfo({
-        ...fetchedUserInfo,
-        createdAt: new Date(fetchedUserInfo.createdAt),
-        modifiedAt: new Date(fetchedUserInfo.modifiedAt),
-        payDay:
-          fetchedUserInfo.payDay === null
-            ? null
-            : new Date(fetchedUserInfo.payDay),
-        initDate:
-          fetchedUserInfo.initDate === 1
-            ? 1
-            : new Date(fetchedUserInfo.initDate),
-      });
+        // 사용자 정보 저장 시 날짜 형식 데이터들은 모두 Date로 형변환 후 저장
+        setUserInfo({
+          ...fetchedUserInfo,
+          createdAt: new Date(fetchedUserInfo.createdAt),
+          modifiedAt: new Date(fetchedUserInfo.modifiedAt),
+          payDay:
+            fetchedUserInfo.payDay === null
+              ? null
+              : new Date(fetchedUserInfo.payDay),
+          initDate:
+            fetchedUserInfo.initDate === 1
+              ? 1
+              : new Date(fetchedUserInfo.initDate),
+        });
+      } catch (err: any) {
+        console.log(err);
+        // 토큰이 만료된 경우 저장된 토큰을 지우고, 다시 로그인
+        if (err.response.status === 401) {
+          setAccessToken(null);
+          window.location.href =
+            'https://accounts.google.com/o/oauth2/auth?' +
+            `client_id=${import.meta.env.VITE_GCLIENT_ID}&` +
+            `redirect_uri=${import.meta.env.VITE_CLIENT}/login&` +
+            'response_type=token&' +
+            'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
+        }
+      }
     };
 
     if (accessToken !== null) {

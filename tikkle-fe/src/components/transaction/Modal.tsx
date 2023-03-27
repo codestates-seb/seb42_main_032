@@ -4,8 +4,10 @@
 import Transaction, { TransactionType } from '../layout/Transaction';
 import styled from 'styled-components';
 import { Input } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { userInfoState } from '../../util/store';
+import { useRecoilValue } from 'recoil';
 
 const ModalContainer = styled.div`
   display: flex;
@@ -45,13 +47,33 @@ interface ModalProps {
   transaction: TransactionType;
   onClose: () => void;
   toggleModal: () => void;
+  date: Date;
 }
 
-const Modal = ({ transaction, toggleModal }: ModalProps) => {
+const Modal = ({ transaction, toggleModal, date }: ModalProps) => {
   // memo 입력 상태 관리
   const [memo, setMemo] = useState<string>(transaction.memo);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  console.log(transaction);
+  // POST 요청 URI parameter 용 memberID, date (month) 받아오기
+  let member_id = useRecoilValue(userInfoState)?.id;
+  let headerMonth =
+    date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0');
+
+  // memo 수정 POST 요청
+  useEffect(() => {
+    const editMemo = async () => {
+      axios.post(
+        `${
+          import.meta.env.VITE_SERVER
+        }/transaction_histories/${member_id}/${headerMonth}`,
+        {
+          memo: memo,
+        }
+      );
+    };
+    editMemo();
+  }, [isEditing]);
 
   // TODO 카테고리 드롭다운 수정 컴포넌트 만들기
   // TODO 카테고리 수정 시, TODO axios POST 요청으로 변경 사항 보내기
@@ -73,7 +95,6 @@ const Modal = ({ transaction, toggleModal }: ModalProps) => {
           <li> 거래 시간: {transaction.time}</li>
           <li className="memo-input">
             메모:
-            {/* // TODO memo 수정 시, axios POST 요청으로 변경 사항 보내기 */}
             <Input
               value={memo}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

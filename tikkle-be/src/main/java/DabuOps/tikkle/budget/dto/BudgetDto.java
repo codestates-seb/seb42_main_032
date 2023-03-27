@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -14,10 +15,10 @@ public class BudgetDto {
     @Getter
     @NoArgsConstructor
     public static class Post {
-        @NotBlank
         private Long memberCategoryId;
-        @NotBlank
-        private int amount;
+
+        @NotNull
+        private Integer amount;
 
         @Builder
         public Post(Long memberCategoryId, int amount) {
