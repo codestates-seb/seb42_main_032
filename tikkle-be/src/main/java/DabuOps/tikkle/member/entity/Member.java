@@ -66,7 +66,7 @@ public class Member extends Auditable {
     private String accessToken;
 
     @Builder
-    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay, Integer payAmount, int totalBudget, Integer initDate, String picture, MemberRole role, String accessToken) {
+    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay, Integer payAmount, Integer totalBudget, Integer initDate, String picture, MemberRole role, String accessToken) {
         this.id = id;
         this.email = email;
         this.name = name;
