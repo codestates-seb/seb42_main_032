@@ -10,7 +10,7 @@ import {
 
 import { TbPigMoney } from 'react-icons/tb';
 import { GiReceiveMoney } from 'react-icons/gi';
-import { userInfo } from '../pages/UserSetting';
+import { userInfoType } from '../pages/Login';
 
 const SetContainer = styled.div`
   display: flex;
@@ -24,8 +24,8 @@ const SetContainer = styled.div`
 
 interface UserInputType {
   label: string;
-  userInfo: userInfo;
-  setUserInfo: React.Dispatch<React.SetStateAction<userInfo>>;
+  userInfo: userInfoType | null;
+  setUserInfo: React.Dispatch<React.SetStateAction<userInfoType | null>>;
   setState: React.Dispatch<React.SetStateAction<number>>;
   state: string | number;
   setDate: React.Dispatch<React.SetStateAction<string>>;
@@ -41,25 +41,24 @@ function UserInput({
   setDate,
   date,
 }: UserInputType) {
-  
-  const handleState = (e: any) => {
-    const newState = e.target.value;
-    setState(newState);
-    
-    if (label === '예산 시작일') {
-      const newUserInfo = {
-        ...userInfo,
-        totalBudget: newState,
-      };
-      setUserInfo(newUserInfo));
-    } else if (label === '급여일') {
-      const newUserInfo = {
-        ...userInfo,
-        payAmount: newState,
-      };
-      setUserInfo(newUserInfo);
-    }
-  };
+  // const handleState = (e: any) => {
+  //   const newState = e.target.value;
+  //   setState(newState);
+
+  //   if (label === '예산 시작일') {
+  //     const newUserInfo = {
+  //       ...userInfo,
+  //       totalBudget: newState,
+  //     };
+  //     setUserInfo(newUserInfo);
+  //   } else if (label === '급여일') {
+  //     const newUserInfo = {
+  //       ...userInfo,
+  //       payAmount: newState,
+  //     };
+  //     setUserInfo(newUserInfo);
+  //   }
+  // };
 
   const handleDate = (e: any) => {
     setDate(new Date(e.target.value).toISOString());
@@ -104,7 +103,7 @@ function UserInput({
             <Input
               type="number"
               focusBorderColor="purple.400"
-              onKeyUp={(e) => handleState(e)}
+              // onChange={(e) => handleState(e)}
               placeholder={
                 label === '예산 시작일'
                   ? '예산 전체 금액을 입력하세요.'
