@@ -27,6 +27,7 @@ function App() {
         <Route path="/userinfo" element={<UserInfo />} />
         <Route path="/usersetting" element={<UserSetting />} />
         <Route path="/userout" element={<UserOut />} />
+        <Route path="/categoryedit" element={<CategoryEdit />} />
       </Routes>
       <Footer />
     </div>

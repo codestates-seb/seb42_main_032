@@ -23,6 +23,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Validated
+@CrossOrigin
 @RequestMapping("/transaction_histories")
 public class TransactionHistoryController {
     private final String DEFAULT_URL = "/transaction_histories";
@@ -32,7 +33,7 @@ public class TransactionHistoryController {
     private final TransactionHistoryMapper mapper;
 
     private final UserAuthService userAuthService;
-    @PostMapping()
+    @PostMapping
     public ResponseEntity postTransactionHistory(@Valid @RequestBody TransactionHistoryDto.Post requestBody) {
         Long memberCategoryId = requestBody.getMemberCategoryId();
         TransactionHistory transactionHistory = mapper.transactionHistoryPostDtoToTransactionHistory(requestBody);

@@ -41,6 +41,7 @@ function UserInput({
   setDate,
   date,
 }: UserInputType) {
+
   // const handleState = (e: any) => {
   //   const newState = e.target.value;
   //   setState(newState);

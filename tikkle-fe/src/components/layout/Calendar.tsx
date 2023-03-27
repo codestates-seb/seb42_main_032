@@ -7,6 +7,8 @@ import { Text } from '@chakra-ui/react';
 import { Box } from '@chakra-ui/react';
 import axios from 'axios';
 import Loading from './Loading';
+import { userInfoState } from '../../util/store';
+import { useRecoilValue } from 'recoil';
 
 /**
  * day: 요일, date: 일자 의미로 주석을 작성했습니다.
@@ -21,17 +23,30 @@ const Calendar = ({ date }: { date: Date }) => {
   const [dailySummary, setDailySummary] = useState<number[][]>([[0, 0]]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  // GET 요청 URI parameter 용 memberID, date (month) 받아오기
+  let member_id = useRecoilValue(userInfoState)?.id;
+  let headerMonth =
+    date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0');
+  console.log(headerMonth);
   // 월별 지출, 수입 데이터 받아오기
   // TODO async / await을 써야 의도한 순서대로 작동함
   useEffect(() => {
-    axios
-      .get('http://localhost:8080/dailySummary')
-      .then((res) => {
-        setDailySummary(res.data.slice(1));
-        setLoading(false);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    const getDailySummary = async () => {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_SERVER
+          }/transaction_histories/${member_id}/${headerMonth}`
+        )
+        .then((res) => {
+          setDailySummary(res.data.dailySummary.slice(1));
+          setLoading(false);
+        })
+        .catch((err) => console.log(err));
+    };
+
+    getDailySummary();
+  }, [headerMonth]);
 
   // 현재 날짜를 불러올 수 있도록 Date 타입의 상태로 생성하고, 초기값을 Date 객체로 설정
   // ! 초기값은 'Home' 페이지에서 설정함.
