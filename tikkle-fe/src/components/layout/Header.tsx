@@ -209,7 +209,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
               <ChevronDownIcon boxSize={25} />
             </MenuButton>
             <MenuList className="header-menulist">
-              <MenuItem as={Link} to="/usersetting">
+              <MenuItem as={Link} to="/userinfo">
                 <div className="header-menulistbutton">회원정보</div>
               </MenuItem>
               <MenuItem as={Link} to={'/budgetsetting'}>

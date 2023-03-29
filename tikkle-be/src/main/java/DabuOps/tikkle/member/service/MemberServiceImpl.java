@@ -78,11 +78,13 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.save(obtainedMember);
     }
 
+    // 멤버 초기 설정 메서드
     public Member initMember(Member member) {
         Member initializedMember = findExistMemberById(member.getId());
 
         initializedMember.setInitDate(member.getInitDate());
         initializedMember.setPayDay(member.getPayDay());
+        initializedMember.setPayAmount(member.getPayAmount());
         initializedMember.setTotalBudget(member.getTotalBudget());
         initializedMember.setGender(member.getGender());
         Member savedMember = memberRepository.save(initializedMember);
