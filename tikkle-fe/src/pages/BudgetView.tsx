@@ -35,7 +35,9 @@ const BudgetWrap = styled.div`
   flex-direction: column;
   gap: 20px;
   margin: 20px;
-  min-width: 350px;
+  min-width: 450px;
+  padding-left: 20px;
+  padding-right: 20px;
   h3 {
     text-align: left;
     font-size: 25px;
@@ -154,7 +156,7 @@ function BudgetView() {
     setUnit(!unit);
   };
   const [totalBudget, setTotalBudget] = useState(0);
-  const [budget, setBudget] = useState();
+  const [totalSpend, setTotalSpend] = useState(0);
   const [budgetCategory, setBudgetCategory] = useState<
     {
       id: number;
@@ -184,6 +186,14 @@ function BudgetView() {
         )
       ).data;
 
+    // 예산 설정된 카테고리 총 소비금액
+    let memberTotalSpend = 0;
+    if (memberBudget) {
+      for (const el of memberBudget) {
+        memberTotalSpend = memberTotalSpend + el.spend;
+      }
+    }
+    setTotalSpend(memberTotalSpend);
     const all =
       userInfo &&
       (await axios.get(
@@ -213,14 +223,6 @@ function BudgetView() {
     nextInitDate &&
     (nextInitDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
 
-  let totalSpend = 0;
-  const getTotalSpend = () => {
-    for (const el of budgetCategory!) {
-      totalSpend = totalSpend + el.spend;
-    }
-  };
-
-  // const getBudgetTrans;
   useEffect(() => {
     getTotalBudget();
     getBudget();
@@ -238,10 +240,12 @@ function BudgetView() {
             <span className="budgetview-edit__span">수정하기</span>
           </Link>
         </div>
-        <div className="budgetview-day__div">{`총 하루 예산 ${(
-          (totalBudget - totalSpend) /
-          dateDiff!
-        ).toLocaleString('ko-KR')} 원`}</div>
+        <div className="budgetview-day__div">{`총 하루 예산 ${
+          totalSpend &&
+          Math.floor(
+            ((totalBudget - totalSpend) / dateDiff! / 10) * 10
+          ).toLocaleString('ko-KR')
+        } 원`}</div>
         <div>
           <Progress
             value={(totalSpend / totalBudget) * 100}
@@ -251,7 +255,7 @@ function BudgetView() {
             }
             borderRadius={10}
           />
-          <span>{`${(totalSpend / totalBudget) * 100}%`}</span>
+          <span>{`${Math.floor((totalSpend / totalBudget) * 100)}%`}</span>
         </div>
         <div className="budgetview-total__div">
           <span>● 예산</span>
@@ -290,11 +294,13 @@ function BudgetView() {
                         />
                         <span>
                           {unit
-                            ? `${el.spend}원 / ${el.amount}원`
+                            ? `${el.spend.toLocaleString(
+                                'ko-KR'
+                              )}원 / ${el.amount.toLocaleString('ko-KR')}원`
                             : `${
                                 el.amount === 0
                                   ? '0'
-                                  : (el.spend / el.amount) * 100
+                                  : Math.floor((el.spend / el.amount) * 100)
                               }% / 100%`}
                         </span>
                       </div>
