@@ -85,21 +85,20 @@ const OauthLoginButton = styled.div`
 
 // 회원 정보 타입
 export interface userInfoType {
-  accessToken: string | null | undefined;
-  createdAt: Date | undefined;
-  email: string;
-  gender: string | number | undefined;
-  id: number;
-  initDate: number;
-  location: string | null;
-  modifiedAt: Date;
-  name: string;
-  payAmount: number | null;
-  payDay: number | null;
-  picture: string;
-  role: string;
-  state: string;
-  totalBudget: number;
+  createdAt?: Date | undefined;
+  email?: string | undefined;
+  gender?: string | undefined;
+  id?: number | undefined;
+  initDate?: number | undefined;
+  location?: string | undefined;
+  modifiedAt?: Date | undefined;
+  name?: string | undefined;
+  payAmount?: number | undefined;
+  payDay?: number | undefined;
+  picture?: string | undefined;
+  role?: string | undefined;
+  state?: string | undefined;
+  totalBudget?: number | undefined;
 }
 //  ToDo 저장된 액세스 토큰이 존재할 경우, 사용자의 현재 상태에 따라 유저/카테고리/예산 설정 페이지 중 하나로 이동
 //  ToDo 저장된 액세스 토큰이 존재하며, 회원가입 절차도 모두 마친 경우 홈 페이지로 이동
