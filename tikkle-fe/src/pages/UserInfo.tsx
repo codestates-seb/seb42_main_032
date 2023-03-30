@@ -36,22 +36,41 @@ const InfoContainer = styled.div`
 const NameContainer = styled.div`
   display: flex;
   margin-left: 6em;
+  margin-bottom: 2em;
   font-size: larger;
 `;
 const EmailContainer = styled.div`
   display: flex;
   margin-left: 6em;
+  margin-bottom: 2em;
   font-size: larger;
 `;
 const IDContainer = styled.div`
   display: flex;
+  flex-direction: column;
   margin-left: 6em;
+  margin-bottom: 2em;
   font-size: larger;
+  .notice {
+    color: #9240e9;
+    font-size: medium;
+  }
+  p {
+    display: flex;
+    margin-bottom: 1em;
+  }
+  }
 `;
 const PayContainer = styled.div`
   display: flex;
+  flex-direction: column;
   margin-left: 6em;
+  margin-bottom: 2em;
   font-size: larger;
+  p {
+    display: flex;
+    margin-bottom: 1em;
+  }
 `;
 function UserInfo() {
   // userInfo Recoil atom으로 가져오기
@@ -70,24 +89,34 @@ function UserInfo() {
       </div>
       <InfoContainer>
         <NameContainer>
-          <p>회원 이름</p>
-          <p>{userInfo?.name}</p>
+          <p>회원 이름: {userInfo?.name}</p>
         </NameContainer>
         <EmailContainer>
-          <p>이메일</p>
-          <p>{userInfo?.email}</p>
+          <p>이메일: {userInfo?.email}</p>
         </EmailContainer>
         <IDContainer>
-          <p>예산 시작일</p>
-          <p>매달 {userInfo?.initDate}일</p>
-          <p>예산</p>
-          <p>매달 {userInfo?.totalBudget}원</p>
+          <p>예산 시작일: 매 달 {userInfo?.initDate}일</p>
+          <p>
+            한 달 예산: 총{' '}
+            {new Intl.NumberFormat('ko-KR', {
+              style: 'currency',
+              currency: 'KRW',
+            }).format(Number(userInfo?.totalBudget))}
+          </p>
+          <p className="notice">
+            한 달 예산은 매 달 예산 시작일 오전 04시에 초기화됩니다.
+          </p>
         </IDContainer>
         <PayContainer>
-          <p>급여일</p>
-          <p>매달 {userInfo?.payDay}일</p>
-          <p>급여</p>
-          <p>매달 {userInfo?.payAmount}원</p>
+          <p>급여일: 매달 {userInfo?.payDay}일</p>
+          <p>
+            급여:{' '}
+            {new Intl.NumberFormat('ko-KR', {
+              style: 'currency',
+              currency: 'KRW',
+            }).format(Number(userInfo?.payAmount))}
+            원
+          </p>
         </PayContainer>
       </InfoContainer>
       <Box className="box-container">
