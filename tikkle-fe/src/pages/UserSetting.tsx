@@ -71,28 +71,32 @@ function UserSetting() {
   };
 
   // 이름 수정
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserInfo({ ...userInfo, name: e.target.value });
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.value;
+    setUserInfo({
+      ...userInfo,
+      name,
+    });
   };
   // 성별 수정
-
-  // 예산 시작일 수정
-
-  // 예산 수정
-
-  // 급여일 수정
-
-  // 급여 금액 수정
+  const handleGenderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const gender = event.target.value;
+    setUserInfo({ ...userInfo, gender });
+  };
 
   // 저장하기 버튼 클릭 핸들러 (axios PATCH 요청)
-  const handleSubmit = () => {
-    const newMemberSetting = async () => {
-      await axios
-        .patch(`${import.meta.env.VITE_SERVER}/${memberId}`, userInfo)
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
-    };
-    newMemberSetting();
+  const handleSubmit = async () => {
+    await axios
+      .patch(
+        `${import.meta.env.VITE_SERVER}/members/${memberId}/init`,
+        userInfo
+      )
+      .then((res) => {
+        alert('저장되었습니다.');
+        navigate('/userinfo');
+      })
+
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -125,6 +129,7 @@ function UserSetting() {
               placeholder="성별을 선택하세요"
               ml="1em"
               defaultValue={userInfo?.gender}
+              onChange={handleGenderChange}
             >
               <option value="female">여성</option>
               <option value="male">남성</option>
@@ -141,8 +146,8 @@ function UserSetting() {
           </Button>
         </Box>
       </SetContainer>
-      <UserInput label={'예산 시작일'} userInfo={userInfo} />
-      <UserInput label={'급여일'} userInfo={userInfo} />
+      <UserInput label={'예산 시작일'} />
+      <UserInput label={'급여일'} />
       <Box mb="100px">
         <Button colorScheme="red" size="md" onClick={handleClick}>
           회원 탈퇴하기
