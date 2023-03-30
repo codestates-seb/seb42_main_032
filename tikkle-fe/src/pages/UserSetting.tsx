@@ -88,28 +88,26 @@ function UserSetting() {
   // 첫 가입 사용자는 userInfo.payDay 값이 null이므로 첫 사용자 여부를 이걸로 판별
   // 카테고리 생성을 위해서 첫 가입 사용자인 경우 /{member-id}/init에 patch 요청
   const handleSubmit = async () => {
-   if (userInfo?.payDay === null) {
-   await axios
-      .patch(
-        `${import.meta.env.VITE_SERVER}/members/${memberId}/init`,
-        userInfo
-      )
-      .then((res) => {
-        alert('저장되었습니다.');
-        navigate('/userinfo');
-      })
-      .catch((err) => console.log(err));
-      } else {
+    if (userInfo?.payDay === null) {
       await axios
-      .patch(
-        `${import.meta.env.VITE_SERVER}/members/${memberId}`,
-        userInfo
-      )
-      .then((res) => {
-        alert('저장되었습니다.');
-        navigate('/userinfo');
-      })
-      .catch((err) => console.log(err));
+        .patch(
+          `${import.meta.env.VITE_SERVER}/members/${memberId}/init`,
+          userInfo
+        )
+        .then((res) => {
+          alert('저장되었습니다.');
+          navigate('/userinfo');
+        })
+        .catch((err) => console.log(err));
+    } else {
+      await axios
+        .patch(`${import.meta.env.VITE_SERVER}/members/${memberId}`, userInfo)
+        .then((res) => {
+          alert('저장되었습니다.');
+          navigate('/userinfo');
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   // 계좌연결 버튼 핸들러
@@ -194,4 +192,5 @@ function UserSetting() {
     </Container>
   );
 }
+
 export default UserSetting;
