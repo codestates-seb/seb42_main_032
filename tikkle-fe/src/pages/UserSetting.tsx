@@ -130,9 +130,6 @@ function UserSetting() {
         }/members/auth/${memberId}?code=${bankingCode}`
       );
     }
-    // 사이트가 첫 렌더링 됐을 때 계좌 인증으로 발행된 code가 있다면 토큰 발급 요청
-    if (bankingCode) {
-    }
   }, []);
 
   return (
