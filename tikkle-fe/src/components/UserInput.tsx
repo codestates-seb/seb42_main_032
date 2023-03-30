@@ -22,49 +22,7 @@ const SetContainer = styled.div`
   }
 `;
 
-interface UserInputType {
-  label: string;
-  userInfo: userInfoType | null;
-  setUserInfo: React.Dispatch<React.SetStateAction<userInfoType | null>>;
-  setState: React.Dispatch<React.SetStateAction<number>>;
-  state: string | number;
-  setDate: React.Dispatch<React.SetStateAction<string>>;
-  date: Date | string;
-}
-
-function UserInput({
-  label,
-  userInfo,
-  setUserInfo,
-  setState,
-  state,
-  setDate,
-  date,
-}: UserInputType) {
-
-  // const handleState = (e: any) => {
-  //   const newState = e.target.value;
-  //   setState(newState);
-
-  //   if (label === '예산 시작일') {
-  //     const newUserInfo = {
-  //       ...userInfo,
-  //       totalBudget: newState,
-  //     };
-  //     setUserInfo(newUserInfo);
-  //   } else if (label === '급여일') {
-  //     const newUserInfo = {
-  //       ...userInfo,
-  //       payAmount: newState,
-  //     };
-  //     setUserInfo(newUserInfo);
-  //   }
-  // };
-
-  const handleDate = (e: any) => {
-    setDate(new Date(e.target.value).toISOString());
-  };
-
+function UserInput({ label, userInfo }) {
   return (
     <SetContainer>
       <Box display="flex" flexDir="column" ml="10vw">
@@ -87,7 +45,9 @@ function UserInput({
               type="date"
               size="md"
               focusBorderColor="purple.400"
-              onChange={(e) => handleDate(e)}
+              defaultValue={
+                label === '예산 시작일' ? userInfo?.initDate : userInfo.payDay
+              }
             ></Input>
           </InputGroup>
           <InputGroup className="input-initialbudget" size="md" ml="20vw">
@@ -109,6 +69,11 @@ function UserInput({
                 label === '예산 시작일'
                   ? '예산 전체 금액을 입력하세요.'
                   : '급여 금액을 입력하세요.'
+              }
+              defaultValue={
+                label === '예산 시작일'
+                  ? userInfo?.totalBudget
+                  : userInfo.payAmount
               }
             ></Input>
             <InputRightAddon children="원" />

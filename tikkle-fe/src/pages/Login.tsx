@@ -88,7 +88,7 @@ export interface userInfoType {
   accessToken: string | null | undefined;
   createdAt: Date | undefined;
   email: string;
-  gender: string | null;
+  gender: string | number | undefined;
   id: number;
   initDate: number;
   location: string | null;

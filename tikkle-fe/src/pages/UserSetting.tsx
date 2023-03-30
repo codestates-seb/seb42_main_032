@@ -62,16 +62,6 @@ function UserSetting() {
   // userInfo Recoil atom으로 가져오기
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
-  // initial budget (props로 UserInput에 전달)
-  const [ibDate, setIbDate] = useState(new Date().toISOString());
-  const [ibAmount, setIbAmount] = useState<number>(userInfo?.totalBudget || 0);
-
-  // salary  (props로 UserInput에 전달)
-  const [salaryDate, setSalaryDate] = useState(new Date().toISOString());
-  const [salaryAmount, setSalaryAmount] = useState<number>(
-    userInfo?.payAmount || 0
-  );
-
   // axios PATCH 요청 parameter에 넣을 member_id
   const memberId = useRecoilValue(userInfoState)?.id;
 
@@ -96,7 +86,7 @@ function UserSetting() {
               children={<Icon as={BsFillPersonFill} color="gray.700" />}
             />
             <Input
-              value={userInfo?.name}
+              defaultValue={userInfo?.name}
               type="text"
               size="md"
               focusBorderColor="purple.400"
@@ -108,6 +98,7 @@ function UserSetting() {
               className="select-usergender"
               placeholder="성별을 선택하세요"
               ml="1em"
+              defaultValue={userInfo?.gender}
             >
               <option value="female">여성</option>
               <option value="male">남성</option>
@@ -124,24 +115,8 @@ function UserSetting() {
           </Button>
         </Box>
       </SetContainer>
-      <UserInput
-        label={'예산 시작일'}
-        userInfo={userInfo}
-        setUserInfo={setUserInfo}
-        setState={setIbAmount}
-        state={ibAmount || 0}
-        setDate={setIbDate}
-        date={ibDate}
-      />
-      <UserInput
-        label={'급여일'}
-        userInfo={userInfo}
-        setUserInfo={setUserInfo}
-        setState={setSalaryAmount}
-        state={salaryAmount || 0}
-        setDate={setSalaryDate}
-        date={salaryDate}
-      />
+      <UserInput label={'예산 시작일'} userInfo={userInfo} />
+      <UserInput label={'급여일'} userInfo={userInfo} />
       <Box mb="100px">
         <Button colorScheme="red" size="md" onClick={handleClick}>
           회원 탈퇴하기
