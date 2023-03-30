@@ -75,9 +75,6 @@ function UserSetting() {
   // axios PATCH 요청 parameter에 넣을 member_id
   const memberId = useRecoilValue(userInfoState)?.id;
 
-  // 계좌연결 후 주소창에 있는 code를 담는 상태
-  const [bankingCode, setBankingCode] = useState('');
-
   // 첫 가입 사용자는 userInfo.payDay 값이 null이므로 첫 사용자 여부를 이걸로 판별
   // 카테고리 생성을 위해서 첫 가입 사용자인 경우 /{member-id}/init에 patch 요청
   if (userInfo?.payDay === null) {
@@ -124,27 +121,17 @@ function UserSetting() {
   };
 
   useEffect(() => {
+    const parsedHash = new URLSearchParams(window.location.search.substring(1));
+    const bankingCode = parsedHash.get('code');
+    if (bankingCode) {
+      axios.post(
+        `${
+          import.meta.env.VITE_SERVER
+        }/members/auth/${memberId}?code=${bankingCode}`
+      );
+    }
     // 사이트가 첫 렌더링 됐을 때 계좌 인증으로 발행된 code가 있다면 토큰 발급 요청
     if (bankingCode) {
-      const getOpenbankingToken = async () => {
-        try {
-          const res = await axios.post(
-            `${
-              import.meta.env.VITE_SERVER
-            }/members/auth/${memberId}?code=${bankingCode}`
-          );
-        } catch (err) {
-          console.log(err);
-        }
-      };
-      getOpenbankingToken();
-    }
-    // 저장된 code가 없다면 URL에서 코드 값을 읽어와서 저장하기
-    else if (!bankingCode) {
-      const parsedHash = new URLSearchParams(
-        window.location.search.substring(1)
-      );
-      setBankingCode(parsedHash.get('code') || '');
     }
   }, []);
 
