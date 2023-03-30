@@ -181,6 +181,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
     setToken(null);
     setUserInfo(null);
     navigate('/');
+    alert('로그아웃 되었습니다.');
   };
 
   return (
