@@ -65,27 +65,6 @@ function UserSetting() {
   // axios PATCH 요청 parameter에 넣을 member_id
   const memberId = userInfo?.id;
 
-  // 첫 가입 사용자는 userInfo.payDay 값이 null이므로 첫 사용자 여부를 이걸로 판별
-  // 카테고리 생성을 위해서 첫 가입 사용자인 경우 /{member-id}/init에 patch 요청
-  if (userInfo?.payDay === null) {
-    axios.patch(`${import.meta.env.VITE_SERVER}/members/${memberId}/init`, {
-      initDate: 1,
-      payDay: 1,
-    });
-    // 변경된 멤버 정보를 다시 반영
-    const getUserInfo = async () => {
-      try {
-        const res = (
-          await axios.get(`${import.meta.env.VITE_SERVER}/members/${memberId}`)
-        ).data;
-        setUserInfo(res);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getUserInfo();
-  }
-
   // 회원탈퇴 버튼 클릭 핸들러
   const handleClick = () => {
     navigate('/userout');
@@ -106,6 +85,8 @@ function UserSetting() {
   };
 
   // 저장하기 버튼 클릭 핸들러 (axios PATCH 요청)
+  // 첫 가입 사용자는 userInfo.payDay 값이 null이므로 첫 사용자 여부를 이걸로 판별
+  // 카테고리 생성을 위해서 첫 가입 사용자인 경우 /{member-id}/init에 patch 요청
   const handleSubmit = async () => {
    if (userInfo?.payDay === null) {
    await axios
