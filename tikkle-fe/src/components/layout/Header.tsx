@@ -21,7 +21,6 @@ import {
   MenuDivider,
 } from '@chakra-ui/react';
 
-import { useRecoilValue } from 'recoil';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { tokenState, userInfoState } from '../../util/store';
@@ -185,12 +184,13 @@ const Header: React.FunctionComponent<HeaderProps> = ({
       setIsLogin(true);
     }
   }, [userInfo]);
+
   const navigate = useNavigate();
   const handleLogout = () => {
     setToken(null);
     setUserInfo(null);
-    setIsLogin(false);
     navigate('/');
+    alert('로그아웃 되었습니다.');
   };
 
   return (
@@ -240,7 +240,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
                 </MenuItem>
                 <MenuItem as={Link} to={'/budgetview'}>
                   <div className="header-menulistbutton">예산 조회</div>
-                </MenuItem>
+                  </MenuItem>
                 <MenuItem as={Link} to="/categoryedit">
                   <div className="header-menulistbutton">카테고리 수정</div>
                 </MenuItem>
