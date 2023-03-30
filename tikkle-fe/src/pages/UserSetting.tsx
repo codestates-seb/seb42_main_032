@@ -82,6 +82,18 @@ function UserSetting() {
       initDate: 1,
       payDay: 1,
     });
+    // 변경된 멤버 정보를 다시 반영
+    const getUserInfo = async () => {
+      try {
+        const res = (
+          await axios.get(`${import.meta.env.VITE_SERVER}/members/${memberId}`)
+        ).data;
+        setUserInfo(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUserInfo();
   }
 
   // TODO axios PATCH 요청으로 입력된 정보 전송
