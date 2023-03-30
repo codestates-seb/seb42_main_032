@@ -1,12 +1,8 @@
 package DabuOps.tikkle.userauth.controller;
 
-import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.service.MemberService;
-import DabuOps.tikkle.oauth.dto.LogInMemberDto;
-import DabuOps.tikkle.oauth.resolver.LoginMember;
 import DabuOps.tikkle.transaction_history.service.TransactionHistoryService;
 import DabuOps.tikkle.userauth.dto.AccountInfoDto;
-import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
 import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
 import DabuOps.tikkle.userauth.dto.TokenResponseDto;
 import DabuOps.tikkle.userauth.service.UserAuthService;
@@ -26,19 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UserAuthController {
     private final UserAuthService userAuthService;
-    private final MemberService memberService;
-    private final TransactionHistoryService transactionHistoryService;
 
     @PostMapping("/members/auth/{member-id}")
     public String accountAuth(@PathVariable("member-id") Long memberId, @RequestParam("code") String authorizationCode) {
         TokenResponseDto tokenResponse = userAuthService.requestToken(authorizationCode, memberId);
         List<AccountInfoDto> accountInfoDtoList = userAuthService.requestUserInfo(tokenResponse.getAccessToken(), tokenResponse.getUserSeqNo());
 
-        return "사용자 인증이 완료되었습니다.";
-    }
-    @GetMapping("auth/{member-id}")
-    public String userInfoAuth(@PathVariable("member-id") Long memberId,@RequestParam("accessToken") String accessToken, @RequestParam("user_seq_no") String userSeqNo){
-        userAuthService.requestUserInfo(accessToken, userSeqNo);
         return "사용자 인증이 완료되었습니다.";
     }
 

@@ -24,8 +24,6 @@ spring:
             scope:
               - email
               - profile
-  jackson:
-    property-naming-strategy: SNAKE_CASE
 logging:
   level:
     org:

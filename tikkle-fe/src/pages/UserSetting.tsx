@@ -65,6 +65,27 @@ function UserSetting() {
   // axios PATCH 요청 parameter에 넣을 member_id
   const memberId = userInfo?.id;
 
+  // 첫 가입 사용자는 userInfo.payDay 값이 null이므로 첫 사용자 여부를 이걸로 판별
+  // 카테고리 생성을 위해서 첫 가입 사용자인 경우 /{member-id}/init에 patch 요청
+  if (userInfo?.payDay === null) {
+    axios.patch(`${import.meta.env.VITE_SERVER}/members/${memberId}/init`, {
+      initDate: 1,
+      payDay: 1,
+    });
+    // 변경된 멤버 정보를 다시 반영
+    const getUserInfo = async () => {
+      try {
+        const res = (
+          await axios.get(`${import.meta.env.VITE_SERVER}/members/${memberId}`)
+        ).data;
+        setUserInfo(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUserInfo();
+  }
+
   // 회원탈퇴 버튼 클릭 핸들러
   const handleClick = () => {
     navigate('/userout');
@@ -86,7 +107,8 @@ function UserSetting() {
 
   // 저장하기 버튼 클릭 핸들러 (axios PATCH 요청)
   const handleSubmit = async () => {
-    await axios
+   if (userInfo?.payDay === null) {
+   await axios
       .patch(
         `${import.meta.env.VITE_SERVER}/members/${memberId}/init`,
         userInfo
@@ -95,9 +117,40 @@ function UserSetting() {
         alert('저장되었습니다.');
         navigate('/userinfo');
       })
-
+      .catch((err) => console.log(err));
+      } else {
+      await axios
+      .patch(
+        `${import.meta.env.VITE_SERVER}/members/${memberId}`,
+        userInfo
+      )
+      .then((res) => {
+        alert('저장되었습니다.');
+        navigate('/userinfo');
+      })
       .catch((err) => console.log(err));
   };
+
+  // 계좌연결 버튼 핸들러
+  const handleConnectOpenbanking = () => {
+    window.location.href =
+      `https://testapi.openbanking.or.kr/oauth/2.0/authorize?response_type=code` +
+      `&client_id=${import.meta.env.VITE_K_CLIENT_ID}` +
+      `&redirect_uri=${import.meta.env.VITE_CLIENT}/usersetting` +
+      `&scope=login inquiry transfer&state=12345678123456781234567812345678&auth_type=0`;
+  };
+
+  useEffect(() => {
+    const parsedHash = new URLSearchParams(window.location.search.substring(1));
+    const bankingCode = parsedHash.get('code');
+    if (bankingCode) {
+      axios.post(
+        `${
+          import.meta.env.VITE_SERVER
+        }/members/auth/${memberId}?code=${bankingCode}`
+      );
+    }
+  }, []);
 
   return (
     <Container>
@@ -141,6 +194,7 @@ function UserSetting() {
             size="md"
             leftIcon={<AddIcon />}
             loadingText="연결 중"
+            onClick={handleConnectOpenbanking}
           >
             계좌 연결하기
           </Button>

@@ -1,5 +1,7 @@
 package DabuOps.tikkle.member_category.service;
 
+import DabuOps.tikkle.budget.entity.Budget;
+import DabuOps.tikkle.budget.repository.BudgetRepository;
 import DabuOps.tikkle.budget.service.BudgetServiceImpl;
 import DabuOps.tikkle.category.entity.Category;
 import DabuOps.tikkle.category.repository.CategoryRepository;
@@ -9,6 +11,8 @@ import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.member_category.entity.MemberCategory;
 import DabuOps.tikkle.member_category.repository.MemberCategoryRepository;
+import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
+import DabuOps.tikkle.transaction_history.repository.TransactionHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +26,8 @@ import java.util.Optional;
 public class MemberCategoryServiceImpl implements MemberCategoryService{
     private final MemberRepository memberRepository;
     private final MemberCategoryRepository memberCategoryRepository;
-    private final BudgetServiceImpl budgetService;
+    private final BudgetRepository budgetRepository;
+    private final TransactionHistoryRepository transactionHistoryRepository;
 
     private final CategoryRepository categoryRepository;
 
@@ -87,7 +92,23 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
 
     public void deleteMemberCategory(Long memberCategoryId) {
         MemberCategory memberCategory = findMemberCategory(memberCategoryId);
+        if(memberCategory.getCategory().getId() <= 21L) {
+            throw new BusinessLogicException(ExceptionCode.CANNOT_CHANGE_CATEGORY_STATUS);
+        }
+        else {
+            memberCategory.setStatus(MemberCategory.Status.INACTIVE);
+            MemberCategory etcCategory = memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(21L, memberCategory.getMember().getId(), MemberCategory.Status.INACTIVE);
 
-        memberCategory.setStatus(MemberCategory.Status.INACTIVE);
+            List<Budget> budgets = budgetRepository.findByMemberCategoryId(memberCategoryId);
+            for(Budget budget : budgets) {
+                budget.setMemberCategory(etcCategory);
+            }
+
+            List<TransactionHistory> transactionHistories = transactionHistoryRepository.findByMemberCategoryId(memberCategoryId);
+
+            for(TransactionHistory transactionHistory : transactionHistories) {
+                transactionHistory.setMemberCategory(etcCategory);
+            }
+        }
     }
 }
