@@ -21,9 +21,10 @@ import {
   MenuDivider,
 } from '@chakra-ui/react';
 
-import { Link, useLocation } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { userInfoState } from '../../util/store';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { tokenState, userInfoState } from '../../util/store';
 
 const HeaderContainer = styled.header`
   z-index: 100;
@@ -175,11 +176,26 @@ const Header: React.FunctionComponent<HeaderProps> = ({
     setSeletctedPath(location.pathname.split('/')[1]);
   }, [location.pathname.split('/')[1]]);
 
+
   useEffect(() => {
     if (userInfo && userInfo.id !== undefined) {
       setIsLogin(true);
     }
   }, [userInfo]);
+
+  // 로그아웃 로직
+  // Recoil token, userInfo 상태 초기화 및 랜딩 페이지로 이동
+  //TODO 향후 랜딩 페이지로 이동 수정
+  const [token, setToken] = useRecoilState(tokenState);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    setToken(null);
+    setUserInfo(null);
+    setIsLogin(false);
+    navigate('/');
+  };
+
 
   return (
     <HeaderContainer>
@@ -235,7 +251,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
                 <MenuItem as={Link} to="/categoryedit">
                   <div className="header-menulistbutton">카테고리 수정</div>
                 </MenuItem>
-                <MenuItem as={Button}>
+                <MenuItem as={Button} onClick={handleLogout}>
                   <div className="header-logoutbutton">로그아웃</div>
                 </MenuItem>
               </MenuList>
