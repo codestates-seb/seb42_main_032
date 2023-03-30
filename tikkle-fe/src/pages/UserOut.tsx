@@ -2,8 +2,11 @@
 import styled from 'styled-components';
 import { Box, Checkbox, CheckboxGroup, Input, Stack } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { tokenState, userInfoState } from '../util/store';
+import axios from 'axios';
 const Container = styled.div`
   background-color: #eaeaea;
   display: flex;
@@ -59,12 +62,21 @@ const EmailCheck = styled.div`
   width: 60vw;
   display: flex;
   flex-direction: column;
-  .emailCheck {
+  .emailCheckFalse {
     margin-top: 4vh;
     display: flex;
     flex-direction: column;
     text-align: right;
     color: red;
+    font-size: smaller;
+  }
+
+  .emailCheckTrue {
+    margin-top: 4vh;
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    color: blue;
     font-size: smaller;
   }
 `;
@@ -74,12 +86,48 @@ function UserOut() {
   const [isCorrect, setIsCorrect] = useState(false);
   const [input, setInput] = useState('');
 
+  // 회원 탈퇴 멈추기 / 계속하기 버튼 핸들러
   const handleClicked = () => {
     setIsClicked(!isClicked);
   };
 
+  // 뒤로 가기 버튼 핸들러
   const handleBack = () => {
     navigate(-1);
+  };
+
+  // 이메일 입력 동기처리
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  useEffect(() => {
+    console.log(input);
+  }, [input]);
+
+  // 회원 탈퇴 시, token, userInfo 초기화, 랜딩 페이지로 이동
+  const [token, setToken] = useRecoilState(tokenState);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  // axios DELETE 요청
+  const handleKeyUp = () => {
+    setIsCorrect(input === userInfo?.email);
+    console.log(isCorrect);
+  };
+  const handleUserOut = () => {
+    if (isCorrect) {
+      const userDelete = async () => {
+        await axios
+          .delete(`${import.meta.env.VITE_SERVER}/${userInfo?.id}`)
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
+      };
+      userDelete();
+      setToken(null);
+      setUserInfo(null);
+      navigate('/');
+    } else {
+      alert('이메일 주소를 확인해주세요.');
+    }
   };
 
   return (
@@ -124,17 +172,19 @@ function UserOut() {
 
             <EmailCheck>
               <p>이메일 재확인</p>
-              <p className="emailCheck">
+              <p className={isCorrect ? 'emailCheckTrue' : 'emailCheckFalse'}>
                 {isCorrect
                   ? '이메일이 일치합니다.'
                   : '이메일을 다시 입력해주세요.'}
               </p>
+
               <Box mb="-4vh">
                 <Input
                   type="email"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setInput(e.target.value)
+                    handleChange(e)
                   }
+                  onKeyUp={handleKeyUp}
                   colorScheme="purple"
                   borderColor="purple.400"
                   mt="5vh"
@@ -143,7 +193,9 @@ function UserOut() {
               </Box>
 
               <Box>
-                <Button colorScheme="red">탈퇴하기</Button>
+                <Button colorScheme="red" onClick={handleUserOut}>
+                  탈퇴하기
+                </Button>
               </Box>
             </EmailCheck>
           </div>

@@ -18,12 +18,15 @@ const LoginContainer = styled.div`
   background-image: url('/tikkle-background.jpg');
   position: relative;
   background-color: transparent;
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
   font-family: 'GmarketSansMedium';
   height: 100vh;
+  width: 100%;
   ::before {
     position: absolute;
     content: '';
