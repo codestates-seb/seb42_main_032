@@ -43,7 +43,7 @@ const BudgetSetting = () => {
     // 컴포넌트 상태를 로딩 중으로 업데이트한 후 카테고리 데이터 요청
     try {
       setIsLoading(true);
-      const res = await axios.get('http://localhost:8080/categories');
+      const res = await axios.get(`${import.meta.env.VITE_SERVER}/categories`);
       setCategories(res.data);
     } catch (err) {
       // 요청 실패 시 콘솔에 에러 표시
@@ -58,7 +58,8 @@ const BudgetSetting = () => {
   const getBudgets = async () => {
     try {
       setIsLoading(true);
-      let res = (await axios.get(`http://localhost:8080/budgets`)).data;
+      let res = (await axios.get(`${import.meta.env.VITE_SERVER}/budgets`))
+        .data;
 
       // 전체 예산 정보에서 날짜 형식 데이터를 모두 Date 타입으로 형변환
       res = res.map((budget: BudgetType) => {
@@ -127,7 +128,7 @@ const BudgetSetting = () => {
               전체 예산 500,000원
             </Text>
             <Box display="flex" justifyContent="flex-start" my="20px">
-              {/* <BudgetDropdown /> */}
+              <BudgetDropdown totalAmount={500000} />
             </Box>
           </Box>
           <Box display="flex" flexDir="column" w="100%" gap="40px" mb="40px">
