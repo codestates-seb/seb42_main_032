@@ -154,8 +154,6 @@ const Header: React.FunctionComponent<HeaderProps> = ({
   selectedDate,
   setSelectedDate,
 }) => {
-  const userInfo = useRecoilValue(userInfoState);
-
   const [isLogin, setIsLogin] = useState(false);
 
   const handlePrevMonth = () => {
@@ -176,18 +174,17 @@ const Header: React.FunctionComponent<HeaderProps> = ({
     setSeletctedPath(location.pathname.split('/')[1]);
   }, [location.pathname.split('/')[1]]);
 
+  // 로그아웃 로직
+  // Recoil token, userInfo 상태 초기화 및 랜딩 페이지로 이동
+  //TODO 향후 랜딩 페이지로 이동 수정
+  const [token, setToken] = useRecoilState(tokenState);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   useEffect(() => {
     if (userInfo && userInfo.id !== undefined) {
       setIsLogin(true);
     }
   }, [userInfo]);
-
-  // 로그아웃 로직
-  // Recoil token, userInfo 상태 초기화 및 랜딩 페이지로 이동
-  //TODO 향후 랜딩 페이지로 이동 수정
-  const [token, setToken] = useRecoilState(tokenState);
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const navigate = useNavigate();
   const handleLogout = () => {
     setToken(null);
@@ -195,7 +192,6 @@ const Header: React.FunctionComponent<HeaderProps> = ({
     setIsLogin(false);
     navigate('/');
   };
-
 
   return (
     <HeaderContainer>
