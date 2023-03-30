@@ -255,11 +255,15 @@ function BudgetView() {
             }
             borderRadius={10}
           />
-          <span>{`${Math.floor((totalSpend / totalBudget) * 100)}%`}</span>
+          <span>{`${
+            totalBudget ? Math.floor((totalSpend / totalBudget) * 100) : 0
+          }%`}</span>
         </div>
         <div className="budgetview-total__div">
           <span>● 예산</span>
-          <span>{`${totalBudget.toLocaleString('ko-KR')} 원`}</span>
+          <span>{`${
+            totalBudget ? totalBudget.toLocaleString('ko-KR') : 0
+          } 원`}</span>
         </div>
         <div className="budgetview-total__div">
           <span>○ 오늘까지 지출 총액</span>
