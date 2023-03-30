@@ -21,7 +21,7 @@ export interface BudgetType {
   createdAt: Date;
 }
 
-interface CategoryType {
+export interface CategoryType {
   id: number;
   name: string;
   categoryIcon: string;
@@ -127,7 +127,7 @@ const BudgetSetting = () => {
               전체 예산 500,000원
             </Text>
             <Box display="flex" justifyContent="flex-start" my="20px">
-              <BudgetDropdown />
+              {/* <BudgetDropdown /> */}
             </Box>
           </Box>
           <Box display="flex" flexDir="column" w="100%" gap="40px" mb="40px">

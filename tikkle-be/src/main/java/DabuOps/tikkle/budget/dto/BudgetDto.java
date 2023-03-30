@@ -34,9 +34,12 @@ public class BudgetDto {
     public static class Patch {
         private int amount;
 
+        private Budget.Status status;
+
         @Builder
-        public Patch(int amount) {
+        public Patch(int amount, Budget.Status status) {
             this.amount = amount;
+            this.status = status;
         }
     }
 

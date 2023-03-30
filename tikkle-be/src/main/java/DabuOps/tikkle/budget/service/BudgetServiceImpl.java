@@ -65,7 +65,9 @@ public class BudgetServiceImpl implements BudgetService{
         Budget updatedBudget = findBudget(budgetId);
 
         Optional.ofNullable(budget.getAmount())
-                .ifPresent(amount -> updatedBudget.setAmount(amount));
+            .ifPresent(amount -> updatedBudget.setAmount(amount));
+        Optional.ofNullable(budget.getStatus())
+            .ifPresent(status -> updatedBudget.setStatus(status));
 
 
         return budgetRepository.save(updatedBudget);
