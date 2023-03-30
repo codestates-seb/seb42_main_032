@@ -63,9 +63,9 @@ function UserSetting() {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   // initial budget (props로 UserInput에 전달)
-
   const [ibDate, setIbDate] = useState(new Date().toISOString());
   const [ibAmount, setIbAmount] = useState<number>(userInfo?.totalBudget || 0);
+
   // salary  (props로 UserInput에 전달)
   const [salaryDate, setSalaryDate] = useState(new Date().toISOString());
   const [salaryAmount, setSalaryAmount] = useState<number>(
@@ -75,29 +75,7 @@ function UserSetting() {
   // axios PATCH 요청 parameter에 넣을 member_id
   const memberId = useRecoilValue(userInfoState)?.id;
 
-  // TODO axios PATCH 요청으로 입력된 정보 전송
-
-  // name 및 gender 상태변경 핸들러 함수
-  // const handleUserInput = (e: any) => {
-  //   const newName: string = e.target.value;
-  //   const newUserInfo: userInfoType = {
-  //     ...userInfo,
-  //     name: newName,
-  //   };
-  //   setUserInfo(newUserInfo);
-  // };
-
-  // const handleUserGender = (e: any) => {
-  //   const newGender: string = e.taget.value;
-  //   const newUserInfo: userInfoType = {
-  //     ...userInfo,
-  //     gender: newGender,
-  //   };
-  //   setUserInfo(newUserInfo);
-  // };
-
   // 회원탈퇴 버튼 클릭 핸들러
-
   const handleClick = () => {
     navigate('/userout');
   };
@@ -122,15 +100,11 @@ function UserSetting() {
               type="text"
               size="md"
               focusBorderColor="purple.400"
-              // onChange={(e) => {
-              //   handleUserInput(e);
-              // }}
               placeholder="ex) 홍길동"
             ></Input>
-            {/* <InputRightElement children={<CheckIcon color="gray.700" />} /> */}
+
             <Select
               focusBorderColor="purple.400"
-              // onClick={(e) => handleUserGender(e)}
               className="select-usergender"
               placeholder="성별을 선택하세요"
               ml="1em"
