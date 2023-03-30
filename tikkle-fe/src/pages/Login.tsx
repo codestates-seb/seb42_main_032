@@ -96,7 +96,8 @@ export interface userInfoType {
   payDay: null | Date;
 
   // initDate는 초기값이 1이기 때문에 number 타입도 허용
-  initDate: null | number | Date;
+  // initDate: null | number | Date;
+  initDate: number;
 
   picture: string;
   accessToken: null | string;
