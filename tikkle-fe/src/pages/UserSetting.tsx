@@ -75,6 +75,9 @@ function UserSetting() {
   // axios PATCH 요청 parameter에 넣을 member_id
   const memberId = useRecoilValue(userInfoState)?.id;
 
+  // 계좌연결 후 주소창에 있는 code를 담는 상태
+  const [bankingCode, setBankingCode] = useState('');
+
   // TODO axios PATCH 요청으로 입력된 정보 전송
 
   // name 및 gender 상태변경 핸들러 함수
@@ -101,6 +104,42 @@ function UserSetting() {
   const handleClick = () => {
     navigate('/userout');
   };
+
+  // 계좌연결 버튼 핸들러
+  const handleConnectOpenbanking = () => {
+    window.location.href =
+      `https://testapi.openbanking.or.kr/oauth/2.0/authorize?response_type=code` +
+      `&client_id=${import.meta.env.VITE_K_CLIENT_ID}` +
+      `&redirect_uri=${import.meta.env.VITE_CLIENT}/usersetting` +
+      `&scope=login inquiry transfer&state=12345678123456781234567812345678&auth_type=0`;
+  };
+
+  useEffect(() => {
+    // 사이트가 첫 렌더링 됐을 때 계좌 인증으로 발행된 code가 있다면 토큰 발급 요청
+    if (bankingCode) {
+      const getOpenbankingToken = async () => {
+        try {
+          const res = await axios.post(
+            `${import.meta.env.VITE_SERVER}/members/auth/${memberId}`,
+            {
+              code: bankingCode,
+            }
+          );
+          console.log(res);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      getOpenbankingToken();
+    }
+    // 저장된 code가 없다면 URL에서 코드 값을 읽어와서 저장하기
+    else if (!bankingCode) {
+      const parsedHash = new URLSearchParams(
+        window.location.search.substring(1)
+      );
+      setBankingCode(parsedHash.get('code') || '');
+    }
+  }, []);
 
   return (
     <Container>
@@ -145,6 +184,7 @@ function UserSetting() {
             size="md"
             leftIcon={<AddIcon />}
             loadingText="연결 중"
+            onClick={handleConnectOpenbanking}
           >
             계좌 연결하기
           </Button>
