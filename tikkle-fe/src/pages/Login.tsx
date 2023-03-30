@@ -156,7 +156,7 @@ function Login() {
       } catch (err: any) {
         console.log(err);
         // 토큰이 만료된 경우 저장된 토큰을 지우고, 다시 로그인
-        if (err.response.status === 401) {
+        if (err.response.status === 401 || err.response.status === 500) {
           setAccessToken(null);
           window.location.href =
             'https://accounts.google.com/o/oauth2/auth?' +
