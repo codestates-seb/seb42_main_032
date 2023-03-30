@@ -63,11 +63,36 @@ function UserSetting() {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   // axios PATCH 요청 parameter에 넣을 member_id
-  const memberId = useRecoilValue(userInfoState)?.id;
+  const memberId = userInfo?.id;
 
   // 회원탈퇴 버튼 클릭 핸들러
   const handleClick = () => {
     navigate('/userout');
+  };
+
+  // 이름 수정
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInfo({ ...userInfo, name: e.target.value });
+  };
+  // 성별 수정
+
+  // 예산 시작일 수정
+
+  // 예산 수정
+
+  // 급여일 수정
+
+  // 급여 금액 수정
+
+  // 저장하기 버튼 클릭 핸들러 (axios PATCH 요청)
+  const handleSubmit = () => {
+    const newMemberSetting = async () => {
+      await axios
+        .patch(`${import.meta.env.VITE_SERVER}/${memberId}`, userInfo)
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    };
+    newMemberSetting();
   };
 
   return (
@@ -91,6 +116,7 @@ function UserSetting() {
               size="md"
               focusBorderColor="purple.400"
               placeholder="ex) 홍길동"
+              onChange={handleNameChange}
             ></Input>
 
             <Select
@@ -121,12 +147,11 @@ function UserSetting() {
         <Button colorScheme="red" size="md" onClick={handleClick}>
           회원 탈퇴하기
         </Button>
-        <Button colorScheme="purple" size="md" ml="40px">
+        <Button colorScheme="purple" size="md" ml="40px" onClick={handleSubmit}>
           저장하기
         </Button>
       </Box>
     </Container>
   );
 }
-
 export default UserSetting;

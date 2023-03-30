@@ -22,6 +22,7 @@ const SetContainer = styled.div`
   }
 `;
 
+//TODO props 타입 지정
 function UserInput({ label, userInfo }) {
   return (
     <SetContainer>
@@ -64,7 +65,6 @@ function UserInput({ label, userInfo }) {
             <Input
               type="number"
               focusBorderColor="purple.400"
-              // onChange={(e) => handleState(e)}
               placeholder={
                 label === '예산 시작일'
                   ? '예산 전체 금액을 입력하세요.'
