@@ -21,6 +21,7 @@ import {
   MenuDivider,
 } from '@chakra-ui/react';
 
+import { useRecoilValue } from 'recoil';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { tokenState, userInfoState } from '../../util/store';
@@ -153,6 +154,10 @@ const Header: React.FunctionComponent<HeaderProps> = ({
   selectedDate,
   setSelectedDate,
 }) => {
+  const userInfo = useRecoilValue(userInfoState);
+
+  const [isLogin, setIsLogin] = useState(false);
+
   const handlePrevMonth = () => {
     const prevDate = new Date(selectedDate);
     prevDate.setMonth(prevDate.getMonth() - 1);
@@ -171,6 +176,13 @@ const Header: React.FunctionComponent<HeaderProps> = ({
     setSeletctedPath(location.pathname.split('/')[1]);
   }, [location.pathname.split('/')[1]]);
 
+
+  useEffect(() => {
+    if (userInfo && userInfo.id !== undefined) {
+      setIsLogin(true);
+    }
+  }, [userInfo]);
+
   // 로그아웃 로직
   // Recoil token, userInfo 상태 초기화 및 랜딩 페이지로 이동
   //TODO 향후 랜딩 페이지로 이동 수정
@@ -180,8 +192,10 @@ const Header: React.FunctionComponent<HeaderProps> = ({
   const handleLogout = () => {
     setToken(null);
     setUserInfo(null);
+    setIsLogin(false);
     navigate('/');
   };
+
 
   return (
     <HeaderContainer>
@@ -209,41 +223,48 @@ const Header: React.FunctionComponent<HeaderProps> = ({
       )}
 
       <HeaderContentWrap>
-        <BeforeLogin>
-          <BellIcon boxSize={25} />
-          <Link to="/login">
-            <LoginButton>Log In</LoginButton>
-          </Link>
-        </BeforeLogin>
-        <AfterLogin>
-          <BellIcon boxSize={25} />
-          <Menu>
-            <MenuButton className="header-menubutton" as={UserButton}>
-              <img className="header-user__img" src="user.png" alt="user" />
-              <ChevronDownIcon boxSize={25} />
-            </MenuButton>
-            <MenuList className="header-menulist">
-              <MenuItem as={Link} to="/userinfo">
-                <div className="header-menulistbutton">회원정보</div>
-              </MenuItem>
-              <MenuItem as={Link} to={'/budgetsetting'}>
-                <div className="header-menulistbutton">예산 설정</div>
-              </MenuItem>
-              <MenuItem as={Link} to={'/budgetview'}>
-                <div className="header-menulistbutton">예산 조회</div>
-              </MenuItem>
-              <MenuItem as={Button}>
-                <div className="header-menulistbutton">거래내역 조회</div>
-              </MenuItem>
-              <MenuItem as={Link} to="/categoryedit">
-                <div className="header-menulistbutton">카테고리 수정</div>
-              </MenuItem>
-              <MenuItem as={Button} onClick={handleLogout}>
-                <div className="header-logoutbutton">로그아웃</div>
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </AfterLogin>
+        {isLogin ? (
+          <AfterLogin>
+            <BellIcon boxSize={25} />
+            <Menu>
+              <MenuButton className="header-menubutton" as={UserButton}>
+                <img
+                  className="header-user__img"
+                  src={userInfo?.picture}
+                  alt="user"
+                />
+                <ChevronDownIcon boxSize={25} />
+              </MenuButton>
+              <MenuList className="header-menulist">
+                <MenuItem as={Link} to="/userinfo">
+                  <div className="header-menulistbutton">회원정보</div>
+                </MenuItem>
+                <MenuItem as={Link} to={'/budgetsetting'}>
+                  <div className="header-menulistbutton">예산 설정</div>
+                </MenuItem>
+                <MenuItem as={Link} to={'/budgetview'}>
+                  <div className="header-menulistbutton">예산 조회</div>
+                </MenuItem>
+                <MenuItem as={Button}>
+                  <div className="header-menulistbutton">거래내역 조회</div>
+                </MenuItem>
+                <MenuItem as={Link} to="/categoryedit">
+                  <div className="header-menulistbutton">카테고리 수정</div>
+                </MenuItem>
+                <MenuItem as={Button} onClick={handleLogout}>
+                  <div className="header-logoutbutton">로그아웃</div>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </AfterLogin>
+        ) : (
+          <BeforeLogin>
+            <BellIcon boxSize={25} />
+            <Link to="/login">
+              <LoginButton>Log In</LoginButton>
+            </Link>
+          </BeforeLogin>
+        )}
       </HeaderContentWrap>
     </HeaderContainer>
   );
