@@ -1,5 +1,6 @@
 package DabuOps.tikkle.budget.dto;
 
+import DabuOps.tikkle.budget.entity.Budget;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,9 +51,12 @@ public class BudgetDto {
         private LocalDate endDate;
         private int spend;
         private LocalDateTime createdAt;
+        private boolean current;
+        private Budget.Status status;
 
         @Builder
-        public Response(long id, long memberCategoryId, int amount, LocalDate startDate, LocalDate endDate, int spend, LocalDateTime createdAt) {
+
+        public Response(long id, long memberCategoryId, int amount, LocalDate startDate, LocalDate endDate, int spend, LocalDateTime createdAt, boolean current, Budget.Status status) {
             this.id = id;
             this.memberCategoryId = memberCategoryId;
             this.amount = amount;
@@ -60,6 +64,8 @@ public class BudgetDto {
             this.endDate = endDate;
             this.spend = spend;
             this.createdAt = createdAt;
+            this.current = current;
+            this.status = status;
         }
     }
 }

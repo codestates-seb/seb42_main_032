@@ -30,9 +30,9 @@ public class BudgetServiceImpl implements BudgetService{
                 .spend(0)
                 .amount(0)
                 .current(true)
+                .startDate(LocalDate.now().withDayOfMonth(memberCategory.getMember().getInitDate()))
+                .endDate(LocalDate.now().withDayOfMonth(memberCategory.getMember().getInitDate()).plusMonths(1).minusDays(1))
                 .build();
-        budget.setStartDate(LocalDate.now().withDayOfMonth(memberCategory.getMember().getInitDate()));
-        budget.setEndDate(budget.getStartDate().plusMonths(1).minusDays(1));
 
         return budgetRepository.save(budget);
     }
