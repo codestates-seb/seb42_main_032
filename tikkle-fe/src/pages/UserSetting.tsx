@@ -120,12 +120,10 @@ function UserSetting() {
       const getOpenbankingToken = async () => {
         try {
           const res = await axios.post(
-            `${import.meta.env.VITE_SERVER}/members/auth/${memberId}`,
-            {
-              code: bankingCode,
-            }
+            `${
+              import.meta.env.VITE_SERVER
+            }/members/auth/${memberId}?code=${bankingCode}`
           );
-          console.log(res);
         } catch (err) {
           console.log(err);
         }
