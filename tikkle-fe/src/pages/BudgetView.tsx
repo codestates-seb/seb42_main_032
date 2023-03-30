@@ -212,7 +212,7 @@ function BudgetView() {
   };
 
   const initDate = new Date();
-  userInfo && new Date(initDate.setDate(userInfo.initDate));
+  userInfo && new Date(initDate.setDate(Number(userInfo.initDate)));
 
   const nextInitDate =
     initDate && new Date(initDate.setMonth(initDate.getMonth() + 1));
