@@ -14,7 +14,13 @@ const Dropdown = styled.span`
   border-radius: 10px;
 `;
 
-const BudgetDropdown = ({ totalAmount }: { totalAmount: number }) => {
+const BudgetDropdown = ({
+  totalAmount,
+  getBudgets,
+}: {
+  totalAmount: number;
+  getBudgets: () => Promise<void>;
+}) => {
   const [consumptionType, setConsumptionType] =
     useState('소비유형을 선택하세요.');
 
@@ -53,14 +59,15 @@ const BudgetDropdown = ({ totalAmount }: { totalAmount: number }) => {
       const selectedBudgetIndex = budgets.findIndex(
         (budget: BudgetType) => budget.memberCategoryId === selectedCategoryId
       );
+
       // 예산 항목이 3개 이하인 경우, 선택된 항목의 예산을 전체 예산의 70%로 설정
       if (budgets.length <= 3)
         budgets[selectedBudgetIndex].amount = totalAmount * 0.7;
       // 예산 항목이 3-6개인 경우, 60%
-      if (budgets.length <= 6)
+      else if (budgets.length <= 6)
         budgets[selectedBudgetIndex].amount = totalAmount * 0.6;
       // 예산 항목이 7개 이상인 경우, 50%
-      if (budgets.length >= 7)
+      else if (budgets.length >= 7)
         budgets[selectedBudgetIndex].amount = totalAmount * 0.5;
 
       // 할당하고 남은 금액을 남은 데이터에 균등 분배하려면 얼마씩인지 계산 후 저장
@@ -71,12 +78,23 @@ const BudgetDropdown = ({ totalAmount }: { totalAmount: number }) => {
         (budgets.length - 1);
 
       // 남은 항목들의 예산 값을 위에서 구한 값으로 변경
-      budgets = budgets.map((budget: BudgetType) => {
+      budgets.map((budget: BudgetType) => {
         // 선택된 카테고리가 아닐 때만 변경
         if (budget.memberCategoryId !== selectedCategoryId) {
           budget.amount = remainAmountEach;
         }
       });
+
+      // 변경된 값으로 PATCH
+      // 일괄 PATCH가 없기 때문에 foreach
+      budgets.forEach((budget: BudgetType) => {
+        axios.patch(`${import.meta.env.VITE_SERVER}/budgets/${budget.id}`, {
+          amount: budget.amount,
+        });
+      });
+
+      // 변경된 값으로 부모 컴포넌트를 다시 렌더링
+      getBudgets();
     } catch (err) {
       console.log(err);
     }

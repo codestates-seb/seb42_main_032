@@ -128,7 +128,9 @@ const BudgetSetting = () => {
               전체 예산 500,000원
             </Text>
             <Box display="flex" justifyContent="flex-start" my="20px">
-              <BudgetDropdown totalAmount={500000} />
+              {/* 드롭다운 메뉴 선택 시 드롭다운 기준 부모인 지금 컴포넌트를 다시 렌더링해야 함 */}
+              {/* 이를 위해 GET 요청 함수를 props로 내려줌 */}
+              <BudgetDropdown totalAmount={500000} getBudgets={getBudgets} />
             </Box>
           </Box>
           <Box display="flex" flexDir="column" w="100%" gap="40px" mb="40px">
