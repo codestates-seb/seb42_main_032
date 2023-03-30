@@ -189,6 +189,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
   const handleLogout = () => {
     setToken(null);
     setUserInfo(null);
+    setIsLogin(false);
     navigate('/');
     alert('로그아웃 되었습니다.');
   };
@@ -240,7 +241,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
                 </MenuItem>
                 <MenuItem as={Link} to={'/budgetview'}>
                   <div className="header-menulistbutton">예산 조회</div>
-                  </MenuItem>
+                </MenuItem>
                 <MenuItem as={Link} to="/categoryedit">
                   <div className="header-menulistbutton">카테고리 수정</div>
                 </MenuItem>
