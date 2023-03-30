@@ -11,14 +11,15 @@ import DabuOps.tikkle.userauth.dto.AccountInfoDto;
 import DabuOps.tikkle.userauth.dto.AccountTransactionDto;
 import DabuOps.tikkle.userauth.dto.AccountTransactionListDto;
 import DabuOps.tikkle.userauth.dto.ModifiedTransactionHistoryDto;
-import DabuOps.tikkle.userauth.dto.ResList;
 import DabuOps.tikkle.userauth.dto.TokenResponseDto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +42,7 @@ public class UserAuthService {
     private final RestTemplate restTemplate;
 
     //이용기관코드 = 테스팅할 사용자 것을 적어야함
-    private final String InstitutionCode = "M202300547";
+    private final String InstitutionCode = "M202300548";
 
     @Value("${webClient.baseUrl}")
     private String openBankingApiUrl;
@@ -64,11 +65,10 @@ public class UserAuthService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(formData, headers);
-
-        ResponseEntity<TokenResponseDto> response = restTemplate.postForEntity(openBankingApiUrl + "/oauth/2.0/token", request, TokenResponseDto.class);
-        TokenResponseDto tokenResponse = response.getBody();
+        TokenResponseDto response = restTemplate.postForObject(openBankingApiUrl + "/oauth/2.0/token", new HttpEntity<>(formData, headers), TokenResponseDto.class);
+        TokenResponseDto tokenResponse = response;
 
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         if (optionalMember.isPresent()) {
@@ -81,20 +81,37 @@ public class UserAuthService {
 
     public List<AccountInfoDto> requestUserInfo(String accessToken, String userSeqNo) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(accessToken);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(openBankingApiUrl + "/v2.0/user/me").queryParam("user_seq_no", userSeqNo);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        HttpEntity<?> request = new HttpEntity<>(headers);
-        ResponseEntity<AccountInfoDto> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, AccountInfoDto.class);
+        AccountInfoDto response = restTemplate.exchange(
+            openBankingApiUrl + "/v2.0/user/me?user_seq_no=" + userSeqNo,
+            HttpMethod.GET,
+            entity,
+            AccountInfoDto.class
+        ).getBody();
 
-        List<AccountInfoDto> accountList = new ArrayList<>();
-        for (ResList resList : response.getBody().getResList()){
+        for (Map<String, Object> accountMap : response.getResList()) {
             Account account = new Account();
-            account.setFintechUseNum(resList.getFintechUseNum());
+            account.setFintechUseNum((String) accountMap.get("fintech_use_num"));
+
+            // fintech_use_num으로 조회하여 해당 계좌가 이미 존재하는지 확인
+            Optional<Account> existingAccountOptional = accountRepository.findByFintechUseNum((String) accountMap.get("fintech_use_num"));
+
+            if (existingAccountOptional.isPresent()) {
+                // 이미 존재하는 경우 정보 업데이트
+                Account existingAccount = existingAccountOptional.get();
+                existingAccount.setFintechUseNum((String) accountMap.get("fintech_use_num"));
+                accountRepository.save(existingAccount);
+            } else {
+                // 존재하지 않는 경우 새로운 Account 행 추가
+                accountRepository.save(account);
+            }
         }
-        return accountList;
+
+        return List.of(response);
     }
 
     public List<ModifiedTransactionHistoryDto> requestTransactionHistories(Long memberId) {

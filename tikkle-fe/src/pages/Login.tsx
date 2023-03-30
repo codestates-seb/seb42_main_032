@@ -18,12 +18,15 @@ const LoginContainer = styled.div`
   background-image: url('/tikkle-background.jpg');
   position: relative;
   background-color: transparent;
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
   font-family: 'GmarketSansMedium';
   height: 100vh;
+  width: 100%;
   ::before {
     position: absolute;
     content: '';
@@ -85,21 +88,21 @@ const OauthLoginButton = styled.div`
 
 // 회원 정보 타입
 export interface userInfoType {
-  createdAt: Date;
-  modifiedAt: Date;
-  id: number;
+  accessToken: string | null | undefined;
+  createdAt: Date | undefined;
   email: string;
+  gender: string | null;
+  id: number;
+  initDate: number;
+  location: string | null;
+  modifiedAt: Date;
   name: string;
-  location: null | string;
-  state: string;
-  gender: null | string;
-  payDay: null | Date;
-
-  // initDate는 초기값이 1이기 때문에 number 타입도 허용
-  initDate: null | number | Date;
-
+  payAmount: number | null;
+  payDay: number | null;
   picture: string;
-  accessToken: null | string;
+  role: string;
+  state: string;
+  totalBudget: number;
 }
 //  ToDo 저장된 액세스 토큰이 존재할 경우, 사용자의 현재 상태에 따라 유저/카테고리/예산 설정 페이지 중 하나로 이동
 //  ToDo 저장된 액세스 토큰이 존재하며, 회원가입 절차도 모두 마친 경우 홈 페이지로 이동
