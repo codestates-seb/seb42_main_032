@@ -82,8 +82,8 @@ function UserSetting() {
   // 카테고리 생성을 위해서 첫 가입 사용자인 경우 /{member-id}/init에 patch 요청
   if (userInfo?.payDay === null) {
     axios.patch(`${import.meta.env.VITE_SERVER}/members/${memberId}/init`, {
-      initDate: userInfo.initDate,
-      payDay: userInfo.payDay,
+      initDate: 1,
+      payDay: 1,
     });
   }
 
