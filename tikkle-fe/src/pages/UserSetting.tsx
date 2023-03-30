@@ -78,6 +78,15 @@ function UserSetting() {
   // 계좌연결 후 주소창에 있는 code를 담는 상태
   const [bankingCode, setBankingCode] = useState('');
 
+  // 첫 가입 사용자는 userInfo.payDay 값이 null이므로 첫 사용자 여부를 이걸로 판별
+  // 카테고리 생성을 위해서 첫 가입 사용자인 경우 /{member-id}/init에 patch 요청
+  if (userInfo?.payDay === null) {
+    axios.patch(`${import.meta.env.VITE_SERVER}/${memberId}/init`, {
+      initDate: userInfo.initDate,
+      payDay: userInfo.payDay,
+    });
+  }
+
   // TODO axios PATCH 요청으로 입력된 정보 전송
 
   // name 및 gender 상태변경 핸들러 함수
