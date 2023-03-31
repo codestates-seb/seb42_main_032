@@ -1,6 +1,5 @@
 // TODO 거래 내역 클릭 시, 상세 정보 나오는 모달창
 
-// axios.get 데이터 받아오기 or Transaction에서 받아서 props로 넘겨 받기
 import Transaction, { TransactionType } from '../layout/Transaction';
 import styled from 'styled-components';
 import { Input } from '@chakra-ui/react';
@@ -8,6 +7,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { userInfoState } from '../../util/store';
 import { useRecoilValue } from 'recoil';
+import { debounce } from 'throttle-debounce';
 
 const ModalContainer = styled.div`
   display: flex;
@@ -53,27 +53,33 @@ interface ModalProps {
 const Modal = ({ transaction, toggleModal, date }: ModalProps) => {
   // memo 입력 상태 관리
   const [memo, setMemo] = useState<string>(transaction.memo);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [categoryId, setCategoryId] = useState<number>(
+    transaction.memberCategoryId
+  );
 
   // POST 요청 URI parameter 용 memberID, date (month) 받아오기
   let member_id = useRecoilValue(userInfoState)?.id;
   let headerMonth =
     date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0');
 
-  // memo 수정 POST 요청
-  useEffect(() => {
-    const editMemo = async () => {
-      axios.post(
-        `${
-          import.meta.env.VITE_SERVER
-        }/transaction_histories/${member_id}/${headerMonth}`,
+  // 메모 수정 핸들러 함수
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMemo(e.target.value);
+    const change = async () => {
+      axios.patch(
+        `${import.meta.env.VITE_SERVER}/transaction_histories/${
+          transaction?.id
+        }`,
         {
+          ...transaction,
           memo: memo,
+          // memberCategoryId: categoryId,
         }
       );
     };
-    editMemo();
-  }, [isEditing]);
+    change();
+  };
+  // memo 수정 POST 요청
 
   // TODO 카테고리 드롭다운 수정 컴포넌트 만들기
   // TODO 카테고리 수정 시, TODO axios POST 요청으로 변경 사항 보내기
@@ -95,12 +101,7 @@ const Modal = ({ transaction, toggleModal, date }: ModalProps) => {
           <li> 거래 시간: {transaction.time}</li>
           <li className="memo-input">
             메모:
-            <Input
-              value={memo}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setMemo(e.target.value)
-              }
-            ></Input>
+            <Input defaultValue={memo} onChange={changeHandler}></Input>
           </li>
           <li> 카테고리: </li>
         </ul>
