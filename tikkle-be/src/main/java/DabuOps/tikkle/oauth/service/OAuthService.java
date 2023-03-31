@@ -102,8 +102,7 @@ public class OAuthService extends DefaultOAuth2UserService {
                 newMember.setEmail(email);
                 newMember.setName(name);
                 newMember.setPicture(picture);
-                memberRepository.save(newMember);
-                return newMember;
+                return memberRepository.save(newMember);
             } else {
                 return  member;
             }

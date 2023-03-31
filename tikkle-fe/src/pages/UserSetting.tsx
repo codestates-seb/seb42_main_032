@@ -62,65 +62,52 @@ function UserSetting() {
   // userInfo Recoil atom으로 가져오기
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
-  // initial budget (props로 UserInput에 전달)
-
-  const [ibDate, setIbDate] = useState(new Date().toISOString());
-  const [ibAmount, setIbAmount] = useState<number>(userInfo?.totalBudget || 0);
-  // salary  (props로 UserInput에 전달)
-  const [salaryDate, setSalaryDate] = useState(new Date().toISOString());
-  const [salaryAmount, setSalaryAmount] = useState<number>(
-    userInfo?.payAmount || 0
-  );
-
   // axios PATCH 요청 parameter에 넣을 member_id
-  const memberId = useRecoilValue(userInfoState)?.id;
-
-  // 첫 가입 사용자는 userInfo.payDay 값이 null이므로 첫 사용자 여부를 이걸로 판별
-  // 카테고리 생성을 위해서 첫 가입 사용자인 경우 /{member-id}/init에 patch 요청
-  if (userInfo?.payDay === null) {
-    axios.patch(`${import.meta.env.VITE_SERVER}/members/${memberId}/init`, {
-      initDate: 1,
-      payDay: 1,
-    });
-    // 변경된 멤버 정보를 다시 반영
-    const getUserInfo = async () => {
-      try {
-        const res = (
-          await axios.get(`${import.meta.env.VITE_SERVER}/members/${memberId}`)
-        ).data;
-        setUserInfo(res);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getUserInfo();
-  }
-
-  // TODO axios PATCH 요청으로 입력된 정보 전송
-
-  // name 및 gender 상태변경 핸들러 함수
-  // const handleUserInput = (e: any) => {
-  //   const newName: string = e.target.value;
-  //   const newUserInfo: userInfoType = {
-  //     ...userInfo,
-  //     name: newName,
-  //   };
-  //   setUserInfo(newUserInfo);
-  // };
-
-  // const handleUserGender = (e: any) => {
-  //   const newGender: string = e.taget.value;
-  //   const newUserInfo: userInfoType = {
-  //     ...userInfo,
-  //     gender: newGender,
-  //   };
-  //   setUserInfo(newUserInfo);
-  // };
+  const memberId = userInfo?.id;
 
   // 회원탈퇴 버튼 클릭 핸들러
-
   const handleClick = () => {
     navigate('/userout');
+  };
+
+  // 이름 수정
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.value;
+    setUserInfo({
+      ...userInfo,
+      name,
+    });
+  };
+  // 성별 수정
+  const handleGenderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const gender = event.target.value;
+    setUserInfo({ ...userInfo, gender });
+  };
+
+  // 저장하기 버튼 클릭 핸들러 (axios PATCH 요청)
+  // 첫 가입 사용자는 userInfo.payDay 값이 null이므로 첫 사용자 여부를 이걸로 판별
+  // 카테고리 생성을 위해서 첫 가입 사용자인 경우 /{member-id}/init에 patch 요청
+  const handleSubmit = async () => {
+    if (userInfo?.payDay === null) {
+      await axios
+        .patch(
+          `${import.meta.env.VITE_SERVER}/members/${memberId}/init`,
+          userInfo
+        )
+        .then((res) => {
+          alert('저장되었습니다.');
+          navigate('/userinfo');
+        })
+        .catch((err) => console.log(err));
+    } else {
+      await axios
+        .patch(`${import.meta.env.VITE_SERVER}/members/${memberId}`, userInfo)
+        .then((res) => {
+          alert('저장되었습니다.');
+          navigate('/userinfo');
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   // 계좌연결 버튼 핸들러
@@ -160,22 +147,21 @@ function UserSetting() {
               children={<Icon as={BsFillPersonFill} color="gray.700" />}
             />
             <Input
-              value={userInfo?.name}
+              defaultValue={userInfo?.name}
               type="text"
               size="md"
               focusBorderColor="purple.400"
-              // onChange={(e) => {
-              //   handleUserInput(e);
-              // }}
               placeholder="ex) 홍길동"
+              onChange={handleNameChange}
             ></Input>
-            {/* <InputRightElement children={<CheckIcon color="gray.700" />} /> */}
+
             <Select
               focusBorderColor="purple.400"
-              // onClick={(e) => handleUserGender(e)}
               className="select-usergender"
               placeholder="성별을 선택하세요"
               ml="1em"
+              defaultValue={userInfo?.gender}
+              onChange={handleGenderChange}
             >
               <option value="female">여성</option>
               <option value="male">남성</option>
@@ -193,29 +179,13 @@ function UserSetting() {
           </Button>
         </Box>
       </SetContainer>
-      <UserInput
-        label={'예산 시작일'}
-        userInfo={userInfo}
-        setUserInfo={setUserInfo}
-        setState={setIbAmount}
-        state={ibAmount || 0}
-        setDate={setIbDate}
-        date={ibDate}
-      />
-      <UserInput
-        label={'급여일'}
-        userInfo={userInfo}
-        setUserInfo={setUserInfo}
-        setState={setSalaryAmount}
-        state={salaryAmount || 0}
-        setDate={setSalaryDate}
-        date={salaryDate}
-      />
+      <UserInput label={'예산 시작일'} />
+      <UserInput label={'급여일'} />
       <Box mb="100px">
         <Button colorScheme="red" size="md" onClick={handleClick}>
           회원 탈퇴하기
         </Button>
-        <Button colorScheme="purple" size="md" ml="40px">
+        <Button colorScheme="purple" size="md" ml="40px" onClick={handleSubmit}>
           저장하기
         </Button>
       </Box>
