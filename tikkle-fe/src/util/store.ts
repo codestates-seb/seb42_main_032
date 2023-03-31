@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 import { userInfoType } from '../pages/Login';
 
@@ -15,11 +15,24 @@ export const dateState = atom({
   default: new Date(),
 });
 
-// ToDo - 사용자 로그인 시점에 서버에서 받아온 데이터로 업데이트
-export const totalBudgetState = atom({
+export const totalBudgetState = selector({
   key: 'totalBudgetState',
-  default: 500000
-})
+  get: ({ get }) => {
+    // 사용자 정보를 userInfoState에서 가져옴
+    const userInfo = get(userInfoState);
+
+    switch (userInfo.totalBudget) {
+      // totalBudget의 값이 null이거나 userInfo 정보를 못 불러왔을 때
+      case null: case undefined:
+        // 전체 예산 정보를 0원으로 설정
+        return 0;
+      
+      // 그 외 모든 경우에 userInfo에 저장된 totalBudget을 반환
+      default:
+        return userInfo.totalBudget
+    }
+  }
+});
 
 /**
  * 액세스 토큰
