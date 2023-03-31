@@ -94,6 +94,13 @@ const Body = styled.div`
   min-height: calc(100vh - 340px);
 `;
 
+const CalendarContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-left: 15px;
+  padding-right: 15px;
+`;
+
 function Home({ selectedDate }: { selectedDate: Date }) {
   // const [accessToken, setAccessToken] = useRecoilState(tokenState);
 
@@ -121,7 +128,9 @@ function Home({ selectedDate }: { selectedDate: Date }) {
   return (
     <HomeContainer>
       <Body>
-        <Calendar date={selectedDate} />
+        <CalendarContainer>
+          <Calendar date={selectedDate} />
+        </CalendarContainer>
         <Transaction date={selectedDate} />
       </Body>
     </HomeContainer>
