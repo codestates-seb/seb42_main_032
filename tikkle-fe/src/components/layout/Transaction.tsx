@@ -135,7 +135,6 @@ const Transaction = ({ date }: { date: Date }) => {
   let member_id = useRecoilValue(userInfoState)?.id;
   let headerMonth =
     date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0');
-  console.log(headerMonth);
 
   useEffect(() => {
     const getTransactionHistories = async () => {
@@ -233,7 +232,6 @@ const Transaction = ({ date }: { date: Date }) => {
           transaction={selectedTransaction}
           onClose={() => setSelectedTransaction(null)}
           toggleModal={toggleModal}
-          date={date}
         ></Modal>
       )}
     </Container>

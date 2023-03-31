@@ -47,20 +47,14 @@ interface ModalProps {
   transaction: TransactionType;
   onClose: () => void;
   toggleModal: () => void;
-  date: Date;
 }
 
-const Modal = ({ transaction, toggleModal, date }: ModalProps) => {
+const Modal = ({ transaction, toggleModal }: ModalProps) => {
   // memo 입력 상태 관리
   const [memo, setMemo] = useState<string>(transaction.memo);
   const [categoryId, setCategoryId] = useState<number>(
     transaction.memberCategoryId
   );
-
-  // POST 요청 URI parameter 용 memberID, date (month) 받아오기
-  let member_id = useRecoilValue(userInfoState)?.id;
-  let headerMonth =
-    date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0');
 
   // 메모 수정 핸들러 함수
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
