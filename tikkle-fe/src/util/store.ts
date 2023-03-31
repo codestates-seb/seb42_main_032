@@ -43,8 +43,7 @@ export const currentPageState = atom({
   effects: [persistAtom]
 })
 
-export const userInfoState = atom<userInfoType | null>({
+export const userInfoState = atom<userInfoType>({
   key: 'userInfoState',
-  default: null,
   effects: [persistAtom],
 })

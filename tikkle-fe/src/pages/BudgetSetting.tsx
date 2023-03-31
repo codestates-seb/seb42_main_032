@@ -1,7 +1,7 @@
 import { Box, Text, useMediaQuery } from '@chakra-ui/react';
 import axios from 'axios';
 import { useEffect, useState, lazy } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import BudgetDropdown from '../components/budget_setting/BudgetDropdown';
 const CategoryBudget = lazy(
@@ -33,9 +33,9 @@ const BudgetSetting = () => {
   // PC 화면에 대응하기 위해 추가
   const [isLagerThan900px] = useMediaQuery('(min-width: 900px)');
 
-  const [userInfo] = useRecoilState(userInfoState);
-  const [isLoading, setIsLoading] = useState(true);
+  const { totalBudget } = useRecoilValue(userInfoState);
 
+  const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<CategoryType[]>();
   const [budgets, setBudgets] = useState<BudgetType[]>();
 
@@ -58,8 +58,9 @@ const BudgetSetting = () => {
   const getBudgets = async () => {
     try {
       setIsLoading(true);
-      let res = (await axios.get(`${import.meta.env.VITE_SERVER}/budgets`))
-        .data;
+      // let res = (await axios.get(`${import.meta.env.VITE_SERVER}/budgets`))
+      //   .data;
+      let res = (await axios.get(`http://localhost:3000/budgets`)).data;
 
       // 전체 예산 정보에서 날짜 형식 데이터를 모두 Date 타입으로 형변환
       res = res.map((budget: BudgetType) => {
