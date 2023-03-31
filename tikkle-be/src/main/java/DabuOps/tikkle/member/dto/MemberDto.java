@@ -37,8 +37,7 @@ public class MemberDto {
         private Gender gender;
 
         @Builder
-        public Patch(String name, String location, Integer payDay,
-            Integer initDate,Integer totalBudget ,Gender gender) {
+        public Patch(String name, String location, Integer payDay, Integer payAmount, Integer initDate, Integer totalBudget, Gender gender) {
             this.name = name;
             this.location = location;
             this.payDay = payDay;
