@@ -202,7 +202,7 @@ function BudgetView() {
     const budgetCategories = [];
     for (const i of memberBudget) {
       for (const j of all?.data.data) {
-        if (i.memberCategoryId === j.id) {
+        if (i.memberCategoryId === j.id && i.status === 'ACTIVE') {
           budgetCategories.push({ ...j, ...i });
           break;
         }
