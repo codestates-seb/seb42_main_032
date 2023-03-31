@@ -153,7 +153,7 @@ function CategoryEdit() {
   >([]);
 
   const [budget, setBudget] = useState<
-    { id?: number; memberCategoryId?: number }[]
+    { id?: number; memberCategoryId?: number; status: string }[]
   >([]);
 
   // 모달 창 닫기 이벤트 핸들러
@@ -225,7 +225,7 @@ function CategoryEdit() {
       const arr = [];
       for (const i of memberBudget?.data) {
         for (const j of all?.data.data) {
-          if (i.memberCategoryId === j.id) {
+          if (i.memberCategoryId === j.id && i.status === 'ACTIVE') {
             arr.push(j);
             break;
           }
