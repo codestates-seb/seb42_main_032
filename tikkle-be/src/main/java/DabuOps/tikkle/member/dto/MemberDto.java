@@ -70,7 +70,7 @@ public class MemberDto {
     @Builder
     @NoArgsConstructor
     public static class Response extends Auditable {
-        private Long memberId;
+        private Long id;
         private String email;
         private String name;
         private String location;
@@ -82,8 +82,8 @@ public class MemberDto {
         private Integer initDate;
 
         @Builder
-        public Response(Long memberId, String email, String name, String location, MemberState state, Gender gender, Integer payDay, Integer payAmount, Integer totalBudget, Integer initDate) {
-            this.memberId = memberId;
+        public Response(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay, Integer payAmount, Integer totalBudget, Integer initDate) {
+            this.id = id;
             this.email = email;
             this.name = name;
             this.location = location;
