@@ -122,6 +122,7 @@ function UserSetting() {
   useEffect(() => {
     const parsedHash = new URLSearchParams(window.location.search.substring(1));
     const bankingCode = parsedHash.get('code');
+ /*
     if (bankingCode) {
       axios.post(
         `${
@@ -129,6 +130,7 @@ function UserSetting() {
         }/members/auth/${memberId}?code=${bankingCode}`
       );
     }
+ */
   }, []);
 
   return (
