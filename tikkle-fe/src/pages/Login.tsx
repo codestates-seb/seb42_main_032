@@ -18,12 +18,15 @@ const LoginContainer = styled.div`
   background-image: url('/tikkle-background.jpg');
   position: relative;
   background-color: transparent;
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
   font-family: 'GmarketSansMedium';
   height: 100vh;
+  width: 100%;
   ::before {
     position: absolute;
     content: '';
@@ -85,21 +88,20 @@ const OauthLoginButton = styled.div`
 
 // 회원 정보 타입
 export interface userInfoType {
-  accessToken: string | null | undefined;
-  createdAt: Date | undefined;
-  email: string;
-  gender: string | null;
-  id: number;
-  initDate: number;
-  location: string | null;
-  modifiedAt: Date;
-  name: string;
-  payAmount: number | null;
-  payDay: number | null;
-  picture: string;
-  role: string;
-  state: string;
-  totalBudget: number;
+  createdAt?: Date | undefined;
+  email?: string | undefined;
+  gender?: string | undefined;
+  id?: number | undefined;
+  initDate?: number | undefined;
+  location?: string | undefined;
+  modifiedAt?: Date | undefined;
+  name?: string | undefined;
+  payAmount?: number | undefined;
+  payDay?: number | undefined;
+  picture?: string | undefined;
+  role?: string | undefined;
+  state?: string | undefined;
+  totalBudget?: number | undefined;
 }
 //  ToDo 저장된 액세스 토큰이 존재할 경우, 사용자의 현재 상태에 따라 유저/카테고리/예산 설정 페이지 중 하나로 이동
 //  ToDo 저장된 액세스 토큰이 존재하며, 회원가입 절차도 모두 마친 경우 홈 페이지로 이동
@@ -153,7 +155,7 @@ function Login() {
       } catch (err: any) {
         console.log(err);
         // 토큰이 만료된 경우 저장된 토큰을 지우고, 다시 로그인
-        if (err.response.status === 401) {
+        if (err.response.status === 401 || err.response.status === 500) {
           setAccessToken(null);
           window.location.href =
             'https://accounts.google.com/o/oauth2/auth?' +

@@ -30,9 +30,9 @@ public class BudgetServiceImpl implements BudgetService{
                 .spend(0)
                 .amount(0)
                 .current(true)
+                .startDate(LocalDate.now().withDayOfMonth(memberCategory.getMember().getInitDate()))
+                .endDate(LocalDate.now().withDayOfMonth(memberCategory.getMember().getInitDate()).plusMonths(1).minusDays(1))
                 .build();
-        budget.setStartDate(LocalDate.now().withDayOfMonth(memberCategory.getMember().getInitDate()));
-        budget.setEndDate(budget.getStartDate().plusMonths(1).minusDays(1));
 
         return budgetRepository.save(budget);
     }
@@ -65,7 +65,9 @@ public class BudgetServiceImpl implements BudgetService{
         Budget updatedBudget = findBudget(budgetId);
 
         Optional.ofNullable(budget.getAmount())
-                .ifPresent(amount -> updatedBudget.setAmount(amount));
+            .ifPresent(amount -> updatedBudget.setAmount(amount));
+        Optional.ofNullable(budget.getStatus())
+            .ifPresent(status -> updatedBudget.setStatus(status));
 
 
         return budgetRepository.save(updatedBudget);
@@ -89,7 +91,7 @@ public class BudgetServiceImpl implements BudgetService{
             memberCategoryIdList.add(memberCategory.getId());
         }
 
-        List<Budget> budgets = budgetRepository.findByMemberCategoryIdInAndCurrentIsTrue(memberCategoryIdList);
+        List<Budget> budgets = budgetRepository.findBudgetsByMemberCategoryIdInAndCurrentIsTrue(memberCategoryIdList);
 
         return budgets;
     }
@@ -116,7 +118,7 @@ public class BudgetServiceImpl implements BudgetService{
                     memberCategoryIdList.add(memberCategory.getId());
                 }
 
-                List<Budget> budgets = budgetRepository.findByMemberCategoryIdInAndCurrentIsTrue(memberCategoryIdList); // 해당 memberCategory의 현재 budget 땡겨오기
+                List<Budget> budgets = budgetRepository.findBudgetsByMemberCategoryIdInAndCurrentIsTrue(memberCategoryIdList); // 해당 memberCategory의 현재 budget 땡겨오기
                 List<Integer> amountList = new ArrayList<>(); // 전월 예산 설정 모은 리스트
                 for(Budget budget : budgets) {
                     budget.setCurrent(false); // 이제 안쓴다!

@@ -1,13 +1,17 @@
 import { Box, Text, useMediaQuery } from '@chakra-ui/react';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy } from 'react';
 import { useRecoilState } from 'recoil';
+
 import BudgetDropdown from '../components/budget_setting/BudgetDropdown';
-import CategoryBudget from '../components/budget_setting/CategoryBudget';
+const CategoryBudget = lazy(
+  () => import('../components/budget_setting/CategoryBudget')
+);
 import MonthlyBudget from '../components/budget_setting/MonthlyBudget';
+import Loading from '../components/layout/Loading';
 import { userInfoState } from '../util/store';
 
-interface BudgetType {
+export interface BudgetType {
   id: number;
   memberCategoryId: number;
   amount: number;
@@ -17,31 +21,47 @@ interface BudgetType {
   createdAt: Date;
 }
 
+export interface CategoryType {
+  id: number;
+  name: string;
+  categoryIcon: string;
+  memberId: number;
+  categoryId: number;
+}
+
 const BudgetSetting = () => {
   // PC 화면에 대응하기 위해 추가
   const [isLagerThan900px] = useMediaQuery('(min-width: 900px)');
 
   const [userInfo] = useRecoilState(userInfoState);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // ToDo 카테고리 페이지에서 추가된 카테고리를 기준으로 List 생성
-  const [categoryList] = useState([{}]);
-
+  const [categories, setCategories] = useState<CategoryType[]>();
   const [budgets, setBudgets] = useState<BudgetType[]>();
 
-  useEffect(() => {
-    const getBudgets = async () => {
-      // 전체 예산 정보 조회
-      // let fetchedBudgets = await axios.get(
-      //   `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo?.id}`
-      // );
-      //
+  const getCategories = async () => {
+    // 컴포넌트 상태를 로딩 중으로 업데이트한 후 카테고리 데이터 요청
+    try {
+      setIsLoading(true);
+      const res = await axios.get('http://localhost:8080/categories');
+      setCategories(res.data);
+    } catch (err) {
+      // 요청 실패 시 콘솔에 에러 표시
+      console.log(err);
+    } finally {
+      // 네트워크 요청을 완료하면 성공/실패 여부에 관계 없이 로딩이 멈추도록 업데이트
+      setIsLoading(false);
+    }
+  };
 
-      // 전체 예산 정보 조회 - 테스트용
-      let fetchedBudgets = (await axios.get(`http://localhost:8080/budgets`))
-        .data;
+  // 네트워크 요청은 getCategories와 같은 방식(주소만 다름)
+  const getBudgets = async () => {
+    try {
+      setIsLoading(true);
+      let res = (await axios.get(`http://localhost:8080/budgets`)).data;
 
       // 전체 예산 정보에서 날짜 형식 데이터를 모두 Date 타입으로 형변환
-      fetchedBudgets = fetchedBudgets.map((budget: BudgetType) => {
+      res = res.map((budget: BudgetType) => {
         return {
           ...budget,
           startDate: new Date(budget.startDate),
@@ -51,14 +71,21 @@ const BudgetSetting = () => {
       });
 
       // 예산 금액을 기준으로 내림차순 정렬
-      fetchedBudgets.sort((a: BudgetType, b: BudgetType) => {
+      res.sort((a: BudgetType, b: BudgetType) => {
         return b.amount - a.amount;
       });
 
-      setBudgets(fetchedBudgets);
-    };
+      setBudgets(res);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     getBudgets();
+    getCategories();
   }, []);
 
   return (
@@ -100,13 +127,27 @@ const BudgetSetting = () => {
               전체 예산 500,000원
             </Text>
             <Box display="flex" justifyContent="flex-start" my="20px">
-              <BudgetDropdown />
+              {/* <BudgetDropdown /> */}
             </Box>
           </Box>
           <Box display="flex" flexDir="column" w="100%" gap="40px" mb="40px">
-            {categoryList.map(() => (
-              <CategoryBudget />
-            ))}
+            {isLoading ? (
+              <Loading />
+            ) : (
+              budgets?.map((budget) => {
+                const category = categories?.filter(
+                  (category) => budget.memberCategoryId === category.id
+                )[0];
+                return (
+                  <CategoryBudget
+                    key={budget.id}
+                    budget={budget.amount}
+                    categoryIcon={category?.categoryIcon || ''}
+                    categoryLabel={category?.name || ''}
+                  />
+                );
+              })
+            )}
           </Box>
         </Box>
       </Box>

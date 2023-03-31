@@ -1,6 +1,7 @@
 package DabuOps.tikkle.oauth.service;
 
 import DabuOps.tikkle.member.entity.Member;
+import DabuOps.tikkle.member.mapper.MemberMapper;
 import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.oauth.dto.UserInfo;
 import com.google.gson.Gson;
@@ -25,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class OAuthService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
 
+    private final MemberMapper mapper;
+
     /*
     * Login 과정
     * Client -> OAuth2 Server 로그인 요청 (프론트)
@@ -41,7 +44,7 @@ public class OAuthService extends DefaultOAuth2UserService {
         Member member = getMemberProfile(accessToken);
 
         if (status == HttpStatus.OK) {
-            return member;
+            return mapper.memberToResponseDto(member);
         } else {
             return HttpStatus.UNAUTHORIZED;
         }
@@ -99,8 +102,7 @@ public class OAuthService extends DefaultOAuth2UserService {
                 newMember.setEmail(email);
                 newMember.setName(name);
                 newMember.setPicture(picture);
-                memberRepository.save(newMember);
-                return newMember;
+                return memberRepository.save(newMember);
             } else {
                 return  member;
             }
