@@ -135,7 +135,6 @@ const Transaction = ({ date }: { date: Date }) => {
   let member_id = useRecoilValue(userInfoState)?.id;
   let headerMonth =
     date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0');
-  console.log(headerMonth);
 
   useEffect(() => {
     const getTransactionHistories = async () => {
@@ -212,7 +211,12 @@ const Transaction = ({ date }: { date: Date }) => {
                   onClick={() => setSelectedTransaction(transaction)}
                 >
                   <div className="transaction-amount-box">
-                    <strong>{transaction.amount}원</strong>
+                    <strong>
+                      {new Intl.NumberFormat('ko-KR').format(
+                        transaction.amount
+                      )}
+                      원
+                    </strong>
                   </div>
                   <div className="transaciton-bank-box">
                     {transaction.bankName} &#8594; {transaction.branchName}
@@ -228,7 +232,6 @@ const Transaction = ({ date }: { date: Date }) => {
           transaction={selectedTransaction}
           onClose={() => setSelectedTransaction(null)}
           toggleModal={toggleModal}
-          date={date}
         ></Modal>
       )}
     </Container>
