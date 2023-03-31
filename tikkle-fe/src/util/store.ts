@@ -60,3 +60,13 @@ export const userInfoState = atom<userInfoType>({
   key: 'userInfoState',
   effects: [persistAtom],
 })
+
+// 사용자의 ID 정보
+export const memberIdState = selector({
+  key: 'memberIdState',
+  get: ({ get }) => {
+    const userInfo = get(userInfoState);
+    // userInfo가 유효하면 해당 ID를 반환하고, 유효하지 않다면 0으로 설정
+    return (userInfo.id || userInfo.id !== null) ? userInfo.id : 0;
+  }
+})
