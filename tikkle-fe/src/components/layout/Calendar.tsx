@@ -19,8 +19,6 @@ const Container = styled.div`
     padding-top: 10px;
     /* padding-bottom: 30px; */
   }
-  table {
-  }
   thead {
     tr {
       th:first-child {

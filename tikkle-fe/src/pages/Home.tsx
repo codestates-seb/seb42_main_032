@@ -92,7 +92,13 @@ const Body = styled.div`
   flex-direction: column;
   margin-top: 80px;
   min-height: calc(100vh - 340px);
-  width: 80%;
+`;
+
+const CalendarContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-left: 15px;
+  padding-right: 15px;
 `;
 
 function Home({ selectedDate }: { selectedDate: Date }) {
@@ -122,7 +128,9 @@ function Home({ selectedDate }: { selectedDate: Date }) {
   return (
     <HomeContainer>
       <Body>
-        <Calendar date={selectedDate} />
+        <CalendarContainer>
+          <Calendar date={selectedDate} />
+        </CalendarContainer>
         <Transaction date={selectedDate} />
       </Body>
     </HomeContainer>
