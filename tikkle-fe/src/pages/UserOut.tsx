@@ -117,7 +117,7 @@ function UserOut() {
     if (isCorrect) {
       const userDelete = async () => {
         await axios
-          .delete(`${import.meta.env.VITE_SERVER}/${userInfo?.id}`)
+          .delete(`${import.meta.env.VITE_SERVER}/members/${userInfo?.id}`)
           .then((res) => console.log(res))
           .catch((err) => console.log(err));
       };
