@@ -92,12 +92,16 @@ const Modal = ({ transaction, toggleModal, date }: ModalProps) => {
         <ul className="modal-content-ul">
           <li>
             {transaction.inoutType === 'SPEND' ? '출금: -' : '입금: +'}
-            {transaction.amount} 원
+            {new Intl.NumberFormat('ko-KR').format(transaction.amount)} 원
           </li>
           <li>
             거래처: {transaction.bankName} &#8594; {transaction.branchName}
           </li>
-          <li> 거래 날짜: {transaction.date.toISOString()}</li>
+          <li>
+            {' '}
+            거래 날짜: {transaction.date.getFullYear()}년{' '}
+            {transaction.date.getMonth()}월 {transaction.date.getDate()}일
+          </li>
           <li> 거래 시간: {transaction.time}</li>
           <li className="memo-input">
             메모:

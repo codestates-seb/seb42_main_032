@@ -212,7 +212,12 @@ const Transaction = ({ date }: { date: Date }) => {
                   onClick={() => setSelectedTransaction(transaction)}
                 >
                   <div className="transaction-amount-box">
-                    <strong>{transaction.amount}원</strong>
+                    <strong>
+                      {new Intl.NumberFormat('ko-KR').format(
+                        transaction.amount
+                      )}
+                      원
+                    </strong>
                   </div>
                   <div className="transaciton-bank-box">
                     {transaction.bankName} &#8594; {transaction.branchName}
