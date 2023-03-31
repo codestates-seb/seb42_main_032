@@ -43,7 +43,7 @@ const BudgetSetting = () => {
     // 컴포넌트 상태를 로딩 중으로 업데이트한 후 카테고리 데이터 요청
     try {
       setIsLoading(true);
-      const res = await axios.get(`${import.meta.env.VITE_SERVER}/categories`);
+      const res = await axios.get(`http://localhost:3000/categories`);
       setCategories(res.data);
     } catch (err) {
       // 요청 실패 시 콘솔에 에러 표시
@@ -150,7 +150,7 @@ const BudgetSetting = () => {
                 return (
                   <CategoryBudget
                     key={budget.id}
-                    budget={budget.amount}
+                    budgetId={budget.id}
                     categoryIcon={category?.categoryIcon || ''}
                     categoryLabel={category?.name || ''}
                   />

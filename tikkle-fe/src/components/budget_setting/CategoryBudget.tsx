@@ -5,19 +5,42 @@ import {
   InputRightAddon,
   Text,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 import CategoryIcon from '../category/CategoryIcon';
 
 const CategoryBudget = ({
-  budget,
+  budgetId,
   categoryLabel,
   categoryIcon,
 }: {
-  budget: number;
+  budgetId: number;
   categoryLabel: string;
   categoryIcon: string;
 }) => {
+  const [budgetAmount, setBudgetAmount] = useState(0);
+
+  const getBudgetAmount = async () => {
+    try {
+      const res =
+        (await axios.get(`http://localhost:3000/budgets/${budgetId}`)).data
+          .amount || 0;
+      setBudgetAmount(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getBudgetAmount();
+  }, []);
+  useEffect(() => {
+    axios.patch(`http://localhost:3000/budgets/${budgetId}`, {
+      amount: budgetAmount,
+    });
+  }, [budgetAmount]);
+
   return (
     <Box
       fontFamily="GmarketSansMedium"
@@ -50,7 +73,19 @@ const CategoryBudget = ({
           </Box>
           {/* Input Container */}
           <InputGroup w="50%">
-            <Input type="number" value={budget}></Input>
+            <Input
+              type="number"
+              value={budgetAmount}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setBudgetAmount(Number(e.target.value));
+              }}
+              onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                if (e.key === 'Enter') {
+                  console.log(e);
+                  (e.target as HTMLInputElement).blur();
+                }
+              }}
+            ></Input>
             <InputRightAddon fontSize="0.8rem" children="원" />
           </InputGroup>
         </Box>
