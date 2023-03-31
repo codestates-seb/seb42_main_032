@@ -92,6 +92,7 @@ const Body = styled.div`
   flex-direction: column;
   margin-top: 80px;
   min-height: calc(100vh - 340px);
+  width: 80%;
 `;
 
 function Home({ selectedDate }: { selectedDate: Date }) {

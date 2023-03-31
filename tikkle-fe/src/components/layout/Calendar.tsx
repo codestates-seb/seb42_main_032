@@ -9,6 +9,35 @@ import axios from 'axios';
 import Loading from './Loading';
 import { userInfoState } from '../../util/store';
 import { useRecoilValue } from 'recoil';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  border: 1px solid black;
+  box-shadow: 1px 1px 4px;
+  border-radius: 10px;
+  div:first-child {
+    padding-top: 10px;
+    /* padding-bottom: 30px; */
+  }
+  table {
+  }
+  thead {
+    tr {
+      th:first-child {
+        color: red;
+      }
+      th:last-child {
+        color: blue;
+      }
+    }
+    th {
+      font-size: 20px;
+      border-bottom: 1px solid black;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  }
+`;
 
 /**
  * day: 요일, date: 일자 의미로 주석을 작성했습니다.
@@ -129,14 +158,16 @@ const Calendar = ({ date }: { date: Date }) => {
   }
 
   return !loading ? (
-    <TableContainer>
-      <Table>
-        <Thead>
-          <Tr>{renderDaysOfWeek}</Tr>
-        </Thead>
-        <Tbody>{renderRow}</Tbody>
-      </Table>
-    </TableContainer>
+    <Container>
+      <TableContainer>
+        <Table>
+          <Thead>
+            <Tr>{renderDaysOfWeek}</Tr>
+          </Thead>
+          <Tbody>{renderRow}</Tbody>
+        </Table>
+      </TableContainer>
+    </Container>
   ) : (
     <Loading />
   );
