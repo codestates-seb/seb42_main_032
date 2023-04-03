@@ -1,6 +1,7 @@
 package DabuOps.tikkle.oauth.service;
 
 import DabuOps.tikkle.member.entity.Member;
+import DabuOps.tikkle.member.entity.Member.MemberState;
 import DabuOps.tikkle.member.mapper.MemberMapper;
 import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.oauth.dto.UserInfo;
@@ -103,6 +104,11 @@ public class OAuthService extends DefaultOAuth2UserService {
                 newMember.setName(name);
                 newMember.setPicture(picture);
                 return memberRepository.save(newMember);
+            } else if(member.getState().equals(MemberState.DELETED)) {
+                //회원의 탈퇴 상태를 활성으로 변경
+                member.setState(MemberState.ACTIVE);
+                //상태 저장
+                return memberRepository.save(member);
             } else {
                 return  member;
             }
