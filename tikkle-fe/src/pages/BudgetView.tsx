@@ -164,6 +164,7 @@ function BudgetView() {
       categoryId: number;
       amount: number;
       spend: number;
+      image: string;
     }[]
   >();
 
@@ -280,7 +281,7 @@ function BudgetView() {
               budgetCategory.map((el) => {
                 return (
                   <div key={el.id} className="budgetview-categorylist__div">
-                    <CategoryIcon icon={CategoryIdMap[el.categoryId]} />
+                    <CategoryIcon icon={el.image} />
                     <div className="budgetview-categorycontent__div">
                       <div className="budgetview-categoryname__div">
                         {el.name}

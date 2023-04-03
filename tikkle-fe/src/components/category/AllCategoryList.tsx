@@ -35,10 +35,17 @@ const CategoryList = styled.div`
 `;
 
 interface AllCategoryListProps {
-  data: { id: number; categoryId: number; name: string };
-  selectedCategory: { id: number; categoryId: number; name: string }[];
+  data: { id: number; categoryId: number; name: string; image: string };
+  selectedCategory: {
+    id: number;
+    categoryId: number;
+    name: string;
+    image: string;
+  }[];
   setSelectedCategory: Dispatch<
-    SetStateAction<{ id: number; categoryId: number; name: string }[]>
+    SetStateAction<
+      { id: number; categoryId: number; name: string; image: string }[]
+    >
   >;
   budget: { id?: number; memberCategoryId?: number; status: string }[];
   setBudget: Dispatch<
@@ -184,7 +191,7 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
         className={isSelected ? 'selected' : ''}
         onClick={handleClickCategory}
       >
-        <CategoryIcon icon={CategoryIdMap[data.categoryId]} />
+        <CategoryIcon icon={data.image} />
         <div className="category-name__div">{data.name}</div>
       </CategoryList>
     </Container>
