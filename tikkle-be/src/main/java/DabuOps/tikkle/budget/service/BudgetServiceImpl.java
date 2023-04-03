@@ -103,6 +103,15 @@ public class BudgetServiceImpl implements BudgetService{
         budget.setStatus(Budget.Status.INACTIVE);
     }
 
+    public void verifiedBudget(Long budgetId) {
+        Optional<Budget> optionalBudget = budgetRepository.findById(budgetId);
+        Budget findBudget =
+                optionalBudget.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.BUDGET_NOT_FOUND));
+        if(findBudget.getStatus().equals(Budget.Status.INACTIVE)) throw new BusinessLogicException(ExceptionCode.BUDGET_IS_INACTIVE);
+
+    }
+
 
     public void checkInitDate() { // 매일 자정에 전체 멤버 initDate 검사
         List<Member> members = memberRepository.findByStateIs(Member.MemberState.ACTIVE);
