@@ -56,6 +56,7 @@ public class UserAuthService {
     private String redirectUri;
 
     public TokenResponseDto requestToken(String authorizationCode, Long memberId) {
+
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("code", authorizationCode);
         formData.add("client_id", clientId);
