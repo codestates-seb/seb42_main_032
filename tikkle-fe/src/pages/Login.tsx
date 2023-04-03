@@ -143,14 +143,6 @@ function Login() {
           ...fetchedUserInfo,
           createdAt: new Date(fetchedUserInfo.createdAt),
           modifiedAt: new Date(fetchedUserInfo.modifiedAt),
-          payDay:
-            fetchedUserInfo.payDay === null
-              ? null
-              : new Date(fetchedUserInfo.payDay),
-          initDate:
-            fetchedUserInfo.initDate === 1
-              ? 1
-              : new Date(fetchedUserInfo.initDate),
         });
       } catch (err: any) {
         console.log(err);

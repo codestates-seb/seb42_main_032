@@ -1,4 +1,4 @@
-import React, { ReactHTMLElement, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Input,
@@ -9,24 +9,16 @@ import {
 } from '@chakra-ui/react';
 import { useRecoilState } from 'recoil';
 import { MdEdit } from 'react-icons/md';
+import axios from 'axios';
 
 // 전역 상태들이 작성되어 있는 store 목록에서 전역 상태를 불러옴
-import { dateState, totalBudgetState } from '../../util/store';
+import { dateState, userInfoState } from '../../util/store';
 
 const MonthlyBudget = () => {
   const [date] = useRecoilState<Date>(dateState);
-  const [totalBudget, setTotalBudget] =
-    useRecoilState<number>(totalBudgetState);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const [isEditable, setIsEditable] = useState(false);
-
-  const handleEditable = () => {
-    setIsEditable(!isEditable);
-  };
-  // 어떤 타입으로 지정해야 할지 생각해보기
-  const handleTotalBudget = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTotalBudget(Number(event.target.value));
-  };
 
   return (
     <Box
@@ -43,23 +35,47 @@ const MonthlyBudget = () => {
           <InputGroup>
             <Input
               type="number"
-              value={totalBudget}
-              onChange={handleTotalBudget}
+              value={userInfo.totalBudget}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                setUserInfo({
+                  ...userInfo,
+                  totalBudget: Number(event.target.value),
+                })
+              }
             ></Input>
             <InputRightElement>
-              <Button onClick={handleEditable}>저장</Button>
+              <Button
+                onClick={async () => {
+                  try {
+                    const res = await axios.patch(
+                      `${import.meta.env.VITE_SERVER}/members/${userInfo.id}`,
+                      {
+                        totalBudget: userInfo.totalBudget,
+                      }
+                    );
+                    console.log(res);
+                    setIsEditable(!isEditable);
+                  } catch (err) {
+                    console.log(err);
+                  }
+                }}
+              >
+                저장
+              </Button>
             </InputRightElement>
           </InputGroup>
         ) : (
           <>
             <Text as="b" fontSize="1.5rem">{`${new Intl.NumberFormat().format(
-              totalBudget
+              userInfo.totalBudget || 0
             )}원`}</Text>
             <Box
               display="flex"
               alignItems="center"
               ml={1}
-              onClick={handleEditable}
+              onClick={() => {
+                setIsEditable(!isEditable);
+              }}
             >
               <MdEdit color="grey" width={2} />
             </Box>
@@ -73,7 +89,9 @@ const MonthlyBudget = () => {
         w="100%"
       >
         <Text>지난 달 지출</Text>
-        <Text>{`${new Intl.NumberFormat().format(totalBudget)}원`}</Text>
+        <Text>{`${new Intl.NumberFormat().format(
+          userInfo.totalBudget || 0
+        )}원`}</Text>
       </Box>
     </Box>
   );

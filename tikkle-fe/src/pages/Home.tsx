@@ -112,6 +112,13 @@ function Home({ selectedDate }: { selectedDate: Date }) {
     selectedDate.getFullYear() +
     String(selectedDate.getMonth() + 1).padStart(2, '0');
 
+  // 21개 기본 카테고리 생성용 테스트 코드
+  // 사용법: 로컬에서 백엔드 서버를 띄웠을 때 아래 코드의 주석을 해제하고, 저장한 뒤 홈페이지에서 새로고침
+  // 사용 후: 다시 주석 처리 후 저장
+  // axios
+  //   .post(`${import.meta.env.VITE_SERVER}/init`)
+  //   .catch((err) => console.log(err));
+
   axios
     .post(`${import.meta.env.VITE_SERVER}/transaction_histories`, {
       memberCategoryId: 1,

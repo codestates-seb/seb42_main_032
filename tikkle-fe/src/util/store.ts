@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 import { userInfoType } from '../pages/Login';
 
@@ -14,12 +14,6 @@ export const dateState = atom({
   key: 'dateState',
   default: new Date(),
 });
-
-// ToDo - 사용자 로그인 시점에 서버에서 받아온 데이터로 업데이트
-export const totalBudgetState = atom({
-  key: 'totalBudgetState',
-  default: 500000
-})
 
 /**
  * 액세스 토큰
@@ -43,8 +37,7 @@ export const currentPageState = atom({
   effects: [persistAtom]
 })
 
-export const userInfoState = atom<userInfoType | null>({
+export const userInfoState = atom<userInfoType>({
   key: 'userInfoState',
-  default: null,
   effects: [persistAtom],
-})
+});
