@@ -61,7 +61,7 @@ public class UserAuthService {
         formData.add("code", authorizationCode);
         formData.add("client_id", clientId);
         formData.add("client_secret", clientSecret);
-        formData.add("redirect_uri", "http://localhost:5173/usersetting");
+        formData.add("redirect_uri", "redirectUri");
         formData.add("grant_type", "authorization_code");
 
         HttpHeaders headers = new HttpHeaders();
