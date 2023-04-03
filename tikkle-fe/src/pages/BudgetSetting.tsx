@@ -33,7 +33,7 @@ const BudgetSetting = () => {
   // PC 화면에 대응하기 위해 추가
   const [isLagerThan900px] = useMediaQuery('(min-width: 900px)');
 
-  const { totalBudget, id } = useRecoilValue(userInfoState);
+  const userInfo = useRecoilValue(userInfoState);
 
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<CategoryType[]>();
@@ -44,7 +44,7 @@ const BudgetSetting = () => {
     try {
       setIsLoading(true);
       const res = await axios.get(
-        `${import.meta.env.VITE_SERVER}/categories/${id}`
+        `${import.meta.env.VITE_SERVER}/categories/${userInfo?.id}`
       );
       console.log(res.data);
       setCategories(res.data);
@@ -62,7 +62,9 @@ const BudgetSetting = () => {
     try {
       setIsLoading(true);
       let res = (
-        await axios.get(`${import.meta.env.VITE_SERVER}/budgets/members/${id}`)
+        await axios.get(
+          `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo?.id}`
+        )
       ).data;
 
       // 예산 금액을 기준으로 내림차순 정렬
@@ -120,14 +122,14 @@ const BudgetSetting = () => {
             </Box>
             <Text align="right" fontSize="0.8rem" color="grey">
               {`전체 예산 ${new Intl.NumberFormat('ko-KR').format(
-                totalBudget || 0
+                userInfo?.totalBudget || 0
               )}원`}
             </Text>
             <Box display="flex" justifyContent="flex-start" my="20px">
               {/* 드롭다운 메뉴 선택 시 드롭다운 기준 부모인 지금 컴포넌트를 다시 렌더링해야 함 */}
               {/* 이를 위해 GET 요청 함수를 props로 내려줌 */}
               <BudgetDropdown
-                totalAmount={totalBudget || 0}
+                totalAmount={userInfo?.totalBudget || 0}
                 getBudgets={getBudgets}
               />
             </Box>

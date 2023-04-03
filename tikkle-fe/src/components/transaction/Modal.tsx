@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { userInfoState } from '../../util/store';
 import { useRecoilValue } from 'recoil';
-import { debounce } from 'throttle-debounce';
+// import { debounce } from 'throttle-debounce';
 
 const ModalContainer = styled.div`
   display: flex;
