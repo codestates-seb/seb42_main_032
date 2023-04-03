@@ -33,7 +33,7 @@ const BudgetSetting = () => {
   // PC 화면에 대응하기 위해 추가
   const [isLagerThan900px] = useMediaQuery('(min-width: 900px)');
 
-  const { totalBudget } = useRecoilValue(userInfoState);
+  const { totalBudget, id } = useRecoilValue(userInfoState);
 
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<CategoryType[]>();
@@ -43,7 +43,10 @@ const BudgetSetting = () => {
     // 컴포넌트 상태를 로딩 중으로 업데이트한 후 카테고리 데이터 요청
     try {
       setIsLoading(true);
-      const res = await axios.get(`http://localhost:3000/categories`);
+      const res = await axios.get(
+        `${import.meta.env.VITE_SERVER}/categories/${id}`
+      );
+      console.log(res.data);
       setCategories(res.data);
     } catch (err) {
       // 요청 실패 시 콘솔에 에러 표시
@@ -58,30 +61,20 @@ const BudgetSetting = () => {
   const getBudgets = async () => {
     try {
       setIsLoading(true);
-      // let res = (await axios.get(`${import.meta.env.VITE_SERVER}/budgets`))
-      //   .data;
-      let res = (await axios.get(`http://localhost:3000/budgets`)).data;
-
-      // 전체 예산 정보에서 날짜 형식 데이터를 모두 Date 타입으로 형변환
-      res = res.map((budget: BudgetType) => {
-        return {
-          ...budget,
-          startDate: new Date(budget.startDate),
-          endDate: new Date(budget.endDate),
-          createdAt: new Date(budget.createdAt),
-        };
-      });
+      let res = (
+        await axios.get(`${import.meta.env.VITE_SERVER}/budgets/members/${id}`)
+      ).data;
 
       // 예산 금액을 기준으로 내림차순 정렬
       res.sort((a: BudgetType, b: BudgetType) => {
         return b.amount - a.amount;
       });
 
+      console.log(res);
+
       setBudgets(res);
     } catch (err) {
       console.log(err);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -144,15 +137,11 @@ const BudgetSetting = () => {
               <Loading />
             ) : (
               budgets?.map((budget) => {
-                const category = categories?.filter(
-                  (category) => budget.memberCategoryId === category.id
-                )[0];
                 return (
                   <CategoryBudget
                     key={budget.id}
                     budgetId={budget.id}
-                    categoryIcon={category?.categoryIcon || ''}
-                    categoryLabel={category?.name || ''}
+                    categoryId={budget.memberCategoryId}
                   />
                 );
               })
