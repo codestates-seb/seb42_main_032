@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 /**
@@ -7,6 +8,8 @@ const LoginContainer = styled.div`
   background-image: url('/tikkle-background.jpg');
   position: relative;
   background-color: transparent;
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,6 +29,49 @@ const LoginContainer = styled.div`
   img {
     width: 600px;
     height: 300px;
+  }
+`;
+
+const Container = styled.div`
+  overflow: hidden;
+`;
+
+interface CarouselProps {
+  current: number;
+}
+
+const CarouselContainer = styled.div<CarouselProps>`
+  display: flex;
+  margin-top: 60px;
+  transform: translateX(-${(props) => props.current * 100}%);
+  width: 100%;
+  transition: all 0.3s ease-out;
+  .landing-carousel0__div {
+    flex: none;
+    background-image: url('/tikkle-background.jpg');
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 60vh;
+  }
+  .landing-carousel1__div {
+    flex: none;
+    background-image: url('/carousel1.png');
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 60vh;
+  }
+  .landing-carousel2__div {
+    flex: none;
+    background-image: url('/carousel2.png');
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 60vh;
   }
 `;
 
@@ -73,13 +119,50 @@ const OauthLoginButton = styled.div`
  */
 
 function Landing() {
+  // 캐러셀 인덱스 상태 관리
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  const useInterval = (callback: () => void, delay: number) => {
+    const savedCallback: { current: () => void } = useRef(() => {});
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+
+    useEffect(() => {
+      const tick = () => {
+        savedCallback.current();
+      };
+      if (delay !== null) {
+        let id = setInterval(tick, delay);
+        return () => clearInterval(id);
+      }
+    }, [delay]);
+  };
+
+  const changeCarousel = () => {
+    if (currentIdx < 2) {
+      setCurrentIdx(currentIdx + 1);
+    } else {
+      setCurrentIdx(0);
+    }
+  };
+
+  useInterval(() => {
+    changeCarousel();
+  }, 5000);
+
   return (
-    <LoginContainer className="login-container">
-      <LogoWrap>
-        <img src="tikkle-logo.svg" alt="logo" />
-        <span>편리한 예산별 지출 관리 서비스, 티클✨</span>
-      </LogoWrap>
-    </LoginContainer>
+    <Container>
+      <CarouselContainer current={currentIdx}>
+        <div className="landing-carousel0__div"></div>
+        <div className="landing-carousel1__div"></div>
+        <div className="landing-carousel2__div"></div>
+      </CarouselContainer>
+    </Container>
+    // <LogoWrap>
+    // <img src="tikkle-logo.svg" alt="logo" />
+    // <span>편리한 예산별 지출 관리 서비스, 티클✨</span>
+    // </LogoWrap>
   );
 }
 
