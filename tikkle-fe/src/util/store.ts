@@ -42,3 +42,9 @@ export const userInfoState = atom<userInfoType | null>({
   default: null,
   effects: [persistAtom],
 });
+
+// 사용자가 최초 가입 사용자인지 판단하는 전역 상태
+export const initUserState = atom<boolean>({
+  key: 'initUserState',
+  default: false,
+})
