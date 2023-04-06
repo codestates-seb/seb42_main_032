@@ -72,7 +72,7 @@ public class CurationService {
      */
     private void verifyAuthorizedMemberForCuration(Long memberId){
         Member obtainMember = memberRepository.findById(memberId).get();
-        if(obtainMember.getRole() != MemberRole.curator)
+        if(obtainMember.getRole() != MemberRole.CURATOR)
             throw new BusinessLogicException(ExceptionCode.MEMBER_UNAUTHORIZED);
 
     }

@@ -20,7 +20,7 @@ public class MemberServiceStub {
             .initDate(25)
             .payDay(25)
             .email("test123@gmail.com")
-            .gender(Gender.male)
+            .gender(Gender.MALE)
             .build();
     }
    // @Override

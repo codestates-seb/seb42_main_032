@@ -93,7 +93,7 @@ public class TagService {
      */
     private void verifyAuthorizedMemberForTag(Long memberId){
         Member obtainMember = memberRepository.findById(memberId).get();
-        if(obtainMember.getRole() != MemberRole.curator)
+        if(obtainMember.getRole() != MemberRole.CURATOR)
             throw new BusinessLogicException(ExceptionCode.MEMBER_UNAUTHORIZED);
 
     }

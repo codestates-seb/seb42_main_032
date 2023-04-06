@@ -57,7 +57,7 @@ public class Member extends Auditable {
     @Column
     @Builder.Default
     @Enumerated(value = EnumType.STRING)
-    private MemberRole role = MemberRole.regular;
+    private MemberRole role = MemberRole.REGULAR;
 
     @Column
     private String accessToken;
@@ -80,8 +80,8 @@ public class Member extends Auditable {
 
 
     public static enum Gender{
-        male("남성"),
-        female("여성");
+        MALE("남성"),
+        FEMALE("여성");
 
         @Getter
         private String gender;
@@ -93,9 +93,9 @@ public class Member extends Auditable {
     }
 
     public static enum MemberState {
-        userSetting("회원 정보 설정 필요"),
-        categoryEdit("카테고리 설정 필요"),
-        budgetSetting("예산 설정 필요"),
+        USERSETTING("회원 정보 설정 필요"),
+        CATEGORYEDIT("카테고리 설정 필요"),
+        BUDGETSETTING("예산 설정 필요"),
         ACTIVE("활성"),
         DORMANT("휴면"),
         DELETED("탈퇴");
@@ -109,8 +109,8 @@ public class Member extends Auditable {
     }
 
     public static enum MemberRole {
-        curator("큐레이터"),
-        regular("일반");
+        CURATOR("큐레이터"),
+        REGULAR("일반");
         @Getter
         private String role;
 
