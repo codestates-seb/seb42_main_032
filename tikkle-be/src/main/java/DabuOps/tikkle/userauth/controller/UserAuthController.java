@@ -26,7 +26,7 @@ public class UserAuthController {
     @PostMapping("/members/auth/{member-id}")
     public String accountAuth(@PathVariable("member-id") Long memberId, @RequestParam("code") String authorizationCode) {
         TokenResponseDto tokenResponse = userAuthService.requestToken(authorizationCode, memberId);
-        List<AccountInfoDto> accountInfoDtoList = userAuthService.requestUserInfo(tokenResponse.getAccessToken(), tokenResponse.getUserSeqNo());
+        List<AccountInfoDto> accountInfoDtoList = userAuthService.requestUserInfo(tokenResponse.getAccessToken(), tokenResponse.getUserSeqNo(), memberId);
 
         return "사용자 인증이 완료되었습니다.";
     }

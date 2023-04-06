@@ -90,7 +90,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
 
     public List<List<Integer>> findMonthlyTransactionHistoriesSummary(List<TransactionHistory> transactionHistories, LocalDate startDate) {
         List<List<Integer>> daily = new ArrayList<>();
-        for (int i = 0; i <= LocalDate.now().getDayOfMonth(); i++) {
+        for (int i = 0; i <= startDate.withDayOfMonth(startDate.lengthOfMonth()).getDayOfMonth(); i++) {
             daily.add(Arrays.asList(0, 0));
             // daily index = 일
             // daily(i,0) = i일의 수입, daily(i,1) = i일의 지출

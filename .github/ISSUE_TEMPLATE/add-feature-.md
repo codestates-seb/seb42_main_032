@@ -1,7 +1,7 @@
 ---
 name: 'Add Feature '
 about: 만들어야 할 feature를 적어주세요.
-title: "[FE] feat: 기능명"
+title: "[FE] Feat: 기능명"
 labels: feat
 assignees: ''
 
