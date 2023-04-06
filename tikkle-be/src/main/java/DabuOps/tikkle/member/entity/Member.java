@@ -57,7 +57,7 @@ public class Member extends Auditable {
     @Column
     @Builder.Default
     @Enumerated(value = EnumType.STRING)
-    private MemberRole role = MemberRole.Regular;
+    private MemberRole role = MemberRole.regular;
 
     @Column
     private String accessToken;
@@ -93,6 +93,9 @@ public class Member extends Auditable {
     }
 
     public static enum MemberState {
+        userSetting("회원 정보 설정 필요"),
+        categoryEdit("카테고리 설정 필요"),
+        budgetSetting("예산 설정 필요"),
         ACTIVE("활성"),
         DORMANT("휴면"),
         DELETED("탈퇴");
@@ -106,8 +109,8 @@ public class Member extends Auditable {
     }
 
     public static enum MemberRole {
-        Curator("큐레이터"),
-        Regular("일반");
+        curator("큐레이터"),
+        regular("일반");
         @Getter
         private String role;
 
