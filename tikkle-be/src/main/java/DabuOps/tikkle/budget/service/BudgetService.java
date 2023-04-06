@@ -10,8 +10,6 @@ import java.util.List;
 public interface BudgetService {
     Budget createAutoBudget(MemberCategory memberCategory);
 
-    Budget initBudget(MemberCategory memberCategory, Integer amount);
-
     Budget createBudget(Budget budget, Long memberCategoryId);
 
     Budget updateBudget(Budget budget, Long budgetId);
