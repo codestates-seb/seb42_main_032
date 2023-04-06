@@ -60,7 +60,7 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
 
     public MemberCategory updateMemberCategory(MemberCategory memberCategory, Long memberCategoryId) {
         MemberCategory updatedMemberCategory = findMemberCategory(memberCategoryId);
-        if(updatedMemberCategory.getCategory().getName().equals("기타")) {
+        if(!updatedMemberCategory.getCategory().getName().equals("기타")) {
             throw new BusinessLogicException(ExceptionCode.CANNOT_CHANGE_CATEGORY_NAME);
         }
 
@@ -87,12 +87,13 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
 
     public void deleteMemberCategory(Long memberCategoryId) {
         MemberCategory memberCategory = findMemberCategory(memberCategoryId);
-        if(memberCategory.getCategory().getName().equals("기타")) {
+        if(!memberCategory.getCategory().getName().equals("기타")) {
             throw new BusinessLogicException(ExceptionCode.CANNOT_CHANGE_CATEGORY_STATUS);
         }
         else {
             memberCategory.setStatus(MemberCategory.Status.INACTIVE);
-            MemberCategory etcCategory = memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(21L, memberCategory.getMember().getId(), MemberCategory.Status.INACTIVE);
+            Long categoryId = categoryRepository.findByName("기타").getId();
+            MemberCategory etcCategory = memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(categoryId, memberCategory.getMember().getId(), MemberCategory.Status.INACTIVE);
 
             List<Budget> budgets = budgetRepository.findByMemberCategoryId(memberCategoryId);
             for(Budget budget : budgets) {
