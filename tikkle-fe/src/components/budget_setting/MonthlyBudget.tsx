@@ -35,7 +35,7 @@ const MonthlyBudget = () => {
           <InputGroup>
             <Input
               type="number"
-              value={userInfo.totalBudget}
+              value={userInfo?.totalBudget || 0}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                 setUserInfo({
                   ...userInfo,
@@ -48,9 +48,9 @@ const MonthlyBudget = () => {
                 onClick={async () => {
                   try {
                     const res = await axios.patch(
-                      `${import.meta.env.VITE_SERVER}/members/${userInfo.id}`,
+                      `${import.meta.env.VITE_SERVER}/members/${userInfo?.id}`,
                       {
-                        totalBudget: userInfo.totalBudget,
+                        totalBudget: userInfo?.totalBudget,
                       }
                     );
                     console.log(res);
@@ -67,7 +67,7 @@ const MonthlyBudget = () => {
         ) : (
           <>
             <Text as="b" fontSize="1.5rem">{`${new Intl.NumberFormat().format(
-              userInfo.totalBudget || 0
+              userInfo?.totalBudget || 0
             )}원`}</Text>
             <Box
               display="flex"
@@ -90,7 +90,7 @@ const MonthlyBudget = () => {
       >
         <Text>지난 달 지출</Text>
         <Text>{`${new Intl.NumberFormat().format(
-          userInfo.totalBudget || 0
+          userInfo?.totalBudget || 0
         )}원`}</Text>
       </Box>
     </Box>

@@ -88,7 +88,11 @@ function UserSetting() {
   // 첫 가입 사용자는 userInfo.payDay 값이 null이므로 첫 사용자 여부를 이걸로 판별
   // 카테고리 생성을 위해서 첫 가입 사용자인 경우 /{member-id}/init에 patch 요청
   const handleSubmit = async () => {
-    if (userInfo?.payDay === null) {
+    if (
+      (await (
+        await axios.get(`${import.meta.env.VITE_SERVER}/categories/${memberId}`)
+      ).data.data.length) === 0
+    ) {
       await axios
         .patch(
           `${import.meta.env.VITE_SERVER}/members/${memberId}/init`,

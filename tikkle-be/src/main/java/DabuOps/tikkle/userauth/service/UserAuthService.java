@@ -3,6 +3,8 @@ package DabuOps.tikkle.userauth.service;
 import DabuOps.tikkle.account.entity.Account;
 import DabuOps.tikkle.account.entity.Account.AccountState;
 import DabuOps.tikkle.account.repository.AccountRepository;
+import DabuOps.tikkle.global.exception.BusinessLogicException;
+import DabuOps.tikkle.global.exception.ExceptionCode;
 import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
@@ -56,6 +58,7 @@ public class UserAuthService {
     private String redirectUri;
 
     public TokenResponseDto requestToken(String authorizationCode, Long memberId) {
+
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("code", authorizationCode);
         formData.add("client_id", clientId);
@@ -79,7 +82,7 @@ public class UserAuthService {
         return tokenResponse;
     }
 
-    public List<AccountInfoDto> requestUserInfo(String accessToken, String userSeqNo) {
+    public List<AccountInfoDto> requestUserInfo(String accessToken, String userSeqNo, Long memberId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(accessToken);
@@ -95,6 +98,9 @@ public class UserAuthService {
 
         for (Map<String, Object> accountMap : response.getResList()) {
             Account account = new Account();
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+            account.setMember(member);
             account.setFintechUseNum((String) accountMap.get("fintech_use_num"));
 
             // fintech_use_num으로 조회하여 해당 계좌가 이미 존재하는지 확인

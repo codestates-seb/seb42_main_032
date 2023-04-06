@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Builder
@@ -62,7 +63,7 @@ public class Member extends Auditable {
     @Enumerated(value = EnumType.STRING)
     private MemberRole role = MemberRole.Regular;
 
-    @Column(length = 1000)
+    @Column(length = 410)
     private String accessToken;
 
     @Builder
