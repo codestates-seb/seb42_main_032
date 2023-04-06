@@ -2,8 +2,9 @@ import Calendar from '../components/layout/Calendar';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import Transaction, { TransactionType } from '../components/layout/Transaction';
-import { tokenState } from '../util/store';
-import { useRecoilState } from 'recoil';
+import { tokenState, userInfoState } from '../util/store';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import axios from 'axios';
 
 // // transaction 컴포넌트용 거래내역 dummydata
 // const transactions: TransactionType[] = [
@@ -93,15 +94,50 @@ const Body = styled.div`
   min-height: calc(100vh - 340px);
 `;
 
+const CalendarContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-left: 15px;
+  padding-right: 15px;
+`;
+
 function Home({ selectedDate }: { selectedDate: Date }) {
   // const [accessToken, setAccessToken] = useRecoilState(tokenState);
 
   // console.log(`Access Token in Home: ${accessToken}`);
 
+  // 테스트용 코드
+  let member_id = useRecoilValue(userInfoState)?.id;
+  let headerMonth =
+    selectedDate.getFullYear() +
+    String(selectedDate.getMonth() + 1).padStart(2, '0');
+
+  // 21개 기본 카테고리 생성용 테스트 코드
+  // 사용법: 로컬에서 백엔드 서버를 띄웠을 때 아래 코드의 주석을 해제하고, 저장한 뒤 홈페이지에서 새로고침
+  // 사용 후: 다시 주석 처리 후 저장
+  // axios
+  //   .post(`${import.meta.env.VITE_SERVER}/init`)
+  //   .catch((err) => console.log(err));
+
+  axios
+    .post(`${import.meta.env.VITE_SERVER}/transaction_histories`, {
+      memberCategoryId: 1,
+      date: '2023-03-19',
+      time: '23:54:01',
+      inoutType: 'SPEND',
+      memo: '메모',
+      amount: 10000,
+      branchName: 'GS25동작엠코점',
+    })
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
+
   return (
     <HomeContainer>
       <Body>
-        <Calendar date={selectedDate} />
+        <CalendarContainer>
+          <Calendar date={selectedDate} />
+        </CalendarContainer>
         <Transaction date={selectedDate} />
       </Body>
     </HomeContainer>

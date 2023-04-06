@@ -1,0 +1,219 @@
+{
+  "budgets": [
+    {
+      "id": 1,
+      "memberCategoryId": 1,
+      "amount": 200000,
+      "startDate": "2023-03-01",
+      "endDate": "2023-03-31",
+      "spend": 0,
+      "createdAt": "2023-03-20T19:23:54.292708"
+    },
+    {
+      "id": 2,
+      "memberCategoryId": 5,
+      "amount": 50000,
+      "startDate": "2023-03-01",
+      "endDate": "2023-03-31",
+      "spend": 0,
+      "createdAt": "2023-03-20T19:23:54.292708"
+    },
+    {
+      "id": 3,
+      "memberCategoryId": 2,
+      "amount": 500000,
+      "startDate": "2023-03-01",
+      "endDate": "2023-03-31",
+      "spend": 0,
+      "createdAt": "2023-03-20T19:23:54.29579"
+    },
+    {
+      "id": 4,
+      "memberCategoryId": 4,
+      "amount": 50000,
+      "startDate": "2023-03-01",
+      "endDate": "2023-03-31",
+      "spend": 0,
+      "createdAt": "2023-03-20T19:23:54.297718"
+    },
+    {
+      "id": 5,
+      "memberCategoryId": 7,
+      "amount": 50000,
+      "startDate": "2023-03-01",
+      "endDate": "2023-03-31",
+      "spend": 0,
+      "createdAt": "2023-03-20T19:23:54.30077"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "쇼핑",
+      "categoryIcon": "AiOutlineShopping",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 2,
+      "name": "식비",
+      "categoryIcon": "MdFastfood",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 3,
+      "name": "카페",
+      "categoryIcon": "BiCoffeeTogo",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 4,
+      "name": "오락",
+      "categoryIcon": "IoLogoGameControllerA",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 5,
+      "name": "유흥",
+      "categoryIcon": "IoBeer",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 6,
+      "name": "의료비",
+      "categoryIcon": "MdOutlineLocalHospital",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 7,
+      "name": "뷰티",
+      "categoryIcon": "GiLipstick",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 8,
+      "name": "여행",
+      "categoryIcon": "GiAirplaneDeparture",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 9,
+      "name": "금융",
+      "categoryIcon": "BiWon",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 10,
+      "name": "자동차",
+      "categoryIcon": "BsFillCarFrontFill",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 11,
+      "name": "교통비",
+      "categoryIcon": "IoIosSubway",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 12,
+      "name": "주거",
+      "categoryIcon": "BsFillHouseFill",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 13,
+      "name": "경조사",
+      "categoryIcon": "GiPresent",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 14,
+      "name": "통신비",
+      "categoryIcon": "BiPhoneCall",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 15,
+      "name": "생활",
+      "categoryIcon": "BsCart4",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 16,
+      "name": "육아",
+      "categoryIcon": "FaBabyCarriage",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 17,
+      "name": "교육",
+      "categoryIcon": "IoMdSchool",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 18,
+      "name": "반려동물",
+      "categoryIcon": "FaDog",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 19,
+      "name": "문화",
+      "categoryIcon": "BiCameraMovie",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 20,
+      "name": "운동",
+      "categoryIcon": "CiDumbbell",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    },
+    {
+      "id": 21,
+      "name": "기타",
+      "categoryIcon": "AiOutlineQuestion",
+      "memberId": 1,
+      "categoryId": 1,
+      "createdAt": null
+    }
+  ]
+}

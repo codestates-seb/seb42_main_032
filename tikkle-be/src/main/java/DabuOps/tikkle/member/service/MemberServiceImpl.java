@@ -74,17 +74,21 @@ public class MemberServiceImpl implements MemberService {
             .ifPresent(obtainedMember::setTotalBudget);
         Optional.ofNullable(member.getGender())
             .ifPresent(obtainedMember::setGender);
+        Optional.ofNullable(member.getPayAmount())
+            .ifPresent(obtainedMember::setPayAmount);
         Optional.ofNullable(member.getState())
             .ifPresent(obtainedMember::setState);
 
         return memberRepository.save(obtainedMember);
     }
 
+    // 멤버 초기 설정 메서드
     public Member initMember(Member member) {
         Member initializedMember = findExistMemberById(member.getId());
 
         initializedMember.setInitDate(member.getInitDate());
         initializedMember.setPayDay(member.getPayDay());
+        initializedMember.setPayAmount(member.getPayAmount());
         initializedMember.setTotalBudget(member.getTotalBudget());
         initializedMember.setGender(member.getGender());
         Member savedMember = memberRepository.save(initializedMember);

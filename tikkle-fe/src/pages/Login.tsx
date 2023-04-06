@@ -18,12 +18,15 @@ const LoginContainer = styled.div`
   background-image: url('/tikkle-background.jpg');
   position: relative;
   background-color: transparent;
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
   font-family: 'GmarketSansMedium';
   height: 100vh;
+  width: 100%;
   ::before {
     position: absolute;
     content: '';
@@ -85,21 +88,20 @@ const OauthLoginButton = styled.div`
 
 // 회원 정보 타입
 export interface userInfoType {
-  createdAt: Date;
-  modifiedAt: Date;
-  id: number;
-  email: string;
-  name: string;
-  location: null | string;
-  state: string;
-  gender: null | string;
-  payDay: null | Date;
-
-  // initDate는 초기값이 1이기 때문에 number 타입도 허용
-  initDate: null | number | Date;
-
-  picture: string;
-  accessToken: null | string;
+  createdAt?: Date | undefined;
+  email?: string | undefined;
+  gender?: string | undefined;
+  id?: number | undefined;
+  initDate?: number | undefined;
+  location?: string | undefined;
+  modifiedAt?: Date | undefined;
+  name?: string | undefined;
+  payAmount?: number | undefined;
+  payDay?: number | undefined;
+  picture?: string | undefined;
+  role?: string | undefined;
+  state?: string | undefined;
+  totalBudget?: number | undefined;
 }
 //  ToDo 저장된 액세스 토큰이 존재할 경우, 사용자의 현재 상태에 따라 유저/카테고리/예산 설정 페이지 중 하나로 이동
 //  ToDo 저장된 액세스 토큰이 존재하며, 회원가입 절차도 모두 마친 경우 홈 페이지로 이동
@@ -141,19 +143,11 @@ function Login() {
           ...fetchedUserInfo,
           createdAt: new Date(fetchedUserInfo.createdAt),
           modifiedAt: new Date(fetchedUserInfo.modifiedAt),
-          payDay:
-            fetchedUserInfo.payDay === null
-              ? null
-              : new Date(fetchedUserInfo.payDay),
-          initDate:
-            fetchedUserInfo.initDate === 1
-              ? 1
-              : new Date(fetchedUserInfo.initDate),
         });
       } catch (err: any) {
         console.log(err);
         // 토큰이 만료된 경우 저장된 토큰을 지우고, 다시 로그인
-        if (err.response.status === 401) {
+        if (err.response.status === 401 || err.response.status === 500) {
           setAccessToken(null);
           window.location.href =
             'https://accounts.google.com/o/oauth2/auth?' +

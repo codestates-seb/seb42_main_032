@@ -1,5 +1,7 @@
 package DabuOps.tikkle.transaction_history.service;
 
+import DabuOps.tikkle.budget.entity.Budget;
+import DabuOps.tikkle.budget.repository.BudgetRepository;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
 import DabuOps.tikkle.member_category.entity.MemberCategory;
@@ -21,13 +23,20 @@ import java.util.Optional;
 public class TransactionHistoryServiceImpl implements TransactionHistoryService{
     private final TransactionHistoryRepository transactionHistoryRepository;
     private final MemberCategoryService memberCategoryService;
-
     private final MemberCategoryRepository memberCategoryRepository;
+    private final BudgetRepository budgetRepository;
 
     public TransactionHistory createTransactionHistory(TransactionHistory transactionHistory, Long memberCategoryId) {
         MemberCategory memberCategory = memberCategoryService.findMemberCategory(memberCategoryId);
         transactionHistory.setMemberCategory(memberCategory);
         transactionHistory.setStatus(TransactionHistory.Status.ACTIVE);
+
+        if(transactionHistory.getInoutType().equals(TransactionHistory.InoutType.SPEND)) {
+            Budget budget = budgetRepository.findByMemberCategoryIdAndCurrentIsTrue(memberCategoryId);
+
+            budget.setSpend(budget.getSpend() + transactionHistory.getAmount());
+            budgetRepository.save(budget);
+        }
 
         return transactionHistoryRepository.save(transactionHistory);
     }
@@ -71,7 +80,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
         List<TransactionHistory> transactionHistories =
-                transactionHistoryRepository.findByMemberCategory_Member_IdAndDateBetweenAndStatusNot(
+                transactionHistoryRepository.findByMemberCategoryMemberIdAndDateBetweenAndStatusNot(
                 memberId, startDate, endDate, TransactionHistory.Status.INACTIVE);
 
         List dailySummary = findMonthlyTransactionHistoriesSummary(transactionHistories, startDate);
@@ -81,7 +90,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
 
     public List<List<Integer>> findMonthlyTransactionHistoriesSummary(List<TransactionHistory> transactionHistories, LocalDate startDate) {
         List<List<Integer>> daily = new ArrayList<>();
-        for (int i = 0; i <= LocalDate.now().getDayOfMonth(); i++) {
+        for (int i = 0; i <= startDate.withDayOfMonth(startDate.lengthOfMonth()).getDayOfMonth(); i++) {
             daily.add(Arrays.asList(0, 0));
             // daily index = 일
             // daily(i,0) = i일의 수입, daily(i,1) = i일의 지출
@@ -251,6 +260,13 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
                 // 그 외 : 기타
                 transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(21L, memberId, MemberCategory.Status.INACTIVE));
                 break;
+        }
+        if(transactionHistory.getInoutType().equals(TransactionHistory.InoutType.SPEND)) {
+            Long memberCategoryId = transactionHistory.getMemberCategory().getId();
+            Budget budget = budgetRepository.findByMemberCategoryIdAndCurrentIsTrue(memberCategoryId);
+
+            budget.setSpend(budget.getSpend() + transactionHistory.getAmount());
+            budgetRepository.save(budget);
         }
 
         return transactionHistoryRepository.save(transactionHistory);

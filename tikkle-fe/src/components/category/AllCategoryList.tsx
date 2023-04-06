@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import CategoryIcon from './CategoryIcon';
+import { userInfoType } from '../../pages/Login';
+import CategoryIcon, { CategoryIdMap } from './CategoryIcon';
 
 //  카테고리 수정 페이지에서 전체 카테고리 리스트 컴포넌트
 
@@ -20,7 +21,7 @@ const CategoryList = styled.div`
   margin: 10px;
   font-size: 25px;
   /* border: 1px solid black; */
-  box-shadow: 2px 2px 4px;
+  box-shadow: 1px 1px 3px;
   border-radius: 5px;
   padding: 10px;
   min-width: 242px;
@@ -34,15 +35,23 @@ const CategoryList = styled.div`
 `;
 
 interface AllCategoryListProps {
-  data: { id: number; categoryIcon: string; name: string };
-  selectedCategory: { id: number; categoryIcon: string; name: string }[];
+  data: { id: number; categoryId: number; name: string; image: string };
+  selectedCategory: {
+    id: number;
+    categoryId: number;
+    name: string;
+    image: string;
+  }[];
   setSelectedCategory: Dispatch<
-    SetStateAction<{ id: number; categoryIcon: string; name: string }[]>
+    SetStateAction<
+      { id: number; categoryId: number; name: string; image: string }[]
+    >
   >;
-  budget: { id?: number; memberCategoryId: number }[];
+  budget: { id?: number; memberCategoryId?: number; status: string }[];
   setBudget: Dispatch<
-    SetStateAction<{ id?: number; memberCategoryId: number }[]>
+    SetStateAction<{ id?: number; memberCategoryId?: number; status: string }[]>
   >;
+  userInfo: userInfoType | null;
 }
 
 const AllCategoryList: React.FC<AllCategoryListProps> = ({
@@ -51,44 +60,75 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
   setSelectedCategory,
   budget,
   setBudget,
+  userInfo,
 }) => {
   // 카테고리 선택 여부 상태
   const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {
-    for (const el of selectedCategory) {
-      if (el.id === data.id) {
+    getBudget().then((memberBudget) => {
+      if (
+        memberBudget &&
+        memberBudget.filter(
+          (el: { id?: number; memberCategoryId?: number; status: string }) => {
+            return el.memberCategoryId === data.id && el.status === 'ACTIVE';
+          }
+        ).length > 0
+      ) {
         setIsSelected(true);
+        // setSelectedCategory([...selectedCategory, data]);
       }
-    }
-  });
+    });
+  }, []);
 
+  // 예산 추가
   const postBudgetCategory = async () => {
     try {
-      await axios.post(`http://localhost:3002/budgets`, {
-        memberCategoryId: data.id,
+      await axios({
+        url: `${import.meta.env.VITE_SERVER}/budgets`,
+        method: 'post',
+        data: {
+          memberCategoryId: data.id,
+          amount: 0,
+        },
       });
     } catch (err) {
       console.log(err);
     }
   };
 
-  const deleteBudgetCatrgory = async (id?: number) => {
+  // 예산 활성화
+  const activeBudgetCatrgory = async (id?: number) => {
     try {
-      await axios.delete(`http://localhost:3002/budgets/${id}`);
+      await axios.patch(`${import.meta.env.VITE_SERVER}/budgets/${id}`, {
+        status: 'ACTIVE',
+      });
     } catch (err) {
       console.log(err);
     }
   };
 
-  const patchBudgetCategory = async () => {
+  // 예산 비활성화
+  const inactiveBudgetCatrgory = async (id?: number) => {
     try {
-      await axios.patch(`http://localhost:3002/budgets`, {
-        memberCategoryId: data.id,
+      await axios.patch(`${import.meta.env.VITE_SERVER}/budgets/${id}`, {
+        status: 'INACTIVE',
       });
     } catch (err) {
       console.log(err);
     }
+  };
+
+  // 예산 조회
+  const getBudget = async () => {
+    const memberBudget =
+      userInfo &&
+      (
+        await axios.get(
+          `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo.id}`
+        )
+      ).data;
+    return memberBudget;
   };
 
   // 카테고리 클릭 이벤트 핸들러
@@ -96,24 +136,53 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
     if (!isSelected) {
       if (
         budget.filter((el) => {
-          return el.memberCategoryId === data.id;
+          return el.memberCategoryId === data.id && el.status === 'ACTIVE';
         }).length === 0
       ) {
-        postBudgetCategory();
-        setBudget([...budget, { memberCategoryId: data.id }]);
+        postBudgetCategory().then(() => {
+          getBudget().then((memberBudget) => {
+            setBudget(memberBudget);
+          });
+        });
         setIsSelected(true);
         setSelectedCategory([...selectedCategory, data]);
       }
+      // else if (
+      //   budget.filter((el) => {
+      //     return el.memberCategoryId === data.id && el.status === 'INACTIVE';
+      //   })
+      // ) {
+      //   activeBudgetCatrgory(
+      //     budget.filter((el) => {
+      //       return el.memberCategoryId === data.id && el.status === 'INACTIVE';
+      //     })[0].id
+      //   );
+      // }
+      else {
+        alert('이미 예산 설정에 추가한 카테고리입니다.');
+      }
     } else {
-      console.log(budget);
-      const budgetId = budget.filter((el) => {
-        return el.memberCategoryId === data.id;
-      })[0].id;
-      deleteBudgetCatrgory(budgetId);
-      setIsSelected(false);
+      if (
+        window.confirm(
+          '예산 카테고리를 해제하면 설정된 예산정보는 사라집니다.\n해제하시겠습니까?'
+        )
+      ) {
+        const budgetId = budget.filter((el) => {
+          return el.memberCategoryId === data.id && el.status === 'ACTIVE';
+        })[0].id;
+        inactiveBudgetCatrgory(budgetId);
 
-      // 선택된 전체 카테고리 중 클릭 된 카테고리 id와 같은 요소는 뺌.
-      setSelectedCategory(selectedCategory.filter((el) => el.id !== data.id));
+        setBudget(() => {
+          const updateBudget = budget.filter((el) => {
+            return el.id !== budgetId;
+          });
+          return updateBudget;
+        });
+        setIsSelected(false);
+
+        // 선택된 전체 카테고리 중 클릭 된 카테고리 id와 같은 요소는 뺌.
+        setSelectedCategory(selectedCategory.filter((el) => el.id !== data.id));
+      }
     }
   };
   return (
@@ -122,7 +191,7 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
         className={isSelected ? 'selected' : ''}
         onClick={handleClickCategory}
       >
-        <CategoryIcon icon={data.categoryIcon} />
+        <CategoryIcon icon={data.image} />
         <div className="category-name__div">{data.name}</div>
       </CategoryList>
     </Container>

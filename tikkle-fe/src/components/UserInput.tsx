@@ -9,7 +9,10 @@ import {
 } from '@chakra-ui/react';
 
 import { TbPigMoney } from 'react-icons/tb';
-import { GiReceiveMoney, GiExpense } from 'react-icons/gi';
+import { GiReceiveMoney } from 'react-icons/gi';
+import { userInfoType } from '../pages/Login';
+import { useRecoilState } from 'recoil';
+import { userInfoState } from '../util/store';
 
 const SetContainer = styled.div`
   display: flex;
@@ -21,21 +24,30 @@ const SetContainer = styled.div`
   }
 `;
 
-interface UserInputType {
-  label: string;
-  setState: React.Dispatch<React.SetStateAction<number>>;
-  state: string | number;
-  setDate: React.Dispatch<React.SetStateAction<string>>;
-  date: Date | string;
-}
+//TODO props 타입 지정
+function UserInput({ label }: { label: string }) {
+  // userInfo Recoil atom으로 가져오기
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
-function UserInput({ label, setState, state, setDate, date }: UserInputType) {
-  const handleState = (e: any) => {
-    setState(e.target.value);
+  // 예산 시작일 수정
+  const handleInitDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const initDate = Number(e.target.value);
+    setUserInfo({ ...userInfo, initDate });
   };
-
-  const handleDate = (e: any) => {
-    setDate(new Date(e.target.value).toISOString());
+  // 예산 수정
+  const handleTotalBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const totalBudget = Number(e.target.value);
+    setUserInfo({ ...userInfo, totalBudget });
+  };
+  // 급여일 수정
+  const handlePayDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const payDay = Number(e.target.value);
+    setUserInfo({ ...userInfo, payDay });
+  };
+  // 급여 금액 수정
+  const handlePayAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const payAmount = Number(e.target.value);
+    setUserInfo({ ...userInfo, payAmount });
   };
 
   return (
@@ -51,19 +63,30 @@ function UserInput({ label, setState, state, setDate, date }: UserInputType) {
               children={
                 label === '예산 시작일' ? (
                   <Icon as={TbPigMoney} color="gray.700" />
-                ) : label === '급여일' ? (
-                  <Icon as={GiReceiveMoney} color="gray.700" />
                 ) : (
-                  <Icon as={GiExpense} color="gray.700" />
+                  <Icon as={GiReceiveMoney} color="gray.700" />
                 )
               }
             />
             <Input
-              type="date"
+              type="number"
               size="md"
               focusBorderColor="purple.400"
-              onChange={(e) => handleDate(e)}
+              placeholder={
+                label === '예산 시작일'
+                  ? 'ex) 13 (매월 13일)'
+                  : 'ex) 25 (매월 25일)'
+              }
+              defaultValue={
+                label === '예산 시작일' ? userInfo?.initDate : userInfo?.payDay
+              }
+              onChange={
+                label === '예산 시작일'
+                  ? handleInitDateChange
+                  : handlePayDayChange
+              }
             ></Input>
+            <InputRightAddon children="일" />
           </InputGroup>
           <InputGroup className="input-initialbudget" size="md" ml="20vw">
             <InputLeftElement
@@ -71,17 +94,29 @@ function UserInput({ label, setState, state, setDate, date }: UserInputType) {
               children={
                 label === '예산 시작일' ? (
                   <Icon as={TbPigMoney} color="gray.700" />
-                ) : label === '급여일' ? (
-                  <Icon as={GiReceiveMoney} color="gray.700" />
                 ) : (
-                  <Icon as={GiExpense} color="gray.700" />
+                  <Icon as={GiReceiveMoney} color="gray.700" />
                 )
               }
             />
             <Input
               type="number"
               focusBorderColor="purple.400"
-              onKeyUp={(e) => handleState(e)}
+              placeholder={
+                label === '예산 시작일'
+                  ? '예산 전체 금액을 입력하세요.'
+                  : '급여 금액을 입력하세요.'
+              }
+              defaultValue={
+                label === '예산 시작일'
+                  ? userInfo?.totalBudget
+                  : userInfo?.payAmount
+              }
+              onChange={
+                label === '예산 시작일'
+                  ? handleTotalBudgetChange
+                  : handlePayAmountChange
+              }
             ></Input>
             <InputRightAddon children="원" />
           </InputGroup>

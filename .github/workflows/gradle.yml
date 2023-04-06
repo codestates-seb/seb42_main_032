@@ -57,6 +57,7 @@ jobs:
           VITE_CLIENT: ${{secrets.VITE_CLIENT}}
           VITE_SERVER: ${{secrets.VITE_SERVER}}
           VITE_GCLIENT_ID: ${{secrets.G_CLIENT_ID}}
+          VITE_K_CLIENT_ID: ${{secrets.K_CLIENT_ID}}
           AWS_EC2_METADATA_DISABLED: true
         run: |
           yarn build

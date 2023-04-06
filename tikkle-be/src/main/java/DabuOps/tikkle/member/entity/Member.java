@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Builder
@@ -45,7 +46,10 @@ public class Member extends Auditable {
     private Integer payDay;
 
     @Column
-    private int totalBudget;
+    private Integer payAmount;
+
+    @Column
+    private Integer totalBudget; //
 
     @Column
     @Builder.Default
@@ -59,11 +63,11 @@ public class Member extends Auditable {
     @Enumerated(value = EnumType.STRING)
     private MemberRole role = MemberRole.REGULAR;
 
-    @Column
+    @Column(length = 410)
     private String accessToken;
 
     @Builder
-    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay, int totalBudget, Integer initDate, String picture, MemberRole role, String accessToken) {
+    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay, Integer payAmount, Integer totalBudget, Integer initDate, String picture, MemberRole role, String accessToken) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -71,13 +75,13 @@ public class Member extends Auditable {
         this.state = state;
         this.gender = gender;
         this.payDay = payDay;
+        this.payAmount = payAmount;
         this.totalBudget = totalBudget;
         this.initDate = initDate;
         this.picture = picture;
         this.role = role;
         this.accessToken = accessToken;
     }
-
 
     public static enum Gender{
         MALE("남성"),
