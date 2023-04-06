@@ -36,7 +36,7 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
     public MemberCategory createOriginalMemberCategory(MemberCategory memberCategory, Long memberId) {
         Member member = memberRepository.findById(memberId)
                         .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-        Category category = categoryRepository.findById(63L).get();
+        Category category = categoryRepository.findByName("기타");
         memberCategory.setCategory(category); // '기타' 카테고리로 고정
         memberCategory.setMember(member);
         memberCategory.setImage(category.getImage());
@@ -60,7 +60,7 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
 
     public MemberCategory updateMemberCategory(MemberCategory memberCategory, Long memberCategoryId) {
         MemberCategory updatedMemberCategory = findMemberCategory(memberCategoryId);
-        if(updatedMemberCategory.getCategory().getId() != 63L) {
+        if(updatedMemberCategory.getCategory().getName().equals("기타")) {
             throw new BusinessLogicException(ExceptionCode.CANNOT_CHANGE_CATEGORY_NAME);
         }
 
@@ -87,7 +87,7 @@ public class MemberCategoryServiceImpl implements MemberCategoryService{
 
     public void deleteMemberCategory(Long memberCategoryId) {
         MemberCategory memberCategory = findMemberCategory(memberCategoryId);
-        if(memberCategory.getCategory().getId() <= 61L) {
+        if(memberCategory.getCategory().getName().equals("기타")) {
             throw new BusinessLogicException(ExceptionCode.CANNOT_CHANGE_CATEGORY_STATUS);
         }
         else {
