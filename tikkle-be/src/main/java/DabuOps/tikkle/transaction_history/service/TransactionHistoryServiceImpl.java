@@ -33,6 +33,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
         transactionHistory.setMemberCategory(memberCategory);
         transactionHistory.setStatus(TransactionHistory.Status.ACTIVE);
         transactionHistory.setDutchAmount(null);
+        transactionHistory.setImage(memberCategory.getImage());
 
         if(transactionHistory.getInoutType().equals(TransactionHistory.InoutType.SPEND)) {
             Budget budget = budgetRepository.findByMemberCategoryIdAndCurrentIsTrue(memberCategoryId);
@@ -51,8 +52,8 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
         budget1.setSpend(budget1.getSpend() - updatedTransactionHistory.getAmount());
         budgetRepository.save(budget1);
 
-        Optional.ofNullable(transactionHistory.getMemberCategory().getId())
-                .ifPresent(categoryId -> updatedTransactionHistory.setMemberCategory(memberCategoryService.findMemberCategory(categoryId)));
+        Optional.ofNullable(transactionHistory.getMemberCategory())
+                .ifPresent(category -> updatedTransactionHistory.setMemberCategory(memberCategoryService.findMemberCategory(category.getId())));
         Optional.ofNullable(transactionHistory.getDate())
                 .ifPresent(date -> updatedTransactionHistory.setDate(date));
         Optional.ofNullable(transactionHistory.getTime())
@@ -122,11 +123,17 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
             // daily(i,0) = i일의 수입, daily(i,1) = i일의 지출
         }
 
-        for(int i = 1; i <= transactionHistories.size(); i++) {
+        for(int i = 1; i <= startDate.lengthOfMonth(); i++) {
             for(TransactionHistory j : transactionHistories) {
                 if(i == j.getDate().getDayOfMonth()) {
-                    if(j.getInoutType().equals(TransactionHistory.InoutType.INCOME)) daily.get(i).set(0, daily.get(i).get(0) + j.getAmount());
-                    else daily.get(i).set(1, daily.get(i).get(1) + j.getAmount());
+                    if(j.getDutchAmount() == null) {
+                        if(j.getInoutType().equals(TransactionHistory.InoutType.INCOME)) daily.get(i).set(0, daily.get(i).get(0) + j.getAmount());
+                        else daily.get(i).set(1, daily.get(i).get(1) + j.getAmount());
+                    }
+                    else {
+                        if(j.getInoutType().equals(TransactionHistory.InoutType.INCOME)) daily.get(i).set(0, daily.get(i).get(0) + j.getDutchAmount());
+                        else daily.get(i).set(1, daily.get(i).get(1) + j.getDutchAmount());
+                    }
                 }
             }
         }

@@ -47,9 +47,10 @@ public class TransactionHistoryController {
     @PatchMapping("/{transaction_history_id}")
     public ResponseEntity patchTransactionHistory(@PathVariable("transaction_history_id") Long transactionHistoryId,
                                                   @Valid @RequestBody TransactionHistoryDto.Patch requestBody) {
-        Long memberCategoryId = requestBody.getMemberCategoryId();
         TransactionHistory transactionHistory = mapper.transactionHistoryPatchDtoToTransactionHistory(requestBody);
-        transactionHistory.setMemberCategory(memberCategoryService.findMemberCategory(memberCategoryId));
+        if(requestBody.getMemberCategoryId() != null) {
+            transactionHistory.setMemberCategory(memberCategoryService.findMemberCategory(requestBody.getMemberCategoryId()));
+        }
         TransactionHistory updatedTransactionHistory = transactionHistoryService.updateTransactionHistory(transactionHistory, transactionHistoryId);
 
         return ResponseEntity.ok().build();
