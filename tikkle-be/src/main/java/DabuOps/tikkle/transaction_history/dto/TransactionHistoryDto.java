@@ -69,6 +69,19 @@ public class TransactionHistoryDto {
     }
 
     @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class PatchDutch {
+        @NotNull
+        private int dutchAmount;
+
+        @Builder
+        public PatchDutch(int dutchAmount) {
+            this.dutchAmount = dutchAmount;
+        }
+    }
+
+    @Getter
     @NoArgsConstructor
     public static class Response {
         private Long id;
@@ -83,9 +96,10 @@ public class TransactionHistoryDto {
         private int amount;
         private String branchName;
         private String bankName;
+        private Integer dutchAmount;
 
         @Builder
-        public Response(Long id, Long memberCategoryId, String memberCategoryName, String image, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName, String bankName) {
+        public Response(Long id, Long memberCategoryId, String memberCategoryName, String image, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName, String bankName, Integer dutchAmount) {
             this.id = id;
             this.memberCategoryId = memberCategoryId;
             this.memberCategoryName = memberCategoryName;
@@ -97,6 +111,7 @@ public class TransactionHistoryDto {
             this.amount = amount;
             this.branchName = branchName;
             this.bankName = bankName;
+            this.dutchAmount = dutchAmount;
         }
     }
 
@@ -116,7 +131,7 @@ public class TransactionHistoryDto {
         private String memo;
         private int amount;
         private String branchName;
-
         private String bankName;
+        private Integer dutchAmount;
     }
 }

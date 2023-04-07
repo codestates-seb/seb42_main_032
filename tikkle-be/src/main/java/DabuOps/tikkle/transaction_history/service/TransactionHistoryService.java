@@ -9,6 +9,8 @@ public interface TransactionHistoryService {
 
     TransactionHistory updateTransactionHistory(TransactionHistory transactionHistory, Long transactionHistoryId);
 
+    TransactionHistory dutchPayModifyTransactionHistory(TransactionHistory transactionHistory, Long transactionHistoryId);
+
     TransactionHistory findTransactionHistory(Long transactionHistoryId);
 
     List<List> findMonthlyTransactionHistories(int date, Long memberId);

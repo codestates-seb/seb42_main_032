@@ -55,6 +55,15 @@ public class TransactionHistoryController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/{transaction_history_id}/dutch")
+    public ResponseEntity modifyDutchPayAmount(@PathVariable("transaction_history_id") Long trasactionHistoryId,
+                                               @Valid @RequestBody TransactionHistoryDto.PatchDutch requestBody) {
+        TransactionHistory transactionHistory = mapper.transactionHistoryPatchDutchDtoToTransactionHistory(requestBody);
+        TransactionHistory updatedTransactionHistory = transactionHistoryService.dutchPayModifyTransactionHistory(transactionHistory, trasactionHistoryId);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{transaction_history_id}")
     public ResponseEntity getTransactionHistory(@PathVariable("transaction_history_id") Long transactionHistoryId) {
         TransactionHistory transactionHistory = transactionHistoryService.findTransactionHistory(transactionHistoryId);
