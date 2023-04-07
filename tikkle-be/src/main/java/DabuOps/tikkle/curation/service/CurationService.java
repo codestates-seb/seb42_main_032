@@ -12,6 +12,10 @@ import DabuOps.tikkle.member.repository.MemberRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,9 +47,11 @@ public class CurationService {
         Curation obtainCuration = findExistCurationById(curationId);
         return obtainCuration;
     }
-    public List<Curation> getCurations(Long tagId){
+    public Page<Curation> getCurations(Long tagId, int page){
         List<Curation> curations =  repository.findAllByTagId(tagId);
-        return curations;
+
+        return new PageImpl<>(curations,
+            PageRequest.of(page, 15, Sort.by("modifiedAt").descending()), 2);
     }
 
     public void deleteCuration (Long curationId, Long memberId){

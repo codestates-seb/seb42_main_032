@@ -16,6 +16,7 @@ import java.util.List;
 import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -63,11 +64,14 @@ public class CurationController {
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity getCurations(@Positive @RequestParam long tagId){
-        List<Curation> curations = curationService.getCurations(tagId);
-        return new ResponseEntity<>(new ResponseListDto<>(
-            mapper.curationsToCurationResponses(curations)),HttpStatus.OK);
+    @GetMapping("/{tag-id}")
+    public ResponseEntity getCurationsByTagId(
+        @Positive @PathVariable("tag-id") long tagId, @Positive @RequestParam int page){
+        Page<Curation> curationPage = curationService.getCurations(tagId, page);
+        List<Curation> curations = curationPage.getContent();
+        return new ResponseEntity<>(
+            new MultiResponseDto<>(
+                mapper.curationsToCurationResponses(curations), curationPage), HttpStatus.OK);
     }
 
     @DeleteMapping("/{curation-id}")
