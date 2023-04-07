@@ -36,7 +36,7 @@ public class Member extends Auditable {
     @Column
     @Builder.Default
     @Enumerated(value = EnumType.STRING)
-    private MemberState state = MemberState.ACTIVE;
+    private MemberState state = MemberState.USERSETTING;
 
     @Column
     @Enumerated(value = EnumType.STRING)
