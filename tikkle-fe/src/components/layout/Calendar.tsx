@@ -40,6 +40,7 @@ const Calendar = ({ date }: { date: Date }) => {
         )
         .then((res) => {
           setDailySummary(res.data.dailySummary.slice(1));
+          console.log(dailySummary);
           setLoading(false);
         })
         .catch((err) => console.log(err));
