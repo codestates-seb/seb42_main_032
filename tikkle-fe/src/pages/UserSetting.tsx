@@ -297,7 +297,22 @@ function UserSetting() {
         <Button colorScheme="red" size="md" onClick={handleClick}>
           회원 탈퇴하기
         </Button>
-        <Button colorScheme="purple" size="md" ml="40px" onClick={handleSubmit}>
+        <Button
+          colorScheme="purple"
+          size="md"
+          ml="40px"
+          onClick={handleSubmit}
+          disabled={
+            isNameValid &&
+            isGenderValid &&
+            isInitDateValid &&
+            isTotalBudgetValid &&
+            isPayDayValid &&
+            isPayAmountValid
+              ? false
+              : true
+          }
+        >
           저장하기
         </Button>
       </Box>
