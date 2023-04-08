@@ -1,4 +1,7 @@
+import axios from 'axios';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { userInfoState } from '../../util/store';
 
 // 모달이 표시되는 화면의 배경 스타일
 const ModalContainer = styled.div`
@@ -48,13 +51,49 @@ export function HrefModal({
   targetPage: string;
   onClose: () => void;
 }) {
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+
+  const handleMemberState = () => {
+    let nextState = '';
+
+    switch (targetPage) {
+      case 'usersetting':
+        nextState = 'categoryEdit';
+      case 'categoryedit':
+        nextState = 'budgetSetting';
+      case 'budgetsetting':
+        nextState = 'active';
+      default:
+        break;
+    }
+
+    // 변경된 state로 새 사용자 객체 생성
+    const newUserInfo = {
+      ...userInfo,
+      state: nextState,
+    };
+
+    // 변경된 state로 사용자 상태 업데이트
+    setUserInfo(newUserInfo);
+
+    // 변경된 내용을 서버에도 반영
+    axios.patch(
+      `${import.meta.env.VITE_SERVER}/members/${userInfo?.id}`,
+      newUserInfo
+    );
+  };
   return (
     <ModalContainer onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <div className="modal-info-message">{infoMessage}</div>
         <div className="modal-button-box">
           <button onClick={onClose}>닫기</button>
-          <button onClick={() => (window.location.href = targetPage)}>
+          <button
+            onClick={() => {
+              handleMemberState();
+              window.location.href = targetPage;
+            }}
+          >
             {buttonLabel}
           </button>
         </div>
