@@ -67,6 +67,16 @@ const SetContainer = styled.div`
     position: relative;
     top: -80px;
   }
+
+  .valid {
+    color: #4949ff;
+    font-size: medium;
+  }
+
+  .invalid {
+    color: #f84c4c;
+    font-size: medium;
+  }
 `;
 
 // TODO 금액 입력 시 콤마 찍혀서 input에 출력
@@ -83,19 +93,54 @@ function UserSetting() {
   const handleClick = () => {
     navigate('/userout');
   };
+  //* 유효성 검사용 상태 (value, message, isValid)
 
-  // 이름 수정
+  // 이름
+  const [nameMessage, setNameMessage] = useState('');
+  const [isNameValid, setIsNameValid] = useState(false);
+  // 성별
+  const [genderMessage, setGenderMessage] = useState('');
+  const [isGenderValid, setIsGenderValid] = useState(false);
+  // 예산 시작일
+  const [initDateMessage, setInitDateMessage] = useState('');
+  const [isInitDateValid, setIsinitDateValid] = useState(false);
+  // 예산 금액
+  const [totalBudgetMessage, setTotalBudgetMessage] = useState('');
+  const [isTotalBudgetValid, setIsTotalBudgetValid] = useState(false);
+  // 급여일
+  const [payDayMessage, setPayDayMessage] = useState('');
+  const [isPayDayValid, setIsPayDayValid] = useState(false);
+  // 급여 금액
+  const [payAmountMessage, setPayAmountMessage] = useState('');
+  const [isPayAmountValid, setIsPayAmountValid] = useState(false);
+
+  // 이름 수정 및 유효성 검사
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.value;
     setUserInfo({
       ...userInfo,
       name,
     });
+    if (name.length < 12 && name.length >= 2) {
+      setIsNameValid(true);
+      setNameMessage('올바른 이름 형식입니다.');
+    } else {
+      setIsNameValid(false);
+      setNameMessage('2글자 이상 12글자 미만으로 입력해주세요.');
+    }
   };
-  // 성별 수정
+
+  // 성별 수정 및 유효성 검사
   const handleGenderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const gender = event.target.value;
     setUserInfo({ ...userInfo, gender });
+    if (gender !== '') {
+      setIsGenderValid(true);
+      setGenderMessage('');
+    } else {
+      setIsGenderValid(false);
+      setGenderMessage('성별을 선택해주세요.');
+    }
   };
 
   // 저장하기 버튼 클릭 핸들러 (axios PATCH 요청)
@@ -159,11 +204,13 @@ function UserSetting() {
           <Box display="flex" mb="1vh">
             <p>사용자 정보</p>
           </Box>
+
           <InputGroup className="input-username">
             <InputLeftElement
               pointerEvents="none"
               children={<Icon as={BsFillPersonFill} color="gray.700" />}
             />
+
             <Input
               defaultValue={userInfo?.name}
               type="text"
@@ -172,6 +219,7 @@ function UserSetting() {
               placeholder="ex) 홍길동"
               onChange={handleNameChange}
             ></Input>
+            <p className={isNameValid ? 'valid' : 'invalid'}>{nameMessage}</p>
 
             <Select
               focusBorderColor="purple.400"
@@ -185,6 +233,7 @@ function UserSetting() {
               <option value="male">남성</option>
             </Select>
           </InputGroup>
+          <p className={isGenderValid ? 'valid' : 'invalid'}>{genderMessage}</p>
 
           <Button
             colorScheme="purple"
@@ -206,8 +255,44 @@ function UserSetting() {
         매달 예산 시작일을 기준으로 한 달간의 예산을 관리하게됩니다.
         <br /> 예산 시작일과 급여일은 캘린더에 표시됩니다.
       </p>
-      <UserInput label={'예산 시작일'} />
-      <UserInput label={'급여일'} />
+      <UserInput
+        label={'예산 시작일'}
+        initDateMessage={initDateMessage}
+        setInitDateMessage={setInitDateMessage}
+        isInitDateValid={isInitDateValid}
+        setIsinitDateValid={setIsinitDateValid}
+        totalBudgetMessage={totalBudgetMessage}
+        setTotalBudgetMessage={setTotalBudgetMessage}
+        isTotalBudgetValid={isTotalBudgetValid}
+        setIsTotalBudgetValid={setIsTotalBudgetValid}
+        payDayMessage={payDayMessage}
+        setPayDayMessage={setPayDayMessage}
+        isPayDayValid={isPayDayValid}
+        setIsPayDayValid={setIsPayDayValid}
+        payAmountMessage={payAmountMessage}
+        setPayAmountMessage={setPayAmountMessage}
+        isPayAmountValid={isPayAmountValid}
+        setIsPayAmountValid={setIsPayAmountValid}
+      />
+      <UserInput
+        label={'급여일'}
+        initDateMessage={initDateMessage}
+        setInitDateMessage={setInitDateMessage}
+        isInitDateValid={isInitDateValid}
+        setIsinitDateValid={setIsinitDateValid}
+        totalBudgetMessage={totalBudgetMessage}
+        setTotalBudgetMessage={setTotalBudgetMessage}
+        isTotalBudgetValid={isTotalBudgetValid}
+        setIsTotalBudgetValid={setIsTotalBudgetValid}
+        payDayMessage={payDayMessage}
+        setPayDayMessage={setPayDayMessage}
+        isPayDayValid={isPayDayValid}
+        setIsPayDayValid={setIsPayDayValid}
+        payAmountMessage={payAmountMessage}
+        setPayAmountMessage={setPayAmountMessage}
+        isPayAmountValid={isPayAmountValid}
+        setIsPayAmountValid={setIsPayAmountValid}
+      />
       <Box mb="100px">
         <Button colorScheme="red" size="md" onClick={handleClick}>
           회원 탈퇴하기
