@@ -83,8 +83,8 @@ export function HrefModal({
     );
   };
   return (
-    <ModalContainer onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
+    <ModalContainer>
+      <ModalContent>
         <div className="modal-info-message">{infoMessage}</div>
         <div className="modal-button-box">
           <button onClick={onClose}>닫기</button>
