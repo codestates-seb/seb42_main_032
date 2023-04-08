@@ -31,7 +31,7 @@ public class MemberCategoryServiceStub{
             .initDate(25)
             .payDay(25)
             .email("test123@gmail.com")
-            .gender(Gender.male)
+            .gender(Gender.MALE)
             .build();
         stubMemberCategory1 = MemberCategory.builder()
                 .id(1L)

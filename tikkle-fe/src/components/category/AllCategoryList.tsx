@@ -35,14 +35,21 @@ const CategoryList = styled.div`
 `;
 
 interface AllCategoryListProps {
-  data: { id: number; categoryId: number; name: string };
-  selectedCategory: { id: number; categoryId: number; name: string }[];
+  data: { id: number; categoryId: number; name: string; image: string };
+  selectedCategory: {
+    id: number;
+    categoryId: number;
+    name: string;
+    image: string;
+  }[];
   setSelectedCategory: Dispatch<
-    SetStateAction<{ id: number; categoryId: number; name: string }[]>
+    SetStateAction<
+      { id: number; categoryId: number; name: string; image: string }[]
+    >
   >;
-  budget: { id?: number; memberCategoryId?: number }[];
+  budget: { id?: number; memberCategoryId?: number; status: string }[];
   setBudget: Dispatch<
-    SetStateAction<{ id?: number; memberCategoryId?: number }[]>
+    SetStateAction<{ id?: number; memberCategoryId?: number; status: string }[]>
   >;
   userInfo: userInfoType | null;
 }
@@ -63,8 +70,8 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
       if (
         memberBudget &&
         memberBudget.filter(
-          (el: { id?: number; memberCategoryId?: number }) => {
-            return el.memberCategoryId === data.id;
+          (el: { id?: number; memberCategoryId?: number; status: string }) => {
+            return el.memberCategoryId === data.id && el.status === 'ACTIVE';
           }
         ).length > 0
       ) {
@@ -90,10 +97,23 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
     }
   };
 
-  // 예산 삭제
-  const deleteBudgetCatrgory = async (id?: number) => {
+  // 예산 활성화
+  const activeBudgetCatrgory = async (id?: number) => {
     try {
-      await axios.delete(`${import.meta.env.VITE_SERVER}/budgets/${id}`);
+      await axios.patch(`${import.meta.env.VITE_SERVER}/budgets/${id}`, {
+        status: 'ACTIVE',
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 예산 비활성화
+  const inactiveBudgetCatrgory = async (id?: number) => {
+    try {
+      await axios.patch(`${import.meta.env.VITE_SERVER}/budgets/${id}`, {
+        status: 'INACTIVE',
+      });
     } catch (err) {
       console.log(err);
     }
@@ -116,7 +136,7 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
     if (!isSelected) {
       if (
         budget.filter((el) => {
-          return el.memberCategoryId === data.id;
+          return el.memberCategoryId === data.id && el.status === 'ACTIVE';
         }).length === 0
       ) {
         postBudgetCategory().then(() => {
@@ -126,25 +146,43 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
         });
         setIsSelected(true);
         setSelectedCategory([...selectedCategory, data]);
-      } else {
+      }
+      // else if (
+      //   budget.filter((el) => {
+      //     return el.memberCategoryId === data.id && el.status === 'INACTIVE';
+      //   })
+      // ) {
+      //   activeBudgetCatrgory(
+      //     budget.filter((el) => {
+      //       return el.memberCategoryId === data.id && el.status === 'INACTIVE';
+      //     })[0].id
+      //   );
+      // }
+      else {
         alert('이미 예산 설정에 추가한 카테고리입니다.');
       }
     } else {
-      const budgetId = budget.filter((el) => {
-        return el.memberCategoryId === data.id;
-      })[0].id;
-      deleteBudgetCatrgory(budgetId);
+      if (
+        window.confirm(
+          '예산 카테고리를 해제하면 설정된 예산정보는 사라집니다.\n해제하시겠습니까?'
+        )
+      ) {
+        const budgetId = budget.filter((el) => {
+          return el.memberCategoryId === data.id && el.status === 'ACTIVE';
+        })[0].id;
+        inactiveBudgetCatrgory(budgetId);
 
-      setBudget(() => {
-        const updateBudget = budget.filter((el) => {
-          return el.id !== budgetId;
+        setBudget(() => {
+          const updateBudget = budget.filter((el) => {
+            return el.id !== budgetId;
+          });
+          return updateBudget;
         });
-        return updateBudget;
-      });
-      setIsSelected(false);
+        setIsSelected(false);
 
-      // 선택된 전체 카테고리 중 클릭 된 카테고리 id와 같은 요소는 뺌.
-      setSelectedCategory(selectedCategory.filter((el) => el.id !== data.id));
+        // 선택된 전체 카테고리 중 클릭 된 카테고리 id와 같은 요소는 뺌.
+        setSelectedCategory(selectedCategory.filter((el) => el.id !== data.id));
+      }
     }
   };
   return (
@@ -153,7 +191,7 @@ const AllCategoryList: React.FC<AllCategoryListProps> = ({
         className={isSelected ? 'selected' : ''}
         onClick={handleClickCategory}
       >
-        <CategoryIcon icon={CategoryIdMap[data.categoryId]} />
+        <CategoryIcon icon={data.image} />
         <div className="category-name__div">{data.name}</div>
       </CategoryList>
     </Container>

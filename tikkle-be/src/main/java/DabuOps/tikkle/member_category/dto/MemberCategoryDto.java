@@ -40,14 +40,16 @@ public class MemberCategoryDto {
         private String name;
         private long memberId;
         private long categoryId;
+        private String image;
         private LocalDateTime createdAt;
 
         @Builder
-        public Response(long id, String name, long memberId, long categoryId, LocalDateTime createdAt) {
+        public Response(long id, String name, long memberId, long categoryId, String image, LocalDateTime createdAt) {
             this.id = id;
             this.name = name;
             this.memberId = memberId;
             this.categoryId = categoryId;
+            this.image = image;
             this.createdAt = createdAt;
         }
     }

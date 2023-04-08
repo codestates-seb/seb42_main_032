@@ -141,7 +141,7 @@ function CategoryEdit() {
   const userInfo = useRecoilValue(userInfoState);
   // 카테고리 리스트 배열에 대한 상태.
   const [allCategory, setAllCategory] = useState<
-    { id: number; name: string; categoryId: number }[]
+    { id: number; name: string; categoryId: number; image: string }[]
   >([]);
 
   // 자식컴포넌트 개별 모달창 관리하기 위해 추가함.
@@ -149,11 +149,11 @@ function CategoryEdit() {
 
   // 예산 설정 카테고리 리스트에 대한 상태
   const [selectedCategory, setSelectedCategory] = useState<
-    { id: number; categoryId: number; name: string }[]
+    { id: number; categoryId: number; name: string; image: string }[]
   >([]);
 
   const [budget, setBudget] = useState<
-    { id?: number; memberCategoryId?: number }[]
+    { id?: number; memberCategoryId?: number; status: string }[]
   >([]);
 
   // 모달 창 닫기 이벤트 핸들러
@@ -220,12 +220,13 @@ function CategoryEdit() {
         ));
 
       memberBudget && setBudget(memberBudget.data);
+      console.log(memberBudget);
 
       // 예산 설정 카테고리(memberCategoryId) - 전체 카테고리 (id) 매핑
       const arr = [];
       for (const i of memberBudget?.data) {
         for (const j of all?.data.data) {
-          if (i.memberCategoryId === j.id) {
+          if (i.memberCategoryId === j.id && i.status === 'ACTIVE') {
             arr.push(j);
             break;
           }
@@ -261,7 +262,7 @@ function CategoryEdit() {
               selectedCategory.map((el) => {
                 return (
                   <CategoryList key={el.id}>
-                    <CategoryIcon icon={CategoryIdMap[el.categoryId]} />
+                    <CategoryIcon icon={el.image} />
                     <div className="category-name__div">{el.name}</div>
                   </CategoryList>
                 );

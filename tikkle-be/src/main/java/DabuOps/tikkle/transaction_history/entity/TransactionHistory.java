@@ -49,6 +49,9 @@ public class TransactionHistory {
     @Column(name = "BANK_NAME")
     private String bankName;
 
+    @Column(name = "DUTCH_AMOUNT")
+    private Integer dutchAmount;
+
     public enum InoutType {
         INCOME("수입"),
         SPEND("지출");
@@ -70,7 +73,7 @@ public class TransactionHistory {
     }
 
     @Builder
-    public TransactionHistory(long id, MemberCategory memberCategory, String image, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branchName, Status status, String bankName) {
+    public TransactionHistory(long id, MemberCategory memberCategory, String image, LocalDate date, LocalTime time, InoutType inoutType, String memo, int amount, String branchName, Status status, String bankName, Integer dutchAmount) {
         this.id = id;
         this.memberCategory = memberCategory;
         this.image = image;
@@ -82,5 +85,6 @@ public class TransactionHistory {
         this.branchName = branchName;
         this.status = status;
         this.bankName = bankName;
+        this.dutchAmount = dutchAmount;
     }
 }

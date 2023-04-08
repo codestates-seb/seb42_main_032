@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BudgetScheduledService {
-    private final BudgetServiceImpl budgetService;
+    private final BudgetService budgetService;
 
 
     //@Scheduled(initialDelay = 60000, fixedRate = 120000) // 테스트용 스케줄 : 실행 후 3분 뒤에 갱신

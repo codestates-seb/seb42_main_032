@@ -38,7 +38,21 @@ const Container = styled.div`
     font-weight: bold;
     font-size: 2rem;
   }
+  .direction_day {
+    margin-left: 10vw;
+    color: #9240e9;
+    font-size: medium;
+    text-align: left;
+    margin-bottom: 4em;
+  }
 
+  .direction_info {
+    color: #757575;
+    text-align: left;
+    font-size: medium;
+    margin-bottom: 10em;
+    margin-top: -5em;
+  }
   input {
     width: auto;
     margin-bottom: 8em;
@@ -88,7 +102,11 @@ function UserSetting() {
   // 첫 가입 사용자는 userInfo.payDay 값이 null이므로 첫 사용자 여부를 이걸로 판별
   // 카테고리 생성을 위해서 첫 가입 사용자인 경우 /{member-id}/init에 patch 요청
   const handleSubmit = async () => {
-    if (userInfo?.payDay === null) {
+    if (
+      (await (
+        await axios.get(`${import.meta.env.VITE_SERVER}/categories/${memberId}`)
+      ).data.data.length) === 0
+    ) {
       await axios
         .patch(
           `${import.meta.env.VITE_SERVER}/members/${memberId}/init`,
@@ -177,8 +195,17 @@ function UserSetting() {
           >
             계좌 연결하기
           </Button>
+          <p className="direction_info">
+            금융결제원 오픈뱅킹 서비스를 이용합니다. <br /> 개인정보는 안전하게
+            관리되며, 계좌번호는 임시로 입력하셔도 서비스 기능 체험이
+            가능합니다.
+          </p>
         </Box>
       </SetContainer>
+      <p className="direction_day">
+        매달 예산 시작일을 기준으로 한 달간의 예산을 관리하게됩니다.
+        <br /> 예산 시작일과 급여일은 캘린더에 표시됩니다.
+      </p>
       <UserInput label={'예산 시작일'} />
       <UserInput label={'급여일'} />
       <Box mb="100px">
