@@ -54,14 +54,14 @@ export function HrefModal({
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const handleMemberState = () => {
+    // 이동할 페이지에 따라 사용자 상태도 변경
     let nextState = '';
-
     switch (targetPage) {
-      case 'usersetting':
-        nextState = 'categoryEdit';
       case 'categoryedit':
-        nextState = 'budgetSetting';
+        nextState = 'categoryEdit';
       case 'budgetsetting':
+        nextState = 'budgetSetting';
+      case 'home':
         nextState = 'active';
       default:
         break;
