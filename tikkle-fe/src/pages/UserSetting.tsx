@@ -91,10 +91,20 @@ function UserSetting() {
   const memberId = userInfo?.id;
 
   // 모달 커스텀 훅 사용
-  const modal = useHrefModal(
+  const modalPage = useHrefModal(
     '회원정보를 저장했습니다. 이어서 카테고리를 설정해주세요.',
     '카테고리 설정으로 이동',
     'categoryedit'
+  );
+
+  // 계좌 연결하기 안내메세지 및 금결원 페이지로 이동
+  const modalBank = useHrefModal(
+    '아직 상용화되지 않은 기능이나, 더미데이터를 통해 서비스 기능 체험이 가능합니다. 가상의 계좌로 연결하시겠습니까?',
+    '계좌 연결하기',
+    `https://testapi.openbanking.or.kr/oauth/2.0/authorize?response_type=code` +
+      `&client_id=${import.meta.env.VITE_K_CLIENT_ID}` +
+      `&redirect_uri=${import.meta.env.VITE_CLIENT}/usersetting` +
+      `&scope=login inquiry transfer&state=12345678123456781234567812345678&auth_type=0`
   );
 
   // 회원탈퇴 버튼 클릭 핸들러
@@ -181,14 +191,14 @@ function UserSetting() {
     }
   };
 
-  // 계좌연결 버튼 핸들러
-  const handleConnectOpenbanking = () => {
-    window.location.href =
-      `https://testapi.openbanking.or.kr/oauth/2.0/authorize?response_type=code` +
-      `&client_id=${import.meta.env.VITE_K_CLIENT_ID}` +
-      `&redirect_uri=${import.meta.env.VITE_CLIENT}/usersetting` +
-      `&scope=login inquiry transfer&state=12345678123456781234567812345678&auth_type=0`;
-  };
+  // // 계좌연결 버튼 핸들러
+  // const handleConnectOpenbanking = () => {
+  //   window.location.href =
+  //     `https://testapi.openbanking.or.kr/oauth/2.0/authorize?response_type=code` +
+  //     `&client_id=${import.meta.env.VITE_K_CLIENT_ID}` +
+  //     `&redirect_uri=${import.meta.env.VITE_CLIENT}/usersetting` +
+  //     `&scope=login inquiry transfer&state=12345678123456781234567812345678&auth_type=0`;
+  // };
 
   useEffect(() => {
     const parsedHash = new URLSearchParams(window.location.search.substring(1));
@@ -248,7 +258,7 @@ function UserSetting() {
             size="md"
             leftIcon={<AddIcon />}
             loadingText="연결 중"
-            onClick={handleConnectOpenbanking}
+            onClick={modalBank.onOpen}
           >
             계좌 연결하기
           </Button>
@@ -311,7 +321,7 @@ function UserSetting() {
           ml="40px"
           onClick={() => {
             handleSubmit();
-            modal.onOpen();
+            modalPage.onOpen();
           }}
           disabled={
             isNameValid &&
@@ -327,7 +337,8 @@ function UserSetting() {
           저장하기
         </Button>
       </Box>
-      <modal.ModalWrapper />
+      <modalPage.ModalWrapper />
+      <modalBank.ModalWrapper />
     </Container>
   );
 }
