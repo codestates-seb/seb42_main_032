@@ -76,6 +76,8 @@ public class MemberServiceImpl implements MemberService {
             .ifPresent(obtainedMember::setGender);
         Optional.ofNullable(member.getPayAmount())
             .ifPresent(obtainedMember::setPayAmount);
+        Optional.ofNullable(member.getState())
+            .ifPresent(obtainedMember::setState);
 
         return memberRepository.save(obtainedMember);
     }
