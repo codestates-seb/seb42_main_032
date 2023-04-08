@@ -2,8 +2,8 @@ import Calendar from '../components/layout/Calendar';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import Transaction, { TransactionType } from '../components/layout/Transaction';
-import { tokenState, userInfoState } from '../util/store';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { userInfoState } from '../util/store';
+import { useRecoilValue } from 'recoil';
 import axios from 'axios';
 
 // // transaction 컴포넌트용 거래내역 dummydata

@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '../util/store';
 import axios from 'axios';
+import { useHrefModal } from '../hooks/useHrefModal';
 
 const Container = styled.div`
   display: flex;
@@ -88,6 +89,13 @@ function UserSetting() {
 
   // axios PATCH 요청 parameter에 넣을 member_id
   const memberId = userInfo?.id;
+
+  // 모달 커스텀 훅 사용
+  const modal = useHrefModal(
+    '회원정보를 저장했습니다. 이어서 카테고리를 설정해주세요.',
+    '카테고리 설정으로 이동',
+    'categoryedit'
+  );
 
   // 회원탈퇴 버튼 클릭 핸들러
   const handleClick = () => {
@@ -301,7 +309,6 @@ function UserSetting() {
           colorScheme="purple"
           size="md"
           ml="40px"
-          onClick={handleSubmit}
           disabled={
             isNameValid &&
             isGenderValid &&
@@ -312,10 +319,15 @@ function UserSetting() {
               ? false
               : true
           }
+          onClick={() => {
+            handleSubmit();
+            modal.onOpen();
+          }}
         >
           저장하기
         </Button>
       </Box>
+      <modal.ModalWrapper />
     </Container>
   );
 }
