@@ -17,6 +17,8 @@ public interface TransactionHistoryMapper {
 
     TransactionHistory transactionHistoryPatchDtoToTransactionHistory(TransactionHistoryDto.Patch requestBody);
 
+    TransactionHistory transactionHistoryPatchDutchDtoToTransactionHistory(TransactionHistoryDto.PatchDutch requestBody);
+
     @Mapping(target = "memberCategoryId", source = "memberCategory.id")
     @Mapping(target = "memberCategoryName", source = "memberCategory.name")
     @Mapping(target = "image", source = "memberCategory.image")
