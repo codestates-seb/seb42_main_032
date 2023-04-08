@@ -11,6 +11,7 @@ import { Button } from '@chakra-ui/react';
 import { userInfoState } from '../util/store';
 import { useRecoilValue } from 'recoil';
 import { userInfoType } from './Login';
+import { useHrefModal } from '../hooks/useHrefModal';
 
 const BodyContainer = styled.div`
   margin-top: 60px;
@@ -242,6 +243,18 @@ function CategoryEdit() {
     getCategory();
   }, [userInfo]);
 
+  const modal = useHrefModal(
+    '카테고리를 설정했습니다. 이어서 예산을 설정해주세요.',
+    '예산 설정으로 이동',
+    'budgetsetting'
+  );
+  useEffect(() => {
+    // 처음 카테고리를 선택했을 때를 판별하기 위해 선택된 카테고리가 1개일 때 멤버 상태가 카테고리 설정 단계인지 판별
+    if (selectedCategory.length === 1 && userInfo?.state === 'categoryEdit') {
+      modal.onOpen();
+    }
+  }, [selectedCategory]);
+
   return (
     <BodyContainer /* onClick={handleCloseEdit} */>
       <ContentContainer>
@@ -314,6 +327,7 @@ function CategoryEdit() {
           </CategoryLists>
         </AllCategories>
       </ContentContainer>
+      <modal.ModalWrapper />
     </BodyContainer>
   );
 }
