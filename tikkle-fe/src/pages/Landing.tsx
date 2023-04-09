@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
+import { tokenState } from '../util/store';
 
 /**
  * 스타일 코드 부분
@@ -109,6 +111,7 @@ function Landing() {
   // 캐러셀 인덱스 상태 관리
   const [currentIdx, setCurrentIdx] = useState(0);
   const savedCallback: { current: () => void } = useRef(() => {});
+  const token = useRecoilValue(tokenState);
 
   const useInterval = (callback: () => void, delay: number) => {
     useEffect(() => {
@@ -126,6 +129,7 @@ function Landing() {
     }, [delay]);
   };
 
+  // 캐러셀 인덱스 추가하는 함수
   const changeCarousel = () => {
     if (currentIdx < 2) {
       setCurrentIdx(currentIdx + 1);
@@ -135,6 +139,13 @@ function Landing() {
   };
 
   useInterval(changeCarousel, 5000);
+
+  useEffect(() => {
+    // 토큰이 있는지 검사하고 있다면 home 페이지로 이동
+    if (token) {
+      window.location.href = `${import.meta.env.VITE_CLIENT}/home`;
+    }
+  });
 
   return (
     <Container>
