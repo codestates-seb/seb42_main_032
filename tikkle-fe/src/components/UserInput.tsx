@@ -13,6 +13,7 @@ import { GiReceiveMoney } from 'react-icons/gi';
 import { userInfoType } from '../pages/Login';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../util/store';
+import { Dispatch, SetStateAction } from 'react';
 
 const SetContainer = styled.div`
   display: flex;
@@ -22,32 +23,105 @@ const SetContainer = styled.div`
     position: relative;
     top: -80px;
   }
+  .valid {
+    color: #4949ff;
+    font-size: medium;
+  }
+
+  .invalid {
+    color: #f84c4c;
+    font-size: medium;
+  }
 `;
 
 //TODO props 타입 지정
-function UserInput({ label }: { label: string }) {
+function UserInput({
+  label,
+  initDateMessage,
+  setInitDateMessage,
+  isInitDateValid,
+  setIsinitDateValid,
+  totalBudgetMessage,
+  setTotalBudgetMessage,
+  isTotalBudgetValid,
+  setIsTotalBudgetValid,
+  payDayMessage,
+  setPayDayMessage,
+  isPayDayValid,
+  setIsPayDayValid,
+  payAmountMessage,
+  setPayAmountMessage,
+  isPayAmountValid,
+  setIsPayAmountValid,
+}: {
+  label: string;
+  initDateMessage: string;
+  setInitDateMessage: Dispatch<SetStateAction<string>>;
+  isInitDateValid: boolean;
+  setIsinitDateValid: Dispatch<SetStateAction<boolean>>;
+  totalBudgetMessage: string;
+  setTotalBudgetMessage: Dispatch<SetStateAction<string>>;
+  isTotalBudgetValid: boolean;
+  setIsTotalBudgetValid: Dispatch<SetStateAction<boolean>>;
+  payDayMessage: string;
+  setPayDayMessage: Dispatch<SetStateAction<string>>;
+  isPayDayValid: boolean;
+  setIsPayDayValid: Dispatch<SetStateAction<boolean>>;
+  payAmountMessage: string;
+  setPayAmountMessage: Dispatch<SetStateAction<string>>;
+  isPayAmountValid: boolean;
+  setIsPayAmountValid: Dispatch<SetStateAction<boolean>>;
+}) {
   // userInfo Recoil atom으로 가져오기
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
-  // 예산 시작일 수정
+  // 예산 시작일 수정 및 유효성 검사
   const handleInitDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const initDate = Number(e.target.value);
     setUserInfo({ ...userInfo, initDate });
+    if (initDate <= 28 && initDate >= 1) {
+      setIsinitDateValid(true);
+      setInitDateMessage('올바른 날짜 형식입니다.');
+    } else {
+      setIsinitDateValid(false);
+      setInitDateMessage('1일 ~ 28일 사이의 숫자를 입력해주세요.');
+    }
   };
-  // 예산 수정
+  // 예산 수정 및 유효성 검사
   const handleTotalBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const totalBudget = Number(e.target.value);
     setUserInfo({ ...userInfo, totalBudget });
+    if (totalBudget > 0) {
+      setIsTotalBudgetValid(true);
+      setTotalBudgetMessage('올바른 금액 형식입니다.');
+    } else {
+      setIsTotalBudgetValid(false);
+      setTotalBudgetMessage('올바른 숫자를 입력해주세요.');
+    }
   };
-  // 급여일 수정
+  // 급여일 수정 및 유효성 검사
   const handlePayDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const payDay = Number(e.target.value);
     setUserInfo({ ...userInfo, payDay });
+    if (payDay <= 28 && payDay >= 1) {
+      setIsPayDayValid(true);
+      setPayDayMessage('올바른 날짜 형식입니다.');
+    } else {
+      setIsPayDayValid(false);
+      setPayDayMessage('1일 ~ 28일 사이의 숫자를 입력해주세요.');
+    }
   };
-  // 급여 금액 수정
+  // 급여 금액 수정 및 유효성 검사
   const handlePayAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const payAmount = Number(e.target.value);
     setUserInfo({ ...userInfo, payAmount });
+    if (payAmount > 0) {
+      setIsPayAmountValid(true);
+      setPayAmountMessage('올바른 금액 형식입니다.');
+    } else {
+      setIsPayAmountValid(false);
+      setPayAmountMessage('올바른 숫자를 입력해주세요.');
+    }
   };
 
   return (
@@ -87,6 +161,20 @@ function UserInput({ label }: { label: string }) {
               }
             ></Input>
             <InputRightAddon children="일" />
+
+            <p
+              className={
+                label === '예산 시작일'
+                  ? isInitDateValid
+                    ? 'valid'
+                    : 'invalid'
+                  : isPayDayValid
+                  ? 'valid'
+                  : 'invalid'
+              }
+            >
+              {label === '예산 시작일' ? initDateMessage : payDayMessage}
+            </p>
           </InputGroup>
           <InputGroup className="input-initialbudget" size="md" ml="20vw">
             <InputLeftElement
@@ -118,8 +206,22 @@ function UserInput({ label }: { label: string }) {
                   : handlePayAmountChange
               }
             ></Input>
+
             <InputRightAddon children="원" />
           </InputGroup>
+          <p
+            className={
+              label === '예산 시작일'
+                ? isTotalBudgetValid
+                  ? 'valid'
+                  : 'invalid'
+                : isPayAmountValid
+                ? 'valid'
+                : 'invalid'
+            }
+          >
+            {label === '예산 시작일' ? totalBudgetMessage : payAmountMessage}
+          </p>
         </Box>
       </Box>
     </SetContainer>

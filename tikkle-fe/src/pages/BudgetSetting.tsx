@@ -9,6 +9,7 @@ const CategoryBudget = lazy(
 );
 import MonthlyBudget from '../components/budget_setting/MonthlyBudget';
 import Loading from '../components/layout/Loading';
+import { useHrefModal } from '../hooks/useHrefModal';
 import { userInfoState } from '../util/store';
 
 export interface BudgetType {
@@ -38,6 +39,12 @@ const BudgetSetting = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<CategoryType[]>();
   const [budgets, setBudgets] = useState<BudgetType[]>();
+
+  const modal = useHrefModal(
+    '튜토리얼을 마쳤습니다. 자유롭게 Tikkle을 사용해주세요.',
+    '홈으로 이동',
+    'home'
+  );
 
   const getCategories = async () => {
     // 컴포넌트 상태를 로딩 중으로 업데이트한 후 카테고리 데이터 요청
@@ -125,13 +132,14 @@ const BudgetSetting = () => {
                 userInfo?.totalBudget || 0
               )}원`}
             </Text>
-            <Box display="flex" justifyContent="flex-start" my="20px">
+            <Box display="flex" justifyContent="space-between" my="20px">
               {/* 드롭다운 메뉴 선택 시 드롭다운 기준 부모인 지금 컴포넌트를 다시 렌더링해야 함 */}
               {/* 이를 위해 GET 요청 함수를 props로 내려줌 */}
               <BudgetDropdown
                 totalAmount={userInfo?.totalBudget || 0}
                 getBudgets={getBudgets}
               />
+              <button onClick={modal.onOpen}>저장하기</button>
             </Box>
           </Box>
           <Box display="flex" flexDir="column" w="100%" gap="40px" mb="40px">
@@ -151,6 +159,7 @@ const BudgetSetting = () => {
           </Box>
         </Box>
       </Box>
+      <modal.ModalWrapper />
     </Box>
   );
 };

@@ -8,7 +8,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { tokenState, currentPageState, userInfoState } from '../util/store';
+import { tokenState, userInfoState } from '../util/store';
 import { useRecoilState } from 'recoil';
 
 /**
@@ -111,9 +111,6 @@ function Login() {
   // 사용자 정보 임시 저장
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
-  // 로그인 후 사용자가 이동해야 할 페이지 저장
-  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
-
   // '/login' 경로로 바로 접속할 경우 recoil-persist가 동작하지 않는 버그가 있어,
   // 해당 키가 로컬스토리지에 없다면 수동으로 생성
   if (localStorage.getItem('recoil-persist') === null) {
@@ -121,7 +118,6 @@ function Login() {
       'recoil-persist',
       JSON.stringify({
         tokenState: null,
-        currentPageState: 'usersetting',
         userInfoState: null,
       })
     );
@@ -173,12 +169,10 @@ function Login() {
     // 액세스 토큰의 값이 변경될 때마다 useEffect 구문 재실행
   }, [accessToken]);
 
-  // 페이지 이동 로직
   useEffect(() => {
-    // 사용자 정보에 payday(급여일), initDate(예산 시작일) 중 하나라도 설정되지 않았다면
-    // 회원정보 설정 페이지로 이동
-    if (userInfo?.payDay === null || userInfo?.initDate === 1) {
-      window.location.href = `${import.meta.env.VITE_CLIENT}/${currentPage}`;
+    // 사용자 상태가 회원 정보 설정을 하지 않은 상태라면 회원정보 페이지로 이동
+    if (userInfo?.state === 'userSetting') {
+      window.location.href = `${import.meta.env.VITE_CLIENT}/usersetting`;
     }
   }, [userInfo]);
 
