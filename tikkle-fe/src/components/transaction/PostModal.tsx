@@ -24,6 +24,10 @@ const ModalContent = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 5px;
+  .notice_p {
+    color: #f83d3d;
+    font-size: smaller;
+  }
 `;
 
 interface NewTransactionType {
@@ -101,7 +105,7 @@ const Modal = ({ togglePostModal }: { togglePostModal: () => void }) => {
         <form>
           <Select onChange={inoutTypeHandler}>
             <option value="지출">출금</option>
-            <option value="입금">입금</option>
+            <option value="수입">입금</option>
           </Select>
           <Input
             type="number"
@@ -129,9 +133,9 @@ const Modal = ({ togglePostModal }: { togglePostModal: () => void }) => {
           ></Input>
           <Select onChange={memberCategoryIdHandler}>
             //TODO 카테고리 map
-            <option>카테고리 1</option>
-            <option>카테고리 2</option>
-            <option>카테고리 3</option>
+            <option value="1">카테고리 1</option>
+            <option value="2">카테고리 2</option>
+            <option value="3">카테고리 3</option>
           </Select>
           <Input
             type="text"
@@ -140,7 +144,21 @@ const Modal = ({ togglePostModal }: { togglePostModal: () => void }) => {
             onChange={memoHandler}
           ></Input>
         </form>
-        <Button colorScheme="purple" onClick={submitHandler}>
+        <p className="notice_p">
+          거래 금액, 거래처, 입금/출금 여부 및 카테고리는 필수 입력 항목입니다.
+        </p>
+        <Button
+          colorScheme="purple"
+          onClick={submitHandler}
+          disabled={
+            transaction.amount !== 0 &&
+            transaction.branchName !== '' &&
+            transaction.inoutType !== '' &&
+            transaction.memberCategoryId !== 0
+              ? false
+              : true
+          }
+        >
           저장하기
         </Button>
       </ModalContent>
