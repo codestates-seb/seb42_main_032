@@ -138,7 +138,12 @@ function Landing() {
 
   return (
     <Container>
-      <CarouselContainer current={currentIdx}>
+      <CarouselContainer
+        current={currentIdx}
+        onClick={() => {
+          window.location.href = `${import.meta.env.VITE_CLIENT}/login`;
+        }}
+      >
         <div className="landing-carousel0__div">
           편리한 예산별 지출 관리 서비스, 티클✨
         </div>
