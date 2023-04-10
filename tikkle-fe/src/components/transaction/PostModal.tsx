@@ -145,7 +145,7 @@ const Modal = ({ togglePostModal }: { togglePostModal: () => void }) => {
           ></Input>
         </form>
         <p className="notice_p">
-          거래 금액, 거래처, 입금/출금 여부 및 카테고리는 필수 입력 항목입니다.
+          거래 금액, 사용처, 입금/출금 여부 및 카테고리는 필수 입력 항목입니다.
         </p>
         <Button
           colorScheme="purple"
