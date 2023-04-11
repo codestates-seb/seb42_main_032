@@ -5,6 +5,7 @@ import DabuOps.tikkle.account.entity.Account;
 import DabuOps.tikkle.account.mapper.AccountMapper;
 import DabuOps.tikkle.account.service.AccountService;
 import DabuOps.tikkle.global.utils.ResponseListDto;
+import DabuOps.tikkle.global.utils.SingleResponseDto;
 import DabuOps.tikkle.global.utils.UriCreator;
 import java.net.URI;
 import java.util.List;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,7 +26,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
+@CrossOrigin
 @RequestMapping("/accounts")
 @Validated
 @RequiredArgsConstructor
@@ -36,7 +40,7 @@ public class AccountController {
 
     @PostMapping
     public ResponseEntity postAccount(@Valid @RequestBody AccountDto.Post post) {
-        Account account = accountService.createAccount(mapper.postDtoToAccount(post), 1L);
+        Account account = accountService.createAccount(mapper.postDtoToAccount(post));
         URI location = UriCreator.createURI("/accounts", account.getId());
 
         return ResponseEntity.created(location).build();
@@ -45,22 +49,29 @@ public class AccountController {
     @PatchMapping("/{account-id}")
     public ResponseEntity patchAccount(@Valid @RequestBody AccountDto.Patch patch,
         @Positive @PathVariable("account-id") long id) {
-        accountService.updateAccount(mapper.patchDtoToAccount(patch), id,1L);
+        accountService.updateAccount(mapper.patchDtoToAccount(patch), id);
 
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
-    public ResponseEntity getAccounts() {
-        List<Account> Accounts = accountService.getAccounts(1L);
+    @GetMapping("/{member-id}")
+    public ResponseEntity getAccounts(@Positive @PathVariable("member-id") long id) {
+        List<Account> Accounts = accountService.getAccounts(id);
 
         return new ResponseEntity<>(new ResponseListDto<>(
             mapper.accountsToResponseDtos(Accounts)), HttpStatus.OK);
     }
+    @GetMapping("/{account-id}")
+    public ResponseEntity getAccount(@Positive @PathVariable("account-id") long id) {
+        Account account = accountService.getAccount(id);
+
+        return new ResponseEntity<>(new SingleResponseDto<>
+            (mapper.accountToResponseDto(account)), HttpStatus.OK);
+    }
 
     @DeleteMapping("/{account-id}")
     public ResponseEntity deleteAccount(@Positive @PathVariable("account-id") long id) {
-        accountService.deleteAccount(id, 1L);
+        accountService.deleteAccount(id);
         return ResponseEntity.noContent().build();
     }
 }

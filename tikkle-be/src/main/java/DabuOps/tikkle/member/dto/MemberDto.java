@@ -15,12 +15,14 @@ public class MemberDto {
         private String email;
         private String name;
         private String picture;
+        private String accessToken;
 
         @Builder
-        public Post(String email, String name, String picture) {
+        public Post(String email, String name, String picture, String accessToken) {
             this.email = email;
             this.name = name;
             this.picture = picture;
+            this.accessToken = accessToken;
         }
     }
     @Getter
@@ -29,16 +31,27 @@ public class MemberDto {
         private String name;
         private String location;
         private Integer payDay;
+        private Integer payAmount;
         private Integer initDate;
+        private Integer totalBudget;
+        private Gender gender;
+        private MemberState state;
 
         @Builder
-        public Patch(String name, String location, Integer payDay, Integer initDate) {
+        public Patch(String name, String location, Integer payDay,
+            Integer payAmount, Integer initDate,
+            Integer totalBudget, Gender gender ,MemberState state) {
             this.name = name;
             this.location = location;
             this.payDay = payDay;
+            this.payAmount = payAmount;
             this.initDate = initDate;
+            this.totalBudget = totalBudget;
+            this.gender = gender;
+            this.state = state;
         }
     }
+
     @Getter
     @Setter
     @NoArgsConstructor
@@ -60,26 +73,33 @@ public class MemberDto {
     @Builder
     @NoArgsConstructor
     public static class Response extends Auditable {
-        private Long memberId;
+        private Long id;
         private String email;
         private String name;
         private String location;
         private MemberState state;
         private Gender gender;
         private Integer payDay;
+        private Integer payAmount;
+        private Integer totalBudget;
         private Integer initDate;
+        private String picture;
+
         @Builder
-        public Response(Long memberId, String email, String name, String location,
-            MemberState state, Gender gender, Integer payDay,
-            Integer initDate) {
-            this.memberId = memberId;
+        public Response(Long id, String email, String name, String location, MemberState state,
+            Gender gender, Integer payDay, Integer payAmount, Integer totalBudget, Integer initDate,
+            String picture) {
+            this.id = id;
             this.email = email;
             this.name = name;
             this.location = location;
             this.state = state;
             this.gender = gender;
             this.payDay = payDay;
+            this.payAmount = payAmount;
+            this.totalBudget = totalBudget;
             this.initDate = initDate;
+            this.picture = picture;
         }
     }
 

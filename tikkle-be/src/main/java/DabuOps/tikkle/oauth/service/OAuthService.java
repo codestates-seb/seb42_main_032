@@ -1,6 +1,8 @@
 package DabuOps.tikkle.oauth.service;
 
 import DabuOps.tikkle.member.entity.Member;
+import DabuOps.tikkle.member.entity.Member.MemberState;
+import DabuOps.tikkle.member.mapper.MemberMapper;
 import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.oauth.dto.UserInfo;
 import com.google.gson.Gson;
@@ -25,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class OAuthService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
 
+    private final MemberMapper mapper;
+
     /*
     * Login 과정
     * Client -> OAuth2 Server 로그인 요청 (프론트)
@@ -37,11 +41,14 @@ public class OAuthService extends DefaultOAuth2UserService {
      */
     public Object login(String accessToken) throws IOException {
 
-        HttpStatus validate = validate(accessToken);
-        if (validate == HttpStatus.OK){
-            return getMemberProfile(accessToken);
+        HttpStatus status = validate(accessToken);
+        Member member = getMemberProfile(accessToken);
+
+        if (status == HttpStatus.OK) {
+            return mapper.memberToResponseDto(member);
+        } else {
+            return HttpStatus.UNAUTHORIZED;
         }
-        return "유효하지 않은 access token 입니다.";
     }
 
     /*
@@ -96,8 +103,12 @@ public class OAuthService extends DefaultOAuth2UserService {
                 newMember.setEmail(email);
                 newMember.setName(name);
                 newMember.setPicture(picture);
-                memberRepository.save(newMember);
-                return newMember;
+                return memberRepository.save(newMember);
+            } else if(member.getState().equals(MemberState.DELETED)) {
+                //회원의 탈퇴 상태를 활성으로 변경
+                member.setState(MemberState.ACTIVE);
+                //상태 저장
+                return memberRepository.save(member);
             } else {
                 return  member;
             }

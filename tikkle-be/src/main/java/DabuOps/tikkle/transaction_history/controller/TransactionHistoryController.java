@@ -23,6 +23,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Validated
+@CrossOrigin
 @RequestMapping("/transaction_histories")
 public class TransactionHistoryController {
     private final String DEFAULT_URL = "/transaction_histories";
@@ -32,7 +33,7 @@ public class TransactionHistoryController {
     private final TransactionHistoryMapper mapper;
 
     private final UserAuthService userAuthService;
-    @PostMapping()
+    @PostMapping
     public ResponseEntity postTransactionHistory(@Valid @RequestBody TransactionHistoryDto.Post requestBody) {
         Long memberCategoryId = requestBody.getMemberCategoryId();
         TransactionHistory transactionHistory = mapper.transactionHistoryPostDtoToTransactionHistory(requestBody);
@@ -46,10 +47,20 @@ public class TransactionHistoryController {
     @PatchMapping("/{transaction_history_id}")
     public ResponseEntity patchTransactionHistory(@PathVariable("transaction_history_id") Long transactionHistoryId,
                                                   @Valid @RequestBody TransactionHistoryDto.Patch requestBody) {
-        Long memberCategoryId = requestBody.getMemberCategoryId();
         TransactionHistory transactionHistory = mapper.transactionHistoryPatchDtoToTransactionHistory(requestBody);
-        transactionHistory.setMemberCategory(memberCategoryService.findMemberCategory(memberCategoryId));
+        if(requestBody.getMemberCategoryId() != null) {
+            transactionHistory.setMemberCategory(memberCategoryService.findMemberCategory(requestBody.getMemberCategoryId()));
+        }
         TransactionHistory updatedTransactionHistory = transactionHistoryService.updateTransactionHistory(transactionHistory, transactionHistoryId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{transaction_history_id}/dutch")
+    public ResponseEntity modifyDutchPayAmount(@PathVariable("transaction_history_id") Long trasactionHistoryId,
+                                               @Valid @RequestBody TransactionHistoryDto.PatchDutch requestBody) {
+        TransactionHistory transactionHistory = mapper.transactionHistoryPatchDutchDtoToTransactionHistory(requestBody);
+        TransactionHistory updatedTransactionHistory = transactionHistoryService.dutchPayModifyTransactionHistory(transactionHistory, trasactionHistoryId);
 
         return ResponseEntity.ok().build();
     }

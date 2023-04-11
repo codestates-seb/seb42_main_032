@@ -1,0 +1,91 @@
+name: Java CI with Gradle
+on:
+  push:
+    branches: [ "main" ]
+permissions:
+  contents: read
+  
+defaults:
+  run:
+    working-directory: ./tikkle-be
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Add permission
+        run: chmod +x gradlew
+      - name: Build with Gradle Wrapper
+        run: ./gradlew build -Pspring.profiles.active=application-prod
+        working-directory: ./tikkle-be
+        
+      # build한 후 프로젝트를 압축합니다.
+      - name: Make backend zip file
+        run: zip -r ./tikkle-be.zip .
+        shell: bash
+      
+      # Access Key와 Secret Access Key를 통해 권한을 확인합니다.
+      # 아래 코드에 Access Key와 Secret Key를 직접 작성하지 않습니다.
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+    
+      # 압축한 백엔드 프로젝트를 S3로 전송합니다.
+      - name: Upload backend to S3
+        run: aws s3 cp --region ap-northeast-2 ./tikkle-be.zip s3://seb42-main-032-tikkle/tikkle-be.zip
+        
+      # 프론트엔드 프로젝트의 빌드와 압축, S3 전송을 수행합니다.
+      - name: Checkout tikkle-fe
+        uses: actions/checkout@v2
+          
+      - name: Install dependencies
+        run: yarn install
+        working-directory: ./tikkle-fe
+      
+      - name: Build React app
+        env:
+          VITE_CLIENT: ${{secrets.VITE_CLIENT}}
+          VITE_SERVER: ${{secrets.VITE_SERVER}}
+          VITE_GCLIENT_ID: ${{secrets.G_CLIENT_ID}}
+          VITE_K_CLIENT_ID: ${{secrets.K_CLIENT_ID}}
+          AWS_EC2_METADATA_DISABLED: true
+        run: |
+          yarn build
+        working-directory: ./tikkle-fe
+        
+      - name: Upload frontend to S3
+        working-directory: ./tikkle-fe
+        run: aws s3 cp --region ap-northeast-2 dist s3://seb42-main-032-tikkle --recursive
+        
+      - name: Code Deploy
+        run: >
+          aws deploy create-deployment --application-name TIKKLE
+          --deployment-config-name CodeDeployDefault.AllAtOnce
+          --deployment-group-name TIKKLE-group
+          --s3-location bucket=seb42-main-032-tikkle,key=tikkle-be.zip,bundleType=zip
+          --file-exists-behavior OVERWRITE
+          --description "TIKKLE 배포"
+          
+      - name: Get parameters from Parameter Store
+        env:
+          aws-region: ap-northeast-2
+        run: |
+          export G_CLIENT_ID=$(aws ssm get-parameter --name "G_CLIENT_ID" --with-decryption --query "Parameter.Value" --output text)
+          export G_CLIENT_SECRET=$(aws ssm get-parameter --name "G_CLIENT_SECRET" --with-decryption --query "Parameter.Value" --output text)
+          export DB_URL=$(aws ssm get-parameter --name "DB_URL" --with-decryption --query "Parameter.Value" --output text)
+          export DB_ID=$(aws ssm get-parameter --name "DB_ID" --with-decryption --query "Parameter.Value" --output text)
+          export DB_SECRET=$(aws ssm get-parameter --name "DB_SECRET" --with-decryption --query "Parameter.Value" --output text)
+          export OPENBANKING_URL=$(aws ssm get-parameter --name "OPENBANKING_URL" --with-decryption --query "Parameter.Value" --output text)  
+          export K_REDIRECT_URI=$(aws ssm get-parameter --name "K_REDIRECT_URI" --with-decryption --query "Parameter.Value" --output text)  
+          export K_CLIENT_ID=$(aws ssm get-parameter --name "K_CLIENT_ID" --with-decryption --query "Parameter.Value" --output text)
+          export K_CLIENT_SECRET=$(aws ssm get-parameter --name "K_CLIENT_SECRET" --with-decryption --query "Parameter.Value" --output text)

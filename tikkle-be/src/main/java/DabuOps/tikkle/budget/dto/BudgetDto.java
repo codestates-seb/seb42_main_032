@@ -1,5 +1,6 @@
 package DabuOps.tikkle.budget.dto;
 
+import DabuOps.tikkle.budget.entity.Budget;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -14,21 +16,15 @@ public class BudgetDto {
     @Getter
     @NoArgsConstructor
     public static class Post {
-        @NotBlank
         private Long memberCategoryId;
-        @NotBlank
-        private int amount;
 
-        private LocalDate startDate;
-
-        private LocalDate endDate;
+        @NotNull
+        private Integer amount;
 
         @Builder
-        public Post(Long memberCategoryId, int amount, LocalDate startDate, LocalDate endDate) {
+        public Post(Long memberCategoryId, int amount) {
             this.memberCategoryId = memberCategoryId;
             this.amount = amount;
-            this.startDate = startDate;
-            this.endDate = endDate;
         }
     }
 
@@ -38,9 +34,12 @@ public class BudgetDto {
     public static class Patch {
         private int amount;
 
+        private Budget.Status status;
+
         @Builder
-        public Patch(int amount) {
+        public Patch(int amount, Budget.Status status) {
             this.amount = amount;
+            this.status = status;
         }
     }
 
@@ -55,9 +54,12 @@ public class BudgetDto {
         private LocalDate endDate;
         private int spend;
         private LocalDateTime createdAt;
+        private boolean current;
+        private Budget.Status status;
 
         @Builder
-        public Response(long id, long memberCategoryId, int amount, LocalDate startDate, LocalDate endDate, int spend, LocalDateTime createdAt) {
+
+        public Response(long id, long memberCategoryId, int amount, LocalDate startDate, LocalDate endDate, int spend, LocalDateTime createdAt, boolean current, Budget.Status status) {
             this.id = id;
             this.memberCategoryId = memberCategoryId;
             this.amount = amount;
@@ -65,6 +67,8 @@ public class BudgetDto {
             this.endDate = endDate;
             this.spend = spend;
             this.createdAt = createdAt;
+            this.current = current;
+            this.status = status;
         }
     }
 }

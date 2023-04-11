@@ -8,7 +8,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { tokenState, currentPageState } from '../util/store';
+import { tokenState, userInfoState } from '../util/store';
 import { useRecoilState } from 'recoil';
 
 /**
@@ -18,12 +18,15 @@ const LoginContainer = styled.div`
   background-image: url('/tikkle-background.jpg');
   position: relative;
   background-color: transparent;
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
   font-family: 'GmarketSansMedium';
   height: 100vh;
+  width: 100%;
   ::before {
     position: absolute;
     content: '';
@@ -84,22 +87,21 @@ const OauthLoginButton = styled.div`
  */
 
 // 회원 정보 타입
-interface userInfoType {
-  createdAt: Date;
-  modifiedAt: Date;
-  id: number;
-  email: string;
-  name: string;
-  location: null | string;
-  state: string;
-  gender: null | string;
-  payDay: null | Date;
-
-  // initDate는 초기값이 1이기 때문에 number 타입도 허용
-  initDate: null | number | Date;
-
-  picture: string;
-  accessToken: null | string;
+export interface userInfoType {
+  createdAt?: Date | undefined;
+  email?: string | undefined;
+  gender?: string | undefined;
+  id?: number | undefined;
+  initDate?: number | undefined;
+  location?: string | undefined;
+  modifiedAt?: Date | undefined;
+  name?: string | undefined;
+  payAmount?: number | undefined;
+  payDay?: number | undefined;
+  picture?: string | undefined;
+  role?: string | undefined;
+  state?: string | undefined;
+  totalBudget?: number | undefined;
 }
 //  ToDo 저장된 액세스 토큰이 존재할 경우, 사용자의 현재 상태에 따라 유저/카테고리/예산 설정 페이지 중 하나로 이동
 //  ToDo 저장된 액세스 토큰이 존재하며, 회원가입 절차도 모두 마친 경우 홈 페이지로 이동
@@ -107,13 +109,7 @@ function Login() {
   const [accessToken, setAccessToken] = useRecoilState(tokenState);
 
   // 사용자 정보 임시 저장
-  const [userInfo, setUserInfo] = useState<userInfoType>();
-
-  // 로그인 후 사용자가 이동해야 할 페이지 저장
-  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
-  console.log(currentPage);
-
-  console.log(userInfo);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   // '/login' 경로로 바로 접속할 경우 recoil-persist가 동작하지 않는 버그가 있어,
   // 해당 키가 로컬스토리지에 없다면 수동으로 생성
@@ -122,7 +118,7 @@ function Login() {
       'recoil-persist',
       JSON.stringify({
         tokenState: null,
-        currentPageState: 'usersetting',
+        userInfoState: null,
       })
     );
   }
@@ -131,26 +127,32 @@ function Login() {
   useEffect(() => {
     // 사용자 요청 후 응답 온 정보를 userInfo에 저장
     const getUserInfo = async () => {
-      const fetchedUserInfo = (
-        await axios.get(
-          `${import.meta.env.VITE_SERVER}/login?accessToken=${accessToken}`
-        )
-      ).data;
+      try {
+        const fetchedUserInfo = (
+          await axios.get(
+            `${import.meta.env.VITE_SERVER}/login?accessToken=${accessToken}`
+          )
+        ).data;
 
-      // 사용자 정보 저장 시 날짜 형식 데이터들은 모두 Date로 형변환 후 저장
-      setUserInfo({
-        ...fetchedUserInfo,
-        createdAt: new Date(fetchedUserInfo.createdAt),
-        modifiedAt: new Date(fetchedUserInfo.modifiedAt),
-        payDay:
-          fetchedUserInfo.payDay === null
-            ? null
-            : new Date(fetchedUserInfo.payDay),
-        initDate:
-          fetchedUserInfo.initDate === 1
-            ? 1
-            : new Date(fetchedUserInfo.initDate),
-      });
+        // 사용자 정보 저장 시 날짜 형식 데이터들은 모두 Date로 형변환 후 저장
+        setUserInfo({
+          ...fetchedUserInfo,
+          createdAt: new Date(fetchedUserInfo.createdAt),
+          modifiedAt: new Date(fetchedUserInfo.modifiedAt),
+        });
+      } catch (err: any) {
+        console.log(err);
+        // 토큰이 만료된 경우 저장된 토큰을 지우고, 다시 로그인
+        if (err.response.status === 401 || err.response.status === 500) {
+          setAccessToken(null);
+          window.location.href =
+            'https://accounts.google.com/o/oauth2/auth?' +
+            `client_id=${import.meta.env.VITE_GCLIENT_ID}&` +
+            `redirect_uri=${import.meta.env.VITE_CLIENT}/login&` +
+            'response_type=token&' +
+            'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
+        }
+      }
     };
 
     if (accessToken !== null) {
@@ -167,12 +169,10 @@ function Login() {
     // 액세스 토큰의 값이 변경될 때마다 useEffect 구문 재실행
   }, [accessToken]);
 
-  // 페이지 이동 로직
   useEffect(() => {
-    // 사용자 정보에 payday(급여일), initDate(예산 시작일) 중 하나라도 설정되지 않았다면
-    // 회원정보 설정 페이지로 이동
-    if (userInfo?.payDay === null || userInfo?.initDate === 1) {
-      window.location.href = `${import.meta.env.VITE_CLIENT}/${currentPage}`;
+    // 사용자 상태가 회원 정보 설정을 하지 않은 상태라면 회원정보 페이지로 이동
+    if (userInfo?.state === 'userSetting') {
+      window.location.href = `${import.meta.env.VITE_CLIENT}/usersetting`;
     }
   }, [userInfo]);
 
@@ -181,7 +181,7 @@ function Login() {
     window.location.href =
       'https://accounts.google.com/o/oauth2/auth?' +
       `client_id=${import.meta.env.VITE_GCLIENT_ID}&` +
-      'redirect_uri=http://localhost:5173/login&' +
+      `redirect_uri=${import.meta.env.VITE_CLIENT}/login&` +
       'response_type=token&' +
       'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
   };

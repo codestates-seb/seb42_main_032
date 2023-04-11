@@ -15,4 +15,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Member findByEmail(String email);
     List<Member> findByStateIs(MemberState state);
 
+    List<Member> findByInitDateAndStateIs(int date, MemberState state);
 }

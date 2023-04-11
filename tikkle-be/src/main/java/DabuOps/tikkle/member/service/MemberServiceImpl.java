@@ -30,9 +30,11 @@ import javax.persistence.PrePersist;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberCategoryRepository memberCategoryRepository;
     private final CategoryRepository categoryRepository;
     private final MemberCategoryService memberCategoryService;
     private final BudgetService budgetService;
+    private final BudgetRepository budgetRepository;
 
     @Override
     public Member createMember(Member member) {
@@ -68,15 +70,27 @@ public class MemberServiceImpl implements MemberService {
             .ifPresent(obtainedMember::setPayDay);
         Optional.ofNullable(member.getInitDate())
             .ifPresent(obtainedMember::setInitDate);
+        Optional.ofNullable(member.getTotalBudget())
+            .ifPresent(obtainedMember::setTotalBudget);
+        Optional.ofNullable(member.getGender())
+            .ifPresent(obtainedMember::setGender);
+        Optional.ofNullable(member.getPayAmount())
+            .ifPresent(obtainedMember::setPayAmount);
+        Optional.ofNullable(member.getState())
+            .ifPresent(obtainedMember::setState);
 
         return memberRepository.save(obtainedMember);
     }
 
+    // 멤버 초기 설정 메서드
     public Member initMember(Member member) {
         Member initializedMember = findExistMemberById(member.getId());
 
         initializedMember.setInitDate(member.getInitDate());
         initializedMember.setPayDay(member.getPayDay());
+        initializedMember.setPayAmount(member.getPayAmount());
+        initializedMember.setTotalBudget(member.getTotalBudget());
+        initializedMember.setGender(member.getGender());
         Member savedMember = memberRepository.save(initializedMember);
 
         // Category 리스트 가져오기
@@ -84,7 +98,6 @@ public class MemberServiceImpl implements MemberService {
 
         for(Category category : categories) {
             MemberCategory memberCategory = memberCategoryService.createAutoMemberCategory(member, category); // 멤버와 카테고리로 멤버카테고리 생성
-            Budget budget = budgetService.createAutoBudget(memberCategory); // 예산도 생성
         }
 
         return savedMember;

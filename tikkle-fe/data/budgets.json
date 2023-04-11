@@ -1,0 +1,40 @@
+{
+  "budgets": [
+    {
+      "id": 1,
+      "memberCategoryId": 1,
+      "amount": 200000,
+      "startDate": "2023-03-01",
+      "endDate": "2023-03-31",
+      "spend": 0,
+      "createdAt": "2023-03-20T19:23:54.292708"
+    },
+    {
+      "id": 2,
+      "memberCategoryId": 5,
+      "amount": 50000,
+      "startDate": "2023-03-01",
+      "endDate": "2023-03-31",
+      "spend": 0,
+      "createdAt": "2023-03-20T19:23:54.292708"
+    },
+    {
+      "id": 3,
+      "memberCategoryId": 2,
+      "amount": 500000,
+      "startDate": "2023-03-01",
+      "endDate": "2023-03-31",
+      "spend": 0,
+      "createdAt": "2023-03-20T19:23:54.29579"
+    },
+    {
+      "id": 4,
+      "memberCategoryId": 4,
+      "amount": 50000,
+      "startDate": "2023-03-01",
+      "endDate": "2023-03-31",
+      "spend": 0,
+      "createdAt": "2023-03-20T19:23:54.297718"
+    }
+  ]
+}

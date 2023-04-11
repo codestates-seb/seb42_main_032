@@ -1,25 +1,36 @@
 // TODO 거래내역 박스
 // TODO 무한 스크롤 구현하기
 
-import { FC, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { MdFastfood } from 'react-icons/md';
 import { BiCoffeeTogo } from 'react-icons/bi';
 import { IoLogoGameControllerA } from 'react-icons/io';
 import Modal from '../transaction/Modal';
+import axios from 'axios';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../util/store';
 
-export interface Transaction {
+// axios GET 요청으로 불러온 데이터 타입 정의
+export interface TransactionType {
   date: Date;
   bankInfo: string;
   payee: string;
   category: string;
   amount: number;
+  branchName: string;
+  id: number;
+  inoutType: string;
+  memberCategoryId: number;
+  memo: string;
+  time: string;
+  bankName: string;
 }
 
-export interface Props {
-  transactions: Transaction[];
-  date: Date;
-}
+// export interface Props {
+//   transactions: TransactionType[];
+//   date: Date;
+// }
 
 // 카테고리별 아이콘 설정하기 <카테고리명: 아이콘이름>
 const categoryIcons: Record<string, any> = {
@@ -80,25 +91,81 @@ const ContentContainer = styled.div`
 `;
 
 // 날짜+요일별 거래내역 박스
-const Transaction: FC<Props> = ({ transactions, date }) => {
+const Transaction = ({ date }: { date: Date }) => {
+  // Modal에 띄울 transaction history 상태 관리
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<TransactionType | null>({
+      amount: 0,
+      branchName: '',
+      date: new Date(date),
+      id: 0,
+      inoutType: '',
+      memberCategoryId: 0,
+      memo: '',
+      time: '',
+      bankName: '',
+      bankInfo: '',
+      payee: '',
+      category: '',
+    });
+
+  // 거래내역 상태 관리
+  const [transactionHistories, setTransactionHistories] = useState<
+    TransactionType[]
+  >([
+    {
+      amount: 0,
+      branchName: '',
+      date: new Date(date),
+      id: 0,
+      inoutType: '',
+      memberCategoryId: 0,
+      memo: '',
+      time: '',
+      bankName: '',
+      bankInfo: '',
+      payee: '',
+      category: '',
+    },
+  ]);
+
+  // 거래내역 네트워크 요청
+
+  // GET 요청 URI parameter 용 memberID, date (month) 받아오기
+  let member_id = useRecoilValue(userInfoState)?.id;
+  let headerMonth =
+    date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0');
+
+  useEffect(() => {
+    const getTransactionHistories = async () => {
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_SERVER
+          }/transaction_histories/${member_id}/${headerMonth}`
+        )
+        .then((res) => {
+          const data: TransactionType[] = res.data.transactionHistoriesResponse;
+          console.log(data);
+          setTransactionHistories(
+            // new Date 처리를 하지 않으면, date 가 string 타입으로 들어감.
+            data.map((transaction) => ({
+              ...transaction,
+              date: new Date(transaction.date),
+            }))
+          );
+        })
+        .catch((err) => console.log(err));
+    };
+    getTransactionHistories();
+  }, [headerMonth]);
+
   // 거래내역 클릭 시 상세 정보 모달 띄우기
   const [showModal, setShowModal] = useState<boolean>(false);
   const toggleModal = () => {
     setShowModal(!showModal);
   };
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
-
-  //헤더의 Month
-  let headerMonth = date.getMonth() + 1;
-
-  //거래내역의 Month
-  // let transactioinMonth = transactions[0].date.getMonth() + 1;
-  // console.log(transactions[0].date.getMonth() + 1);
-
-  // 헤더에서 선택한 달과 일치하는 거래내역만 가져오기
-  const transactionThisMonth = transactions.filter(
-    (el) => el.date.getMonth() + 1 === headerMonth
-  );
 
   //TODO 무한스크롤
   const options = {
@@ -116,35 +183,43 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
   useEffect(() => {
     let observer = new IntersectionObserver(callback, options);
     if (target.current) {
-      observer.observe(target.current as Element);
+      console.log(target.current);
+      observer.observe(target.current);
+      // observer.unobserve(target);
     }
     return () => observer && observer.disconnect();
   }, []);
 
+  //TODO 아이콘 처리
   return (
     <Container className="transaction-history-box" ref={target}>
-      {transactionThisMonth.map((transaction, index) => {
-        const IconComponent = categoryIcons[transaction.category];
+      {transactionHistories.map((transaction, idx) => {
+        const IconComponent = categoryIcons[transaction.memberCategoryId];
         return (
-          <TransactionContainer key={index} onClick={toggleModal}>
+          <TransactionContainer key={transaction.id} onClick={toggleModal}>
             <div>
               <div className="transaction-date-box">
                 {transaction.date.getDate()}일{' '}
                 {daysOfWeek[transaction.date.getDay()]}요일
               </div>
               <ContentContainer>
-                <CategoryIconWrapper category={transaction.category}>
+                {/* <CategoryIconWrapper category={transaction.memberCategoryId}>
                   <IconComponent className="transaciton-icon" />
-                </CategoryIconWrapper>
-                <div className="transaction-content-box" onClick={toggleModal}>
-                  {showModal && <Modal></Modal>}
+                </CategoryIconWrapper> */}
+                <div
+                  className="transaction-content-box"
+                  onClick={() => setSelectedTransaction(transaction)}
+                >
                   <div className="transaction-amount-box">
                     <strong>
+                      {new Intl.NumberFormat('ko-KR').format(
+                        transaction.amount
+                      )}
                       원
                     </strong>
                   </div>
                   <div className="transaciton-bank-box">
-                    {transaction.bankInfo} &#8594; {transaction.payee}
+                    {transaction.bankName} &#8594; {transaction.branchName}
                   </div>
                 </div>
               </ContentContainer>
@@ -152,6 +227,13 @@ const Transaction: FC<Props> = ({ transactions, date }) => {
           </TransactionContainer>
         );
       })}
+      {selectedTransaction && showModal && (
+        <Modal
+          transaction={selectedTransaction}
+          onClose={() => setSelectedTransaction(null)}
+          toggleModal={toggleModal}
+        ></Modal>
+      )}
     </Container>
   );
 };

@@ -1,6 +1,5 @@
 package DabuOps.tikkle.oauth.controller;
 
-import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.oauth.service.OAuthService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -11,16 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin
 @RequiredArgsConstructor
 @Slf4j
 public class OAuthController {
     private final OAuthService oAuthService;
 
     @GetMapping("/login")
-    public Member login(@RequestParam("accessToken") String accessToken) throws IOException {
-        Member member = (Member) oAuthService.login(accessToken);
-
-        return member;
+    public Object login(@RequestParam("accessToken") String accessToken) throws IOException {
+        return oAuthService.login(accessToken);
     }
 }

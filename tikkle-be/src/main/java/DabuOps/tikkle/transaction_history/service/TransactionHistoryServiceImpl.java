@@ -1,5 +1,7 @@
 package DabuOps.tikkle.transaction_history.service;
 
+import DabuOps.tikkle.budget.entity.Budget;
+import DabuOps.tikkle.budget.repository.BudgetRepository;
 import DabuOps.tikkle.global.exception.BusinessLogicException;
 import DabuOps.tikkle.global.exception.ExceptionCode;
 import DabuOps.tikkle.member_category.entity.MemberCategory;
@@ -9,6 +11,7 @@ import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
 import DabuOps.tikkle.transaction_history.repository.TransactionHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,16 +21,26 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class TransactionHistoryServiceImpl implements TransactionHistoryService{
     private final TransactionHistoryRepository transactionHistoryRepository;
     private final MemberCategoryService memberCategoryService;
-
     private final MemberCategoryRepository memberCategoryRepository;
+    private final BudgetRepository budgetRepository;
 
     public TransactionHistory createTransactionHistory(TransactionHistory transactionHistory, Long memberCategoryId) {
         MemberCategory memberCategory = memberCategoryService.findMemberCategory(memberCategoryId);
         transactionHistory.setMemberCategory(memberCategory);
         transactionHistory.setStatus(TransactionHistory.Status.ACTIVE);
+        transactionHistory.setDutchAmount(null);
+        transactionHistory.setImage(memberCategory.getImage());
+
+        if(transactionHistory.getInoutType().equals(TransactionHistory.InoutType.SPEND)) {
+            Budget budget = budgetRepository.findByMemberCategoryIdAndCurrentIsTrue(memberCategoryId);
+
+            budget.setSpend(budget.getSpend() + transactionHistory.getAmount());
+            budgetRepository.save(budget);
+        }
 
         return transactionHistoryRepository.save(transactionHistory);
     }
@@ -35,8 +48,12 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
     public TransactionHistory updateTransactionHistory(TransactionHistory transactionHistory, Long transactionHistoryId) {
         TransactionHistory updatedTransactionHistory = findTransactionHistory(transactionHistoryId);
 
-        Optional.ofNullable(transactionHistory.getMemberCategory().getId())
-                .ifPresent(categoryId -> updatedTransactionHistory.setMemberCategory(memberCategoryService.findMemberCategory(categoryId)));
+        Budget budget1 = budgetRepository.findByMemberCategoryIdAndCurrentIsTrue(updatedTransactionHistory.getMemberCategory().getId());
+        budget1.setSpend(budget1.getSpend() - updatedTransactionHistory.getAmount());
+        budgetRepository.save(budget1);
+
+        Optional.ofNullable(transactionHistory.getMemberCategory())
+                .ifPresent(category -> updatedTransactionHistory.setMemberCategory(memberCategoryService.findMemberCategory(category.getId())));
         Optional.ofNullable(transactionHistory.getDate())
                 .ifPresent(date -> updatedTransactionHistory.setDate(date));
         Optional.ofNullable(transactionHistory.getTime())
@@ -47,6 +64,25 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
                 .ifPresent(amount -> updatedTransactionHistory.setAmount(amount));
         Optional.ofNullable(transactionHistory.getBranchName())
                 .ifPresent(branchName -> updatedTransactionHistory.setBranchName(branchName));
+
+        Budget budget2 = budgetRepository.findByMemberCategoryIdAndCurrentIsTrue(updatedTransactionHistory.getMemberCategory().getId());
+        budget2.setSpend(budget2.getSpend() + updatedTransactionHistory.getAmount());
+        budgetRepository.save(budget2);
+
+        return transactionHistoryRepository.save(updatedTransactionHistory);
+    }
+
+    public TransactionHistory dutchPayModifyTransactionHistory(TransactionHistory transactionHistory, Long transactionHistoryId) {
+        TransactionHistory updatedTransactionHistory = findTransactionHistory(transactionHistoryId);
+
+        Budget budget = budgetRepository.findByMemberCategoryIdAndCurrentIsTrue(updatedTransactionHistory.getMemberCategory().getId());
+        budget.setSpend(budget.getSpend() - updatedTransactionHistory.getAmount());
+
+        updatedTransactionHistory.setDutchAmount(transactionHistory.getDutchAmount());
+
+        budget.setSpend(budget.getSpend() + updatedTransactionHistory.getDutchAmount());
+
+        budgetRepository.save(budget);
 
         return transactionHistoryRepository.save(updatedTransactionHistory);
     }
@@ -71,7 +107,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
         List<TransactionHistory> transactionHistories =
-                transactionHistoryRepository.findByMemberCategory_Member_IdAndDateBetweenAndStatusNot(
+                transactionHistoryRepository.findByMemberCategoryMemberIdAndDateBetweenAndStatusNot(
                 memberId, startDate, endDate, TransactionHistory.Status.INACTIVE);
 
         List dailySummary = findMonthlyTransactionHistoriesSummary(transactionHistories, startDate);
@@ -81,17 +117,23 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
 
     public List<List<Integer>> findMonthlyTransactionHistoriesSummary(List<TransactionHistory> transactionHistories, LocalDate startDate) {
         List<List<Integer>> daily = new ArrayList<>();
-        for (int i = 0; i <= LocalDate.now().getDayOfMonth(); i++) {
+        for (int i = 0; i <= startDate.withDayOfMonth(startDate.lengthOfMonth()).getDayOfMonth(); i++) {
             daily.add(Arrays.asList(0, 0));
             // daily index = 일
             // daily(i,0) = i일의 수입, daily(i,1) = i일의 지출
         }
 
-        for(int i = 1; i <= transactionHistories.size(); i++) {
+        for(int i = 1; i <= startDate.lengthOfMonth(); i++) {
             for(TransactionHistory j : transactionHistories) {
                 if(i == j.getDate().getDayOfMonth()) {
-                    if(j.getInoutType().equals(TransactionHistory.InoutType.INCOME)) daily.get(i).set(0, daily.get(i).get(0) + j.getAmount());
-                    else daily.get(i).set(1, daily.get(i).get(1) + j.getAmount());
+                    if(j.getDutchAmount() == null) {
+                        if(j.getInoutType().equals(TransactionHistory.InoutType.INCOME)) daily.get(i).set(0, daily.get(i).get(0) + j.getAmount());
+                        else daily.get(i).set(1, daily.get(i).get(1) + j.getAmount());
+                    }
+                    else {
+                        if(j.getInoutType().equals(TransactionHistory.InoutType.INCOME)) daily.get(i).set(0, daily.get(i).get(0) + j.getDutchAmount());
+                        else daily.get(i).set(1, daily.get(i).get(1) + j.getDutchAmount());
+                    }
                 }
             }
         }
@@ -252,6 +294,14 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
                 transactionHistory.setMemberCategory(memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(21L, memberId, MemberCategory.Status.INACTIVE));
                 break;
         }
+        if(transactionHistory.getInoutType().equals(TransactionHistory.InoutType.SPEND)) {
+            Long memberCategoryId = transactionHistory.getMemberCategory().getId();
+            Budget budget = budgetRepository.findByMemberCategoryIdAndCurrentIsTrue(memberCategoryId);
+
+            budget.setSpend(budget.getSpend() + transactionHistory.getAmount());
+            budgetRepository.save(budget);
+        }
+        transactionHistory.setDutchAmount(null);
 
         return transactionHistoryRepository.save(transactionHistory);
     }

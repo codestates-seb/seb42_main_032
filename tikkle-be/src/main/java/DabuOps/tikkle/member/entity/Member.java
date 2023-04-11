@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Builder
@@ -35,7 +36,7 @@ public class Member extends Auditable {
     @Column
     @Builder.Default
     @Enumerated(value = EnumType.STRING)
-    private MemberState state = MemberState.ACTIVE;
+    private MemberState state = MemberState.USERSETTING;
 
     @Column
     @Enumerated(value = EnumType.STRING)
@@ -43,6 +44,12 @@ public class Member extends Auditable {
 
     @Column
     private Integer payDay;
+
+    @Column
+    private Integer payAmount;
+
+    @Column
+    private Integer totalBudget;
 
     @Column
     @Builder.Default
@@ -54,15 +61,13 @@ public class Member extends Auditable {
     @Column
     @Builder.Default
     @Enumerated(value = EnumType.STRING)
-    private MemberRole role = MemberRole.Regular;
+    private MemberRole role = MemberRole.REGULAR;
 
-    @Column
+    @Column(length = 410)
     private String accessToken;
 
-
     @Builder
-    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay,
-        Integer initDate, String picture, MemberRole role, String accessToken) {
+    public Member(Long id, String email, String name, String location, MemberState state, Gender gender, Integer payDay, Integer payAmount, Integer totalBudget, Integer initDate, String picture, MemberRole role, String accessToken) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -70,11 +75,12 @@ public class Member extends Auditable {
         this.state = state;
         this.gender = gender;
         this.payDay = payDay;
+        this.payAmount = payAmount;
+        this.totalBudget = totalBudget;
         this.initDate = initDate;
         this.picture = picture;
-        this.accessToken = accessToken;
         this.role = role;
-
+        this.accessToken = accessToken;
     }
 
     public static enum Gender{
@@ -91,6 +97,9 @@ public class Member extends Auditable {
     }
 
     public static enum MemberState {
+        USERSETTING("회원 정보 설정 필요"),
+        CATEGORYEDIT("카테고리 설정 필요"),
+        BUDGETSETTING("예산 설정 필요"),
         ACTIVE("활성"),
         DORMANT("휴면"),
         DELETED("탈퇴");
@@ -104,8 +113,8 @@ public class Member extends Auditable {
     }
 
     public static enum MemberRole {
-        Curator("큐레이터"),
-        Regular("일반");
+        CURATOR("큐레이터"),
+        REGULAR("일반");
         @Getter
         private String role;
 

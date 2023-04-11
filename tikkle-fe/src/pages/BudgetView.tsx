@@ -1,11 +1,18 @@
 //TODO BUDGET_002 예산 조회 화면 구현
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Progress } from '@chakra-ui/react';
 import { MdFastfood } from 'react-icons/md';
 import { BiCoffeeTogo, BiWon } from 'react-icons/bi';
 import { FiPercent } from 'react-icons/fi';
 import { IoLogoGameControllerA } from 'react-icons/io';
+import axios from 'axios';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../util/store';
+import CategoryIcon, {
+  CategoryIdMap,
+} from '../components/category/CategoryIcon';
+import { Link } from 'react-router-dom';
 
 const BodyContainer = styled.div`
   margin-top: 60px;
@@ -28,7 +35,9 @@ const BudgetWrap = styled.div`
   flex-direction: column;
   gap: 20px;
   margin: 20px;
-  min-width: 350px;
+  min-width: 450px;
+  padding-left: 20px;
+  padding-right: 20px;
   h3 {
     text-align: left;
     font-size: 25px;
@@ -140,65 +149,126 @@ const ViewChangeButtonWrap = styled.div`
   }
 `;
 
-// 카테고리 아이콘
-const categoryIcons: Record<string, any> = {
-  식비: MdFastfood,
-  음료: BiCoffeeTogo,
-  오락: IoLogoGameControllerA,
-};
-
-const CategoryIconWrapper = styled.div<{ category: string }>`
-  max-width: fit-content;
-  padding: 10px;
-  border-radius: 100%;
-  color: white;
-  font-size: 20px;
-  background-color: ${(props) => {
-    switch (props.category) {
-      case '식비':
-        return '#FFC107'; // yellow
-      case '음료':
-        return '#4CAF50'; // green
-      case '오락':
-        return '#9C27B0'; // purple
-      default:
-        return 'inherit';
-    }
-  }};
-`;
-
-const testArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
-
 function BudgetView() {
+  const userInfo = useRecoilValue(userInfoState);
   const [unit, setUnit] = useState<boolean>(false);
   const handleUnitButton = () => {
     setUnit(!unit);
   };
+  const [totalBudget, setTotalBudget] = useState(0);
+  const [totalSpend, setTotalSpend] = useState(0);
+  const [budgetCategory, setBudgetCategory] = useState<
+    {
+      id: number;
+      name: string;
+      categoryId: number;
+      amount: number;
+      spend: number;
+      image: string;
+    }[]
+  >();
+
+  // 유저 총 예산 금액 get
+  const getTotalBudget = async () => {
+    const userTotalBudget =
+      userInfo &&
+      (await axios.get(`${import.meta.env.VITE_SERVER}/members/${userInfo.id}`))
+        .data.data.totalBudget;
+    setTotalBudget(userTotalBudget);
+  };
+
+  // budget 조회
+  const getBudget = async () => {
+    const memberBudget =
+      userInfo &&
+      (
+        await axios.get(
+          `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo.id}`
+        )
+      ).data;
+
+    // 예산 설정된 카테고리 총 소비금액
+    let memberTotalSpend = 0;
+    if (memberBudget) {
+      for (const el of memberBudget) {
+        memberTotalSpend = memberTotalSpend + el.spend;
+      }
+    }
+    setTotalSpend(memberTotalSpend);
+    const all =
+      userInfo &&
+      (await axios.get(
+        `${import.meta.env.VITE_SERVER}/categories/${userInfo.id}`
+      ));
+    const budgetCategories = [];
+    for (const i of memberBudget) {
+      for (const j of all?.data.data) {
+        if (i.memberCategoryId === j.id && i.status === 'ACTIVE') {
+          budgetCategories.push({ ...j, ...i });
+          break;
+        }
+      }
+    }
+    setBudgetCategory(budgetCategories);
+  };
+
+  const initDate = new Date();
+  userInfo && new Date(initDate.setDate(Number(userInfo.initDate)));
+
+  const nextInitDate =
+    initDate && new Date(initDate.setMonth(initDate.getMonth() + 1));
+
+  const today = new Date();
+
+  const dateDiff =
+    nextInitDate &&
+    (nextInitDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
+
+  useEffect(() => {
+    getTotalBudget();
+    getBudget();
+  }, []);
+
   return (
     <BodyContainer>
       <BudgetWrap>
         <h3>한 달 총 예산</h3>
         <div className="budgetview-total__div">
-          <span className="budgetview-free__span">500,000원 남음</span>
-          <span className="budgetview-edit__span">수정하기</span>
+          <span className="budgetview-free__span">{`${(
+            totalBudget - totalSpend
+          ).toLocaleString('ko-KR')} 원 남음`}</span>
+          <Link to="/budgetsetting">
+            <span className="budgetview-edit__span">수정하기</span>
+          </Link>
         </div>
-        <div className="budgetview-day__div">총 하루 예산 20,000원</div>
+        <div className="budgetview-day__div">{`총 하루 예산 ${
+          totalSpend &&
+          Math.floor(
+            ((totalBudget - totalSpend) / dateDiff! / 10) * 10
+          ).toLocaleString('ko-KR')
+        } 원`}</div>
         <div>
           <Progress
-            value={30}
+            value={(totalSpend / totalBudget) * 100}
             size="lg"
-            colorScheme="purple"
+            colorScheme={
+              (totalSpend / totalBudget) * 100 < 90 ? 'purple' : 'red'
+            }
             borderRadius={10}
           />
-          <span>30%</span>
+          <span>{`${
+            totalBudget ? Math.floor((totalSpend / totalBudget) * 100) : 0
+          }%`}</span>
         </div>
         <div className="budgetview-total__div">
           <span>● 예산</span>
-          <span>500,000원</span>
+          <span>{`${
+            totalBudget ? totalBudget.toLocaleString('ko-KR') : 0
+          } 원`}</span>
         </div>
         <div className="budgetview-total__div">
           <span>○ 오늘까지 지출 총액</span>
-          <span>150,000원</span>
+          <span>{`${totalSpend.toLocaleString('ko-KR')} 원`}</span>
         </div>
       </BudgetWrap>
       <CategoryBudgetWrap>
@@ -207,29 +277,42 @@ function BudgetView() {
         </div>
         <div className="budgetview-category-contents__div">
           <CategoryBudgetLists>
-            {testArr.map(() => {
-              return (
-                <div className="budgetview-categorylist__div">
-                  <CategoryIconWrapper category={'식비'}>
-                    <MdFastfood size={30} />
-                  </CategoryIconWrapper>
-                  <div className="budgetview-categorycontent__div">
-                    <div className="budgetview-categoryname__div">식비</div>
-                    <div>
-                      <Progress
-                        value={30}
-                        size="md"
-                        colorScheme={'purple'}
-                        borderRadius={10}
-                      />
-                      <span>
-                        {unit ? '30,000원 / 100,000원' : '30% / 100%'}
-                      </span>
+            {budgetCategory &&
+              budgetCategory.map((el) => {
+                return (
+                  <div key={el.id} className="budgetview-categorylist__div">
+                    <CategoryIcon icon={el.image} />
+                    <div className="budgetview-categorycontent__div">
+                      <div className="budgetview-categoryname__div">
+                        {el.name}
+                      </div>
+                      <div>
+                        <Progress
+                          value={
+                            el.amount === 0 ? 0 : (el.spend / el.amount) * 100
+                          }
+                          size="md"
+                          colorScheme={
+                            (el.spend / el.amount) * 100 < 90 ? 'purple' : 'red'
+                          }
+                          borderRadius={10}
+                        />
+                        <span>
+                          {unit
+                            ? `${el.spend.toLocaleString(
+                                'ko-KR'
+                              )}원 / ${el.amount.toLocaleString('ko-KR')}원`
+                            : `${
+                                el.amount === 0
+                                  ? '0'
+                                  : Math.floor((el.spend / el.amount) * 100)
+                              }% / 100%`}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </CategoryBudgetLists>
           <ViewChangeStickyContainer>
             <ViewChangeButtonWrap onClick={handleUnitButton}>
