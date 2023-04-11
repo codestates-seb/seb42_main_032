@@ -2,10 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Progress } from '@chakra-ui/react';
-import { MdFastfood } from 'react-icons/md';
-import { BiCoffeeTogo, BiWon } from 'react-icons/bi';
+import { BiWon } from 'react-icons/bi';
 import { FiPercent } from 'react-icons/fi';
-import { IoLogoGameControllerA } from 'react-icons/io';
 import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../util/store';
@@ -13,6 +11,7 @@ import CategoryIcon, {
   CategoryIdMap,
 } from '../components/category/CategoryIcon';
 import { Link } from 'react-router-dom';
+import { useHrefModal } from '../hooks/useHrefModal';
 
 const BodyContainer = styled.div`
   margin-top: 60px;
@@ -95,6 +94,33 @@ const CategoryBudgetLists = styled.div`
     font-size: 20px;
   }
   .budgetview-category__icon {
+  }
+  .budgetview-nocategory__div {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    button {
+      padding: 10px 20px;
+      color: #6b46c1;
+      background-color: transparent;
+      border-radius: 6px;
+      background-color: #b794f4;
+      box-shadow: 2px 2px 4px;
+      :hover {
+        background-color: #6b46c1;
+        color: white;
+        border-color: transparent;
+      }
+      :active {
+        background-color: #b794f4;
+        color: white;
+        border-color: transparent;
+      }
+    }
   }
 `;
 const ViewChangeStickyContainer = styled.div`
@@ -277,7 +303,7 @@ function BudgetView() {
         </div>
         <div className="budgetview-category-contents__div">
           <CategoryBudgetLists>
-            {budgetCategory &&
+            {budgetCategory && budgetCategory.length > 0 ? (
               budgetCategory.map((el) => {
                 return (
                   <div key={el.id} className="budgetview-categorylist__div">
@@ -312,7 +338,22 @@ function BudgetView() {
                     </div>
                   </div>
                 );
-              })}
+              })
+            ) : (
+              <div className="budgetview-nocategory__div">
+                <span>예산카테고리 설정이 안되어있습니다.</span>
+                <span>먼저 예산 설정할 카테고리를 선택해주세요.</span>
+                <button
+                  onClick={() => {
+                    window.location.href = `${
+                      import.meta.env.VITE_CLIENT
+                    }/categoryedit`;
+                  }}
+                >
+                  카테고리 설정
+                </button>
+              </div>
+            )}
           </CategoryBudgetLists>
           <ViewChangeStickyContainer>
             <ViewChangeButtonWrap onClick={handleUnitButton}>
