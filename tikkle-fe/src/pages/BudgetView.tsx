@@ -2,10 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Progress } from '@chakra-ui/react';
-import { MdFastfood } from 'react-icons/md';
-import { BiCoffeeTogo, BiWon } from 'react-icons/bi';
+import { BiWon } from 'react-icons/bi';
 import { FiPercent } from 'react-icons/fi';
-import { IoLogoGameControllerA } from 'react-icons/io';
 import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../util/store';
@@ -13,6 +11,7 @@ import CategoryIcon, {
   CategoryIdMap,
 } from '../components/category/CategoryIcon';
 import { Link } from 'react-router-dom';
+import Loading from '../components/layout/Loading';
 
 const BodyContainer = styled.div`
   margin-top: 60px;
@@ -90,11 +89,44 @@ const CategoryBudgetLists = styled.div`
   .budgetview-categorycontent__div {
     flex-grow: 1;
   }
+  .budgetview-nobudget__div {
+    text-align: left;
+    font-size: 20px;
+    color: red;
+    cursor: pointer;
+  }
   .budgetview-categoryname__div {
     text-align: left;
     font-size: 20px;
   }
   .budgetview-category__icon {
+  }
+  .budgetview-nocategory__div {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    button {
+      padding: 10px 20px;
+      color: white;
+      background-color: transparent;
+      border-radius: 6px;
+      background-color: #b794f4;
+      box-shadow: 1px 1px 2px black;
+      :hover {
+        background-color: #6b46c1;
+        color: white;
+        border-color: transparent;
+      }
+      :active {
+        background-color: #b794f4;
+        color: white;
+        border-color: transparent;
+      }
+    }
   }
 `;
 const ViewChangeStickyContainer = styled.div`
@@ -152,6 +184,7 @@ const ViewChangeButtonWrap = styled.div`
 function BudgetView() {
   const userInfo = useRecoilValue(userInfoState);
   const [unit, setUnit] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
   const handleUnitButton = () => {
     setUnit(!unit);
   };
@@ -210,6 +243,7 @@ function BudgetView() {
       }
     }
     setBudgetCategory(budgetCategories);
+    setIsLoading(false);
   };
 
   const initDate = new Date();
@@ -275,69 +309,103 @@ function BudgetView() {
         <div>
           <h3>카테고리별 예산</h3>
         </div>
-        <div className="budgetview-category-contents__div">
-          <CategoryBudgetLists>
-            {budgetCategory &&
-              budgetCategory.map((el) => {
-                return (
-                  <div key={el.id} className="budgetview-categorylist__div">
-                    <CategoryIcon icon={el.image} />
-                    <div className="budgetview-categorycontent__div">
-                      <div className="budgetview-categoryname__div">
-                        {el.name}
-                      </div>
-                      <div>
-                        <Progress
-                          value={
-                            el.amount === 0 ? 0 : (el.spend / el.amount) * 100
-                          }
-                          size="md"
-                          colorScheme={
-                            (el.spend / el.amount) * 100 < 90 ? 'purple' : 'red'
-                          }
-                          borderRadius={10}
-                        />
-                        <span>
-                          {unit
-                            ? `${el.spend.toLocaleString(
-                                'ko-KR'
-                              )}원 / ${el.amount.toLocaleString('ko-KR')}원`
-                            : `${
-                                el.amount === 0
-                                  ? '0'
-                                  : Math.floor((el.spend / el.amount) * 100)
-                              }% / 100%`}
-                        </span>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <div className="budgetview-category-contents__div">
+            <CategoryBudgetLists>
+              {budgetCategory && budgetCategory.length > 0 ? (
+                budgetCategory.map((el) => {
+                  return (
+                    <div key={el.id} className="budgetview-categorylist__div">
+                      <CategoryIcon icon={el.image} />
+                      <div className="budgetview-categorycontent__div">
+                        {el.amount === 0 ? (
+                          <div
+                            className="budgetview-nobudget__div"
+                            onClick={() =>
+                              (window.location.href = `${
+                                import.meta.env.VITE_CLIENT
+                              }/budgetsetting`)
+                            }
+                          >
+                            {el.name} - 예산 설정안됨
+                          </div>
+                        ) : (
+                          <div className="budgetview-categoryname__div">
+                            {el.name}
+                          </div>
+                        )}
+                        <div>
+                          <Progress
+                            value={
+                              el.amount === 0 ? 0 : (el.spend / el.amount) * 100
+                            }
+                            size="md"
+                            colorScheme={
+                              (el.spend / el.amount) * 100 < 90
+                                ? 'purple'
+                                : 'red'
+                            }
+                            borderRadius={10}
+                          />
+                          <span>
+                            {unit
+                              ? `${el.spend.toLocaleString(
+                                  'ko-KR'
+                                )}원 / ${el.amount.toLocaleString('ko-KR')}원`
+                              : `${
+                                  el.amount === 0
+                                    ? '0'
+                                    : Math.floor((el.spend / el.amount) * 100)
+                                }% / 100%`}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-          </CategoryBudgetLists>
-          <ViewChangeStickyContainer>
-            <ViewChangeButtonWrap onClick={handleUnitButton}>
-              <div
-                className={
-                  unit
-                    ? 'budgetview-change__button'
-                    : 'budgetview-change__button selected'
-                }
-              >
-                <FiPercent size={30} />
-              </div>
-              <div
-                className={
-                  unit
-                    ? 'budgetview-change__button selected'
-                    : 'budgetview-change__button'
-                }
-              >
-                <BiWon size={30} />
-              </div>
-              <div className={unit ? 'toggle selected' : 'toggle'}></div>
-            </ViewChangeButtonWrap>
-          </ViewChangeStickyContainer>
-        </div>
+                  );
+                })
+              ) : (
+                <div className="budgetview-nocategory__div">
+                  <span>예산 설정된 카테고리가 없습니다..</span>
+                  <span>먼저 예산 설정할 카테고리를 선택해주세요.</span>
+                  <button
+                    onClick={() => {
+                      window.location.href = `${
+                        import.meta.env.VITE_CLIENT
+                      }/categoryedit`;
+                    }}
+                  >
+                    카테고리 설정
+                  </button>
+                </div>
+              )}
+            </CategoryBudgetLists>
+            <ViewChangeStickyContainer>
+              <ViewChangeButtonWrap onClick={handleUnitButton}>
+                <div
+                  className={
+                    unit
+                      ? 'budgetview-change__button'
+                      : 'budgetview-change__button selected'
+                  }
+                >
+                  <FiPercent size={30} />
+                </div>
+                <div
+                  className={
+                    unit
+                      ? 'budgetview-change__button selected'
+                      : 'budgetview-change__button'
+                  }
+                >
+                  <BiWon size={30} />
+                </div>
+                <div className={unit ? 'toggle selected' : 'toggle'}></div>
+              </ViewChangeButtonWrap>
+            </ViewChangeStickyContainer>
+          </div>
+        )}
       </CategoryBudgetWrap>
     </BodyContainer>
   );
