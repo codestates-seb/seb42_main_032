@@ -9,6 +9,7 @@ import DabuOps.tikkle.global.exception.ExceptionCode;
 import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.entity.Member.MemberRole;
 import DabuOps.tikkle.member.repository.MemberRepository;
+import DabuOps.tikkle.member.service.MemberService;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +23,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CurationService {
     private final CurationRepository repository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     public Curation createCuration(Curation curation, Long memberId){
-        verifyAuthorizedMemberForCuration(memberId);
+        Member obtainMember = verifyAuthorizedMemberForCuration(memberId);
+        curation.setMember(obtainMember);
         return repository.save(curation);
     }
 
@@ -76,10 +78,10 @@ public class CurationService {
     /**
      * 사용자가 권한을 가졌는지 확인하는 method
      */
-    private void verifyAuthorizedMemberForCuration(Long memberId){
-        Member obtainMember = memberRepository.findById(memberId).get();
+    private Member verifyAuthorizedMemberForCuration(Long memberId){
+        Member obtainMember = memberService.findExistMemberById(memberId);
         if(obtainMember.getRole() != MemberRole.CURATOR)
             throw new BusinessLogicException(ExceptionCode.MEMBER_UNAUTHORIZED);
-
+        return obtainMember;
     }
 }
