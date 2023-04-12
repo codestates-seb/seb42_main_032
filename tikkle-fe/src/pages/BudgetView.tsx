@@ -11,7 +11,6 @@ import CategoryIcon, {
   CategoryIdMap,
 } from '../components/category/CategoryIcon';
 import { Link } from 'react-router-dom';
-import { useHrefModal } from '../hooks/useHrefModal';
 
 const BodyContainer = styled.div`
   margin-top: 60px;
@@ -89,6 +88,12 @@ const CategoryBudgetLists = styled.div`
   .budgetview-categorycontent__div {
     flex-grow: 1;
   }
+  .budgetview-nobudget__div {
+    text-align: left;
+    font-size: 20px;
+    color: red;
+    cursor: pointer;
+  }
   .budgetview-categoryname__div {
     text-align: left;
     font-size: 20px;
@@ -105,11 +110,11 @@ const CategoryBudgetLists = styled.div`
     font-size: 20px;
     button {
       padding: 10px 20px;
-      color: #6b46c1;
+      color: white;
       background-color: transparent;
       border-radius: 6px;
       background-color: #b794f4;
-      box-shadow: 2px 2px 4px;
+      box-shadow: 1px 1px 2px black;
       :hover {
         background-color: #6b46c1;
         color: white;
@@ -309,9 +314,22 @@ function BudgetView() {
                   <div key={el.id} className="budgetview-categorylist__div">
                     <CategoryIcon icon={el.image} />
                     <div className="budgetview-categorycontent__div">
-                      <div className="budgetview-categoryname__div">
-                        {el.name}
-                      </div>
+                      {el.amount === 0 ? (
+                        <div
+                          className="budgetview-nobudget__div"
+                          onClick={() =>
+                            (window.location.href = `${
+                              import.meta.env.VITE_CLIENT
+                            }/budgetsetting`)
+                          }
+                        >
+                          {el.name} - 예산 설정안됨
+                        </div>
+                      ) : (
+                        <div className="budgetview-categoryname__div">
+                          el.name
+                        </div>
+                      )}
                       <div>
                         <Progress
                           value={
@@ -341,7 +359,7 @@ function BudgetView() {
               })
             ) : (
               <div className="budgetview-nocategory__div">
-                <span>예산카테고리 설정이 안되어있습니다.</span>
+                <span>예산 설정된 카테고리가 없습니다..</span>
                 <span>먼저 예산 설정할 카테고리를 선택해주세요.</span>
                 <button
                   onClick={() => {
