@@ -33,11 +33,12 @@ public class TransactionHistoryController {
     private final TransactionHistoryMapper mapper;
 
     private final UserAuthService userAuthService;
-    @PostMapping
-    public ResponseEntity postTransactionHistory(@Valid @RequestBody TransactionHistoryDto.Post requestBody) {
-        Long memberCategoryId = requestBody.getMemberCategoryId();
+    @PostMapping("/{member_id}")
+    public ResponseEntity postTransactionHistory(@PathVariable("member_id") Long memberId,
+                                                 @Valid @RequestBody TransactionHistoryDto.Post requestBody) {
+        Long categoryId = requestBody.getCategoryId();
         TransactionHistory transactionHistory = mapper.transactionHistoryPostDtoToTransactionHistory(requestBody);
-        TransactionHistory createdTransactionHistory = transactionHistoryService.createTransactionHistory(transactionHistory, memberCategoryId);
+        TransactionHistory createdTransactionHistory = transactionHistoryService.createTransactionHistory(transactionHistory, categoryId, memberId);
 
         URI location = UriCreator.createURIWithoutResourceId(DEFAULT_URL);
 

@@ -5,7 +5,7 @@ import DabuOps.tikkle.transaction_history.entity.TransactionHistory;
 import java.util.List;
 
 public interface TransactionHistoryService {
-    TransactionHistory createTransactionHistory(TransactionHistory transactionHistory, Long memberCategoryId);
+    TransactionHistory createTransactionHistory(TransactionHistory transactionHistory, Long categoryId, Long memberId);
 
     TransactionHistory updateTransactionHistory(TransactionHistory transactionHistory, Long transactionHistoryId);
 
