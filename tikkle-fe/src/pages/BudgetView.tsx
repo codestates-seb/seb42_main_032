@@ -12,6 +12,7 @@ import CategoryIcon, {
 } from '../components/category/CategoryIcon';
 import { Link } from 'react-router-dom';
 import Loading from '../components/layout/Loading';
+import useFetchActiveCategory from '../hooks/useFetchActiveCategory';
 
 const BodyContainer = styled.div`
   margin-top: 60px;
@@ -213,12 +214,7 @@ function BudgetView() {
   // budget 조회
   const getBudget = async () => {
     const memberBudget =
-      userInfo &&
-      (
-        await axios.get(
-          `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo.id}`
-        )
-      ).data;
+      userInfo?.id && (await useFetchActiveCategory(userInfo.id));
 
     // 예산 설정된 카테고리 총 소비금액
     let memberTotalSpend = 0;
@@ -228,21 +224,8 @@ function BudgetView() {
       }
     }
     setTotalSpend(memberTotalSpend);
-    const all =
-      userInfo &&
-      (await axios.get(
-        `${import.meta.env.VITE_SERVER}/categories/${userInfo.id}`
-      ));
-    const budgetCategories = [];
-    for (const i of memberBudget) {
-      for (const j of all?.data.data) {
-        if (i.memberCategoryId === j.id && i.status === 'ACTIVE') {
-          budgetCategories.push({ ...j, ...i });
-          break;
-        }
-      }
-    }
-    setBudgetCategory(budgetCategories);
+
+    memberBudget && setBudgetCategory(memberBudget);
     setIsLoading(false);
   };
 
