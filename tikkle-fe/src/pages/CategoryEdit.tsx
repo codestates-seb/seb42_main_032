@@ -221,7 +221,6 @@ function CategoryEdit() {
         ));
 
       memberBudget && setBudget(memberBudget.data);
-      console.log(memberBudget);
 
       // 예산 설정 카테고리(memberCategoryId) - 전체 카테고리 (id) 매핑
       const arr = [];
