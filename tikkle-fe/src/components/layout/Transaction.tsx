@@ -174,7 +174,9 @@ const Transaction = ({ date }: { date: Date }) => {
       <Button colorScheme="purple" maxWidth="15vw" onClick={togglePostModal}>
         거래내역 추가하기
       </Button>
-      {showPostModal && <PostModal togglePostModal={togglePostModal} />}
+      {showPostModal && (
+        <PostModal togglePostModal={togglePostModal} memberId={member_id} />
+      )}
       {transactionHistories.map((transaction, idx) => {
         return (
           <TransactionContainer key={transaction.id} onClick={toggleModal}>

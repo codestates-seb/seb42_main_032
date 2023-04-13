@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Button, Input, Select } from '@chakra-ui/react';
 import { useState } from 'react';
 import axios from 'axios';
+import Dropdown from './Dropdown';
 
 const ModalContainer = styled.div`
   display: flex;
@@ -41,7 +42,10 @@ interface NewTransactionType {
   time: string;
 }
 
-const Modal = ({ togglePostModal }: { togglePostModal: () => void }) => {
+const PostModal = (
+  { togglePostModal }: { togglePostModal: () => void },
+  { memberId }: { memberId: number }
+) => {
   // 유저가 입력한 정보 상태 관리
   const [transaction, setTransaction] = useState<NewTransactionType>({
     amount: 0,
@@ -58,10 +62,10 @@ const Modal = ({ togglePostModal }: { togglePostModal: () => void }) => {
   const submitHandler = () => {
     const postTransaction = async () => {
       axios
-        .post(
-          `${import.meta.env.VITE_SERVER}/transaction_histories`,
-          transaction
-        )
+        .post(`${import.meta.env.VITE_SERVER}/transaction_histories`, {
+          ...transaction,
+          memberCategoryId: 3949,
+        })
         .then((res) => console.log(res))
         .then((res) => alert('저장되었습니다.'))
         .catch((err) => console.log(err));
@@ -71,31 +75,31 @@ const Modal = ({ togglePostModal }: { togglePostModal: () => void }) => {
 
   // input 핸들러 함수들 작성 (순서대로 inoutType, amount, branchName, bankName, date, memberCategoryId, memo)
   //TODO 이벤트 타입 지정
-  const inoutTypeHandler = (e) => {
+  const inoutTypeHandler = (e: { target: { value: any } }) => {
     setTransaction({ ...transaction, inoutType: e.target.value });
   };
 
-  const amounteHandler = (e) => {
+  const amounteHandler = (e: { target: { value: any } }) => {
     setTransaction({ ...transaction, amount: e.target.value });
   };
 
-  const branchNameHandler = (e) => {
+  const branchNameHandler = (e: { target: { value: any } }) => {
     setTransaction({ ...transaction, branchName: e.target.value });
   };
 
-  const bankNameHandler = (e) => {
+  const bankNameHandler = (e: { target: { value: any } }) => {
     setTransaction({ ...transaction, bankName: e.target.value });
   };
 
-  const dateHandler = (e) => {
+  const dateHandler = (e: { target: { value: any } }) => {
     setTransaction({ ...transaction, date: e.target.value });
   };
 
-  const memberCategoryIdHandler = (e) => {
+  const memberCategoryIdHandler = (e: { target: { value: any } }) => {
     setTransaction({ ...transaction, memberCategoryId: e.target.value });
   };
 
-  const memoHandler = (e) => {
+  const memoHandler = (e: { target: { value: any } }) => {
     setTransaction({ ...transaction, memo: e.target.value });
   };
   return (
@@ -104,8 +108,8 @@ const Modal = ({ togglePostModal }: { togglePostModal: () => void }) => {
         <h1>거래 내역 추가</h1>
         <form>
           <Select onChange={inoutTypeHandler}>
-            <option value="지출">출금</option>
-            <option value="수입">입금</option>
+            <option value="SPEND">출금</option>
+            <option value="INCOME">입금</option>
           </Select>
           <Input
             type="number"
@@ -131,12 +135,10 @@ const Modal = ({ togglePostModal }: { togglePostModal: () => void }) => {
             colorScheme="purple"
             onChange={dateHandler}
           ></Input>
-          <Select onChange={memberCategoryIdHandler}>
-            //TODO 카테고리 map
-            <option value="1">카테고리 1</option>
-            <option value="2">카테고리 2</option>
-            <option value="3">카테고리 3</option>
-          </Select>
+          <Dropdown
+            memberId={memberId}
+            memberCategoryIdHandler={memberCategoryIdHandler}
+          ></Dropdown>
           <Input
             type="text"
             placeholder="메모를 입력하세요."
@@ -166,4 +168,4 @@ const Modal = ({ togglePostModal }: { togglePostModal: () => void }) => {
   );
 };
 
-export default Modal;
+export default PostModal;
