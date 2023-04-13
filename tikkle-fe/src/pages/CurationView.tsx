@@ -44,8 +44,8 @@ const Tag = styled.div`
   color: white;
   border-radius: 10px;
   width: fit-content;
-  padding: 3px;
-  background-color: #9240e9;
+  padding: 8px;
+  background-color: #a256f3;
 `;
 
 const ButtonContainer = styled.div`
