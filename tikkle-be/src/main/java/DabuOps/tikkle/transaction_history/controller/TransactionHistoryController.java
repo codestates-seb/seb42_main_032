@@ -28,17 +28,15 @@ import java.util.List;
 public class TransactionHistoryController {
     private final String DEFAULT_URL = "/transaction_histories";
     private final TransactionHistoryService transactionHistoryService;
-    private final TransactionHistoryRepository transactionHistoryRepository;
     private final MemberCategoryService memberCategoryService;
     private final TransactionHistoryMapper mapper;
 
     private final UserAuthService userAuthService;
-    @PostMapping("/{member_id}")
-    public ResponseEntity postTransactionHistory(@PathVariable("member_id") Long memberId,
-                                                 @Valid @RequestBody TransactionHistoryDto.Post requestBody) {
-        Long categoryId = requestBody.getCategoryId();
+    @PostMapping
+    public ResponseEntity postTransactionHistory(@Valid @RequestBody TransactionHistoryDto.Post requestBody) {
+        Long memberCategoryId = requestBody.getMemberCategoryId();
         TransactionHistory transactionHistory = mapper.transactionHistoryPostDtoToTransactionHistory(requestBody);
-        TransactionHistory createdTransactionHistory = transactionHistoryService.createTransactionHistory(transactionHistory, categoryId, memberId);
+        TransactionHistory createdTransactionHistory = transactionHistoryService.createTransactionHistory(transactionHistory, memberCategoryId);
 
         URI location = UriCreator.createURIWithoutResourceId(DEFAULT_URL);
 

@@ -28,15 +28,15 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService{
     private final MemberCategoryRepository memberCategoryRepository;
     private final BudgetRepository budgetRepository;
 
-    public TransactionHistory createTransactionHistory(TransactionHistory transactionHistory, Long categoryId, Long memberId) {
-        MemberCategory memberCategory = memberCategoryRepository.findByCategoryIdAndMemberIdAndStatusNot(categoryId, memberId, MemberCategory.Status.INACTIVE);
+    public TransactionHistory createTransactionHistory(TransactionHistory transactionHistory, Long memberCategoryId) {
+        MemberCategory memberCategory = memberCategoryService.findMemberCategory(memberCategoryId);
         transactionHistory.setMemberCategory(memberCategory);
         transactionHistory.setStatus(TransactionHistory.Status.ACTIVE);
         transactionHistory.setDutchAmount(null);
         transactionHistory.setImage(memberCategory.getImage());
 
         if(transactionHistory.getInoutType().equals(TransactionHistory.InoutType.SPEND)) {
-            Budget budget = budgetRepository.findByMemberCategoryIdAndCurrentIsTrue(memberCategory.getId());
+            Budget budget = budgetRepository.findByMemberCategoryIdAndCurrentIsTrue(memberCategoryId);
 
             budget.setSpend(budget.getSpend() + transactionHistory.getAmount());
             budgetRepository.save(budget);

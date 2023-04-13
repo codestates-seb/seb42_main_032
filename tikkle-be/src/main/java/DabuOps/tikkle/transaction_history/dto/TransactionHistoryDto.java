@@ -14,10 +14,8 @@ public class TransactionHistoryDto {
     @Getter
     @NoArgsConstructor
     public static class Post {
-        @NotNull
-        private Long categoryId;
+        private Long memberCategoryId;
         @DateTimeFormat(pattern = "yyyy-MM-dd")
-        @NotNull
         private LocalDate date;
         @DateTimeFormat(pattern = "HH:mm:ss")
         private LocalTime time;
@@ -34,8 +32,8 @@ public class TransactionHistoryDto {
         private String bankName;
 
         @Builder
-        public Post(Long categoryId, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, Integer amount, String branchName, String bankName) {
-            this.categoryId = categoryId;
+        public Post(Long memberCategoryId, LocalDate date, LocalTime time, TransactionHistory.InoutType inoutType, String memo, int amount, String branchName, String bankName) {
+            this.memberCategoryId = memberCategoryId;
             this.date = date;
             this.time = time;
             this.inoutType = inoutType;

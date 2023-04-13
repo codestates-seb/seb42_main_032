@@ -25,6 +25,8 @@ public class CurationService {
     private final CurationRepository repository;
     private final MemberService memberService;
 
+    private final int pageSize = 10;
+
     public Curation createCuration(Curation curation, Long memberId){
         Member obtainMember = verifyAuthorizedMemberForCuration(memberId);
         curation.setMember(obtainMember);
@@ -49,11 +51,20 @@ public class CurationService {
         Curation obtainCuration = findExistCurationById(curationId);
         return obtainCuration;
     }
-    public Page<Curation> getCurations(Long tagId, int page){
-        List<Curation> curations =  repository.findAllByTagId(tagId);
+    public Page<Curation> findCurations(String keyword, int page, int searchType){
+        PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by("modifiedAt").descending());
+        Page<Curation> response = null;
+        if(searchType == 0) {
+            response = repository.findByTitleContainsOrTagName(keyword, pageRequest);
+        }
+        else if(searchType == 1) {
+            response = repository.findByTitleContains(keyword, pageRequest);
+        }
+        else {
+            response = repository.findByTagName(keyword, pageRequest);
+        }
 
-        return new PageImpl<>(curations,
-            PageRequest.of(page, 15, Sort.by("modifiedAt").descending()), 2);
+        return response;
     }
 
     public void deleteCuration (Long curationId, Long memberId){
