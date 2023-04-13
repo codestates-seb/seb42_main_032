@@ -7,7 +7,9 @@ import {
   AiOutlineEdit,
   AiOutlineUser,
 } from 'react-icons/ai';
-import { Button, Icon } from '@chakra-ui/react';
+import { Box, Button, Icon } from '@chakra-ui/react';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../util/store';
 
 const Container = styled.div`
   font-family: 'GmarketSansMedium';
@@ -51,8 +53,11 @@ const Tag = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: end;
-
   margin-bottom: 10vh;
+  .consistent_notice {
+    color: #f25f5f;
+    margin-left: 10px;
+  }
 `;
 function CurationView() {
   interface Article {
@@ -99,6 +104,10 @@ function CurationView() {
   };
 
   // 조회하는 사용자가 게시글 작성자인지 확인
+  // 로그인한 사용자 정보 (useRecoilState) 와 article.name 비교
+  const userName = useRecoilValue(userInfoState)?.name;
+
+  const isConsistent = userName === article.name;
 
   return (
     <Container>
@@ -113,7 +122,6 @@ function CurationView() {
 
       <p className="curation_content">article.content</p>
       <ButtonContainer>
-        {/* //TODO 클릭 여부 확인하여 조건부 렌더링 */}
         {isLiked ? (
           <Icon
             onClick={undoHandler}
@@ -130,22 +138,30 @@ function CurationView() {
           />
         )}
         {/* //TODO 사용자인지 확인하여 조건부 렌더링 */}
-        <Button
-          minWidth="auto"
-          backgroundColor="#ceb1ed"
-          color="white"
-          ml="20px"
-        >
-          수정하기
-        </Button>
-        <Button
-          minWidth="auto"
-          backgroundColor="#ceb1ed"
-          color="white"
-          ml="10px"
-        >
-          삭제하기
-        </Button>
+        {isConsistent ? (
+          <Box>
+            <Button
+              minWidth="auto"
+              backgroundColor="#ceb1ed"
+              color="white"
+              ml="20px"
+            >
+              수정하기
+            </Button>
+            <Button
+              minWidth="auto"
+              backgroundColor="#ceb1ed"
+              color="white"
+              ml="10px"
+            >
+              삭제하기
+            </Button>
+          </Box>
+        ) : (
+          <p className="consistent_notice">
+            수정 및 삭제는 글 작성자만 가능합니다.
+          </p>
+        )}
       </ButtonContainer>
     </Container>
   );
