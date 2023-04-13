@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface CurationRepository extends JpaRepository<Curation, Long> {
     Page<Curation> findByTitleContains(String keyword, Pageable pageable);
 
-    Page<Curation> findByTagName(String keyword, Pageable pageable);
+    Page<Curation> findByTag_NameContaining(String keyword, Pageable pageable);
 
     Page<Curation> findByTitleContainingOrTag_NameContaining(String keyword, String keyword2, Pageable pageable);
 

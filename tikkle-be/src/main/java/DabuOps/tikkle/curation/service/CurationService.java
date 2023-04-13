@@ -67,7 +67,7 @@ public class CurationService {
             response = repository.findByTitleContains(keyword, pageRequest);
         }
         else {
-            response = repository.findByTagName(keyword, pageRequest);
+            response = repository.findByTag_NameContaining(keyword, pageRequest);
         }
 
         return response;
