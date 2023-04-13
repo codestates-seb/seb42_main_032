@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { userInfoState } from '../../util/store';
 import { useRecoilValue } from 'recoil';
+import Dropdown from './Dropdown';
 // import { debounce } from 'throttle-debounce';
 
 const ModalContainer = styled.div`
@@ -49,6 +50,9 @@ interface ModalProps {
   toggleModal: () => void;
 }
 
+//TODO [수정하기] 버튼 메모, 금액, 카테고리 수정 PATCH 요청 및 상태 관리
+//TODO [더치페이] 버튼 메모, 금액, 카테고리 수정 PATCH 요청 및 상태 관리
+
 const Modal = ({ transaction, toggleModal }: ModalProps) => {
   // memo 입력 상태 관리
   const [memo, setMemo] = useState<string>(transaction.memo);
@@ -76,7 +80,7 @@ const Modal = ({ transaction, toggleModal }: ModalProps) => {
   // memo 수정 POST 요청
 
   // TODO 카테고리 드롭다운 수정 컴포넌트 만들기
-  // TODO 카테고리 수정 시, TODO axios POST 요청으로 변경 사항 보내기
+  // TODO 카테고리 수정 시, TODO axios PATCH 요청으로 변경 사항 보내기
   return (
     <ModalContainer onClick={toggleModal}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -101,7 +105,10 @@ const Modal = ({ transaction, toggleModal }: ModalProps) => {
             메모:
             <Input defaultValue={memo} onChange={changeHandler}></Input>
           </li>
-          <li> 카테고리: </li>
+          <li>
+            카테고리:
+            <Dropdown memberId={transaction.id}></Dropdown>
+          </li>
         </ul>
       </ModalContent>
     </ModalContainer>

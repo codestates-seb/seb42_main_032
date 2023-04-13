@@ -13,8 +13,7 @@ export function useHrefModal(
 
   // 모달을 열고 닫는 핸들러
   const onOpen = () => {
-    // 사용자가 active 상태일 때는 모달을 열지 않도록 설정
-    // TODO 사용자가 active가 아닐 때 (or bank account 연결이 되어있지 않을 때)
+    // TODO 사용자가 active가 아닐 때 (or bank account 연결이 되어있지 않을 때)만 모달을 열도록 설정
     setShowModal(true);
   };
 

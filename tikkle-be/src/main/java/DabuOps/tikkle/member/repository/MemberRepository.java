@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    Optional<Member> findByIdAndStateIs(Long id, MemberState state);
-    Optional<Member> findByEmailAndStateIs(String email, MemberState state);
+    Optional<Member> findByIdAndStateNot(Long id, MemberState state);
+    Optional<Member> findByEmailAndStateNot(String email, MemberState state);
     Member findByEmail(String email);
     List<Member> findByStateIs(MemberState state);
 
