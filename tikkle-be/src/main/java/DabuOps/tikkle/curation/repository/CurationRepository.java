@@ -15,7 +15,7 @@ public interface CurationRepository extends JpaRepository<Curation, Long> {
 
     Page<Curation> findByTagName(String keyword, Pageable pageable);
 
-    Page<Curation> findByTitleContainsOrTagName(String keyword, Pageable pageable);
+    Page<Curation> findByTitleContainingOrTag_NameContaining(String keyword, String keyword2, Pageable pageable);
 
     List<Curation> findAllByTagId(Long tagId);
 }

@@ -10,6 +10,8 @@ import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.entity.Member.MemberRole;
 import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.member.service.MemberService;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,8 @@ public class CurationService {
     public Curation createCuration(Curation curation, Long memberId){
         Member obtainMember = verifyAuthorizedMemberForCuration(memberId);
         curation.setMember(obtainMember);
+        curation.setCreatedAt(LocalDateTime.now());
+        curation.setModifiedAt(LocalDateTime.now());
         return repository.save(curation);
     }
 
@@ -45,6 +49,8 @@ public class CurationService {
         Optional.ofNullable(curation.getTag())
             .ifPresent(obtainCuration::setTag);
 
+        obtainCuration.setModifiedAt(LocalDateTime.now());
+
         return repository.save(obtainCuration);
     }
     public Curation getCuration(Long curationId){
@@ -52,10 +58,10 @@ public class CurationService {
         return obtainCuration;
     }
     public Page<Curation> findCurations(String keyword, int page, int searchType){
-        PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by("modifiedAt").descending());
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by("modifiedAt").descending());
         Page<Curation> response = null;
         if(searchType == 0) {
-            response = repository.findByTitleContainsOrTagName(keyword, pageRequest);
+            response = repository.findByTitleContainingOrTag_NameContaining(keyword, keyword, pageRequest);
         }
         else if(searchType == 1) {
             response = repository.findByTitleContains(keyword, pageRequest);
