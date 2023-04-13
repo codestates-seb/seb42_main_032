@@ -9,19 +9,25 @@ import DabuOps.tikkle.global.exception.ExceptionCode;
 import DabuOps.tikkle.member.entity.Member;
 import DabuOps.tikkle.member.entity.Member.MemberRole;
 import DabuOps.tikkle.member.repository.MemberRepository;
+import DabuOps.tikkle.member.service.MemberService;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class CurationService {
     private final CurationRepository repository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     public Curation createCuration(Curation curation, Long memberId){
-        verifyAuthorizedMemberForCuration(memberId);
+        Member obtainMember = verifyAuthorizedMemberForCuration(memberId);
+        curation.setMember(obtainMember);
         return repository.save(curation);
     }
 
@@ -43,9 +49,11 @@ public class CurationService {
         Curation obtainCuration = findExistCurationById(curationId);
         return obtainCuration;
     }
-    public List<Curation> getCurations(Long tagId){
+    public Page<Curation> getCurations(Long tagId, int page){
         List<Curation> curations =  repository.findAllByTagId(tagId);
-        return curations;
+
+        return new PageImpl<>(curations,
+            PageRequest.of(page, 15, Sort.by("modifiedAt").descending()), 2);
     }
 
     public void deleteCuration (Long curationId, Long memberId){
@@ -70,10 +78,10 @@ public class CurationService {
     /**
      * 사용자가 권한을 가졌는지 확인하는 method
      */
-    private void verifyAuthorizedMemberForCuration(Long memberId){
-        Member obtainMember = memberRepository.findById(memberId).get();
+    private Member verifyAuthorizedMemberForCuration(Long memberId){
+        Member obtainMember = memberService.findExistMemberById(memberId);
         if(obtainMember.getRole() != MemberRole.CURATOR)
             throw new BusinessLogicException(ExceptionCode.MEMBER_UNAUTHORIZED);
-
+        return obtainMember;
     }
 }
