@@ -1,3 +1,4 @@
+import Editing from '../components/curation/Editing';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -10,6 +11,7 @@ import {
 import { Box, Button, Icon } from '@chakra-ui/react';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../util/store';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   font-family: 'GmarketSansMedium';
@@ -60,6 +62,7 @@ const ButtonContainer = styled.div`
   }
 `;
 function CurationView() {
+  const navigate = useNavigate();
   interface Article {
     id: number;
     title: string;
@@ -84,7 +87,7 @@ function CurationView() {
   // 게시글 GET 요청 (단일 게시글 조회)
   useEffect(() => {
     const getArticle = async () => {
-      axios
+      await axios
         .get(`${import.meta.env.VITE_SERVER}/curations/${curationId}`)
         .then((res) => setArticle(res.data))
         .catch((err) => console.log(err));
@@ -106,71 +109,103 @@ function CurationView() {
   // 조회하는 사용자가 게시글 작성자인지 확인
   // 로그인한 사용자 정보 (useRecoilState) 와 article.name 비교
   const userName = useRecoilValue(userInfoState)?.name;
+  const isConsistent = true;
+  // const isConsistent = userName === article.name;
 
-  const isConsistent = userName === article.name;
+  // 수정하기 버튼 핸들러
+  // 버튼 클릭 시, isEditing 상태 변경 및 이에 따른 에디터 조건부 렌더링
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  return (
-    <Container>
-      <h1>article.title</h1>
-      <Tag>article.tag</Tag>
+  const editHandler = () => {
+    setIsEditing(true);
+  };
 
-      <p className="writer_information">
-        <Icon as={AiOutlineUser} /> by article.name <br />
-        <Icon as={AiOutlineEdit} /> article.createdAt 에 작성되었어요. <br />
-        <Icon as={AiOutlineHeart} /> article.likes 명이 좋아했어요.
-      </p>
+  // 삭제하기 버튼 핸들러
 
-      <p className="curation_content">article.content</p>
-      <ButtonContainer>
-        {isLiked ? (
-          <Icon
-            onClick={undoHandler}
-            as={AiFillHeart}
-            fontSize="xx-large"
-            color="#a256f3"
-          />
-        ) : (
-          <Icon
-            onClick={likeHandler}
-            as={AiOutlineHeart}
-            fontSize="xx-large"
-            color="#a256f3"
-          />
-        )}
-        {/* //TODO 사용자인지 확인하여 조건부 렌더링 */}
-        {isConsistent ? (
-          <Box>
-            <Button
-              minWidth="auto"
-              backgroundColor="#ceb1ed"
-              color="white"
-              ml="20px"
-            >
-              수정하기
-            </Button>
-            <Button
-              minWidth="auto"
-              backgroundColor="#ceb1ed"
-              color="white"
-              ml="10px"
-            >
-              삭제하기
-            </Button>
-          </Box>
-        ) : (
-          <p className="consistent_notice">
-            수정 및 삭제는 글 작성자만 가능합니다.
-          </p>
-        )}
-      </ButtonContainer>
-    </Container>
-  );
-  // 각 정보 보여주는 Container
-  // 수정 / 삭제 버튼 Container, 조건부 렌더링 / 글 작성자인지 확인하는 로직 필요
-  // 좋아요 버튼 (하트모양?) 및 좋아요 개수 렌더링
-  // 수정하기 / 삭제 버튼 클릭 시 버튼 클릭 핸들러 작성
-  // 수정하기 -> 에디터 뷰로 전환 및 저장하기 버튼 생성
-  // 삭제하기 -> "게시글을 삭제하겠습니까?" -> YES 클릭 -> DELETE 요청 & 성공 시 alert "삭제되었습니다"
+  const deleteHandler = () => {
+    if (confirm('삭제하시겠습니까?')) {
+      const deleteArticle = async () => {
+        await axios
+          .delete(`${import.meta.env.VITE_SERVER}/curations/${curationId}`)
+          .then((res) => {
+            const isSuccess = res.status === 200;
+            if (isSuccess) alert('삭제되었습니다.');
+          })
+          .catch((err) => console.log(err));
+      };
+      deleteArticle();
+    }
+    //TODO 게시글 리스트 화면으로 이동
+    navigate('/');
+  };
+
+  if (isEditing) {
+    return <Editing article={article} />;
+  } else {
+    return (
+      <Container>
+        <h1>article.title</h1>
+        <Tag>article.tag</Tag>
+
+        <p className="writer_information">
+          <Icon as={AiOutlineUser} /> by article.name <br />
+          <Icon as={AiOutlineEdit} /> article.createdAt 에 작성되었어요. <br />
+          <Icon as={AiOutlineHeart} /> article.likes 명이 좋아했어요.
+        </p>
+
+        <p className="curation_content">article.content</p>
+        <ButtonContainer>
+          {isLiked ? (
+            <Icon
+              onClick={undoHandler}
+              as={AiFillHeart}
+              fontSize="xx-large"
+              color="#a256f3"
+            />
+          ) : (
+            <Icon
+              onClick={likeHandler}
+              as={AiOutlineHeart}
+              fontSize="xx-large"
+              color="#a256f3"
+            />
+          )}
+          {isConsistent ? (
+            <Box>
+              <Button
+                onClick={editHandler}
+                minWidth="auto"
+                backgroundColor="#ceb1ed"
+                color="white"
+                ml="20px"
+              >
+                수정하기
+              </Button>
+              <Button
+                onClick={deleteHandler}
+                minWidth="auto"
+                backgroundColor="#ceb1ed"
+                color="white"
+                ml="10px"
+              >
+                삭제하기
+              </Button>
+            </Box>
+          ) : (
+            <p className="consistent_notice">
+              수정 및 삭제는 글 작성자만 가능합니다.
+            </p>
+          )}
+        </ButtonContainer>
+      </Container>
+    );
+  }
 }
 
+// 각 정보 보여주는 Container
+// 수정 / 삭제 버튼 Container, 조건부 렌더링 / 글 작성자인지 확인하는 로직 필요
+// 좋아요 버튼 (하트모양?) 및 좋아요 개수 렌더링
+// 수정하기 / 삭제 버튼 클릭 시 버튼 클릭 핸들러 작성
+// 수정하기 -> 에디터 뷰로 전환 및 저장하기 버튼 생성
+// 삭제하기 -> "게시글을 삭제하겠습니까?" -> YES 클릭 -> DELETE 요청 & 성공 시 alert "삭제되었습니다"
 export default CurationView;
