@@ -76,6 +76,7 @@ function CurationView() {
   });
 
   // TODO curationID 받아오기
+  // 게시글 GET 요청 (단일 게시글 조회)
   useEffect(() => {
     const getArticle = async () => {
       axios
@@ -85,7 +86,19 @@ function CurationView() {
     };
     getArticle();
   }, []);
-  // 게시글 GET 요청 (단일 게시글 조회)
+
+  // 좋아요 기능 (한번만 클릭 가능, 해제 불가능)
+  // TODO 좋아요 클릭 시, PATCH요청으로 개수 ++
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const likeHandler = () => {
+    setIsLiked(true);
+    alert('좋아요가 반영되었습니다.');
+  };
+  const undoHandler = () => {
+    alert('반영된 좋아요는 취소가 불가합니다.');
+  };
+
+  // 조회하는 사용자가 게시글 작성자인지 확인
 
   return (
     <Container>
@@ -101,7 +114,21 @@ function CurationView() {
       <p className="curation_content">article.content</p>
       <ButtonContainer>
         {/* //TODO 클릭 여부 확인하여 조건부 렌더링 */}
-        <Icon as={AiOutlineHeart} fontSize="xx-large" />
+        {isLiked ? (
+          <Icon
+            onClick={undoHandler}
+            as={AiFillHeart}
+            fontSize="xx-large"
+            color="#a256f3"
+          />
+        ) : (
+          <Icon
+            onClick={likeHandler}
+            as={AiOutlineHeart}
+            fontSize="xx-large"
+            color="#a256f3"
+          />
+        )}
         {/* //TODO 사용자인지 확인하여 조건부 렌더링 */}
         <Button
           minWidth="auto"
