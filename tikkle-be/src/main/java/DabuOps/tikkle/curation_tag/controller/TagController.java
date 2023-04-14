@@ -8,12 +8,9 @@ import DabuOps.tikkle.curation_tag.service.TagService;
 import DabuOps.tikkle.global.utils.ResponseListDto;
 import DabuOps.tikkle.global.utils.SingleResponseDto;
 import DabuOps.tikkle.global.utils.UriCreator;
-import DabuOps.tikkle.oauth.dto.LogInMemberDto;
-import DabuOps.tikkle.oauth.resolver.LoginMember;
 import java.net.URI;
 import java.util.List;
 import javax.validation.constraints.Positive;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,22 +34,22 @@ public class TagController {
     private final TagService tagService;
     private final TagMapper mapper;
 
-    @PostMapping
+    @PostMapping("/{member-id}")
     public ResponseEntity postTag(@RequestBody TagDto.Post post,
-        @LoginMember LogInMemberDto logInMemberDto) {
-        Tag tag = tagService.createTag(mapper.postDtoToTag(post), logInMemberDto.getMemberId());
+        @Positive @PathVariable("member-id") long memberId) {
+        Tag tag = tagService.createTag(mapper.postDtoToTag(post), memberId);
         URI location = UriCreator.createURI("/tags", tag.getId());
         return ResponseEntity.created(location).build();
     }
 
-    @PatchMapping("/{tag-id}")
+    @PatchMapping("/{tag-id}/{member-id}")
     public  ResponseEntity patchTag(
         @Positive @PathVariable("tag-id") long tagId,
         @RequestBody TagDto.Patch patch,
-        @LoginMember LogInMemberDto logInMemberDto){
+        @Positive @PathVariable("member-id") long memberId){
         Tag tag = mapper.patchDtoToTag(patch);
         tag.setId(tagId);
-        tagService.updateTag(tag, logInMemberDto.getMemberId());
+        tagService.updateTag(tag, memberId);
         return ResponseEntity.ok().build();
     }
 
@@ -71,10 +68,10 @@ public class TagController {
         ,HttpStatus.OK);
     }
 
-    @DeleteMapping("/{tag-id}")
+    @DeleteMapping("/{tag-id}/{member-id}")
     public ResponseEntity deleteTag(@Positive @PathVariable("tag-id") long tagId,
-        @LoginMember LogInMemberDto logInMemberDto){
-        tagService.deleteTag(tagId, logInMemberDto.getMemberId());
+        @Positive @PathVariable("member-id") long memberId){
+        tagService.deleteTag(tagId, memberId);
         return ResponseEntity.noContent().build();
     }
 
