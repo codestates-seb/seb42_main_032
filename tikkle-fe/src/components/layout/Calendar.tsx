@@ -11,6 +11,13 @@ import { userInfoState } from '../../util/store';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  p {
+    margin-top: 2vh;
+  }
+`;
 const Container = styled.div`
   border: 1px solid black;
   box-shadow: 1px 1px 4px;
@@ -161,16 +168,19 @@ const Calendar = ({ date }: { date: Date }) => {
   }
 
   return !loading ? (
-    <Container>
-      <TableContainer>
-        <Table>
-          <Thead>
-            <Tr>{renderDaysOfWeek}</Tr>
-          </Thead>
-          <Tbody>{renderRow}</Tbody>
-        </Table>
-      </TableContainer>
-    </Container>
+    <PageContainer>
+      <Container>
+        <TableContainer>
+          <Table>
+            <Thead>
+              <Tr>{renderDaysOfWeek}</Tr>
+            </Thead>
+            <Tbody>{renderRow}</Tbody>
+          </Table>
+        </TableContainer>
+      </Container>
+      <p>날짜 클릭 시, 해당 날짜의 거래내역으로 이동합니다.</p>
+    </PageContainer>
   ) : (
     <Loading />
   );
