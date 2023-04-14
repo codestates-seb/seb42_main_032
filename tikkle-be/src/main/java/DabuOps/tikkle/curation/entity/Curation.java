@@ -2,6 +2,7 @@ package DabuOps.tikkle.curation.entity;
 
 import DabuOps.tikkle.curation_tag.entity.Tag;
 import DabuOps.tikkle.global.audit.Auditable;
+import DabuOps.tikkle.member.entity.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -37,19 +38,28 @@ public class Curation extends Auditable {
     @JoinColumn(name = "TAG_ID", nullable = true)
     private Tag tag;
 
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID", nullable = true)
+    private Member member;
+
+    @Column
+    @Builder.Default
+    private int like = 0;
+
     @Column
     @Builder.Default
     @Enumerated(value = EnumType.STRING)
     private CurationState state = CurationState.ACTIVE;
 
 
-
     @Builder
-    public Curation(Long id, String title, String content, Tag tag, CurationState state) {
+    public Curation(Long id, String title, String content, Tag tag, Member member, int like, CurationState state) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.tag = tag;
+        this.member = member;
+        this.like = like;
         this.state = state;
     }
 
