@@ -20,7 +20,8 @@ public enum ExceptionCode {
     CURATION_IS_INACTIVE(403, "Curation is Inactive"),
     TAG_NOT_FOUND(404, "Tag Not Found"),
     TAG_EXISTS(409, "Tag Already Exist."),
-    TAG_IS_INACTIVE(403, "Tag is Inactive");
+    TAG_IS_INACTIVE(403, "Tag is Inactive"),
+    MEMBER_ALREADY_LIKED(403, "Member already liked");
     @Getter
     private int status;
 

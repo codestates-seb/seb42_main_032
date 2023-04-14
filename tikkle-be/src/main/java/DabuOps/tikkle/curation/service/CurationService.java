@@ -32,8 +32,6 @@ public class CurationService {
     public Curation createCuration(Curation curation, Long memberId){
         Member obtainMember = verifyAuthorizedMemberForCuration(memberId);
         curation.setMember(obtainMember);
-        curation.setCreatedAt(LocalDateTime.now());
-        curation.setModifiedAt(LocalDateTime.now());
         return repository.save(curation);
     }
 
@@ -49,8 +47,6 @@ public class CurationService {
         Optional.ofNullable(curation.getTag())
             .ifPresent(obtainCuration::setTag);
 
-        obtainCuration.setModifiedAt(LocalDateTime.now());
-
         return repository.save(obtainCuration);
     }
     public Curation getCuration(Long curationId){
@@ -58,7 +54,7 @@ public class CurationService {
         return obtainCuration;
     }
     public Page<Curation> findCurations(String keyword, int page, int searchType){
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by("modifiedAt").descending());
+        PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by("modifiedAt").descending());
         Page<Curation> response = null;
         if(searchType == 0) {
             response = repository.findByTitleContainingOrTag_NameContaining(keyword, keyword, pageRequest);
@@ -74,7 +70,7 @@ public class CurationService {
     }
 
     public Page<Curation> getAllCurations(int page) {
-        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by("modifiedAt").descending());
+        PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by("modifiedAt").descending());
         Page<Curation> response = repository.findByStateIsNot(CurationState.DELETED, pageRequest);
 
         return response;
@@ -86,6 +82,20 @@ public class CurationService {
         obtainCuration.setState(CurationState.DELETED);
         repository.save(obtainCuration);
     }
+
+//    public void likeCuration(Long curationId, Long memberId) {
+//        Curation curation = findExistCurationById(curationId);
+//        Member member = memberService.findExistMemberById(memberId);
+//
+//        if (curation.getLikedMember().contains(member)) {
+//            throw new BusinessLogicException(ExceptionCode.MEMBER_ALREADY_LIKED);
+//        }
+//        else {
+//            curation.setLike(curation.getLike() + 1);
+//            curation.getLikedMember().add(member);
+//            repository.save(curation);
+//        }
+//    }
 
     /**
      * Curation이 존재하는지 검증하는 method
