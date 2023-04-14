@@ -16,8 +16,10 @@ import java.util.List;
 import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -64,10 +66,16 @@ public class CurationController {
     }
 
     @GetMapping
-    public ResponseEntity getCurations(@Positive @RequestParam long tagId){
-        List<Curation> curations = curationService.getCurations(tagId);
-        return new ResponseEntity<>(new ResponseListDto<>(
-            mapper.curationsToCurationResponses(curations)),HttpStatus.OK);
+    public ResponseEntity getCurations(@RequestParam("page") int page,
+                                       @RequestParam("keyword") String keyword,
+                                       @RequestBody CurationDto.Search requestBody) {
+        int searchType = requestBody.getSearchType();
+        Page<Curation> curationPage = curationService.findCurations(keyword, page, searchType);
+        List<Curation> curations = curationPage.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(
+                        mapper.curationsToCurationResponses(curations), curationPage), HttpStatus.OK);
     }
 
     @DeleteMapping("/{curation-id}")

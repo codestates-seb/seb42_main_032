@@ -28,7 +28,6 @@ import java.util.List;
 public class TransactionHistoryController {
     private final String DEFAULT_URL = "/transaction_histories";
     private final TransactionHistoryService transactionHistoryService;
-    private final TransactionHistoryRepository transactionHistoryRepository;
     private final MemberCategoryService memberCategoryService;
     private final TransactionHistoryMapper mapper;
 
