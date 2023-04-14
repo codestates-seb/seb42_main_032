@@ -1,11 +1,6 @@
 import Calendar from '../components/layout/Calendar';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import Transaction, { TransactionType } from '../components/layout/Transaction';
-import { userInfoState } from '../util/store';
-import { useRecoilValue } from 'recoil';
-import axios from 'axios';
-import { TagDropdown } from '../components/layout/TagDropdown';
+import Transaction from '../components/layout/Transaction';
 
 const HomeContainer = styled.div`
   font-family: 'GmarketSansMedium';
@@ -32,7 +27,6 @@ function Home({ selectedDate }: { selectedDate: Date }) {
   return (
     <HomeContainer>
       <Body>
-        <TagDropdown />
         <CalendarContainer>
           <Calendar date={selectedDate} />
         </CalendarContainer>
