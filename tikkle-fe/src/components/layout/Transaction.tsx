@@ -37,7 +37,12 @@ const Container = styled.div`
 `;
 
 const TransactionContainer = styled.div`
-  padding: 10px;
+  padding: 5px;
+  border-radius: 10px;
+  :hover {
+    background-color: #cfcece;
+    cursor: pointer;
+  }
   .transaction-date-box {
     text-align: left;
     margin-top: 10px;
