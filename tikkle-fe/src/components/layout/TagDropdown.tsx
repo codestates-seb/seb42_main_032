@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/md';
+import { MdKeyboardArrowDown } from 'react-icons/md';
 
-type TagType = {
+export type TagType = {
   id: number;
   name: string;
 };
@@ -42,13 +42,17 @@ const dummyTags: TagType[] = [
   },
 ];
 
-export function TagDropdown() {
+export function TagDropdown({
+  onChange,
+}: {
+  onChange: React.Dispatch<React.SetStateAction<TagType | undefined>>;
+}) {
   const [selectedTag, setSelectedTag] = useState<TagType>();
   const [isOpen, setIsOpen] = useState(false);
 
-  // 선택된 태그를 추가하고, 이미 추가된 태그라면 제거
   const handleTag = (tag: TagType) => {
     setSelectedTag(tag);
+    onChange(tag);
     setIsOpen(false);
   };
 
