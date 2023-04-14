@@ -10,7 +10,7 @@ import Modal from '../transaction/Modal';
 import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../util/store';
-import { Button } from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 import PostModal from '../transaction/PostModal';
 import CategoryIcon, { CategoryIdMap } from '../category/CategoryIcon';
 
@@ -34,13 +34,20 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 5vw;
+
+  button {
+    margin-right: 95vw;
+    margin-top: 5vh;
+  }
 `;
 
 const TransactionContainer = styled.div`
-  padding: 5px;
+  margin: 1vw;
+  padding: 10px;
   border-radius: 10px;
+  width: 70%;
   :hover {
-    background-color: #cfcece;
+    background-color: #ede1f0;
     cursor: pointer;
   }
   .transaction-date-box {
@@ -176,9 +183,12 @@ const Transaction = ({ date }: { date: Date }) => {
   //TODO 아이콘 처리
   return (
     <Container className="transaction-history-box" ref={target}>
-      <Button colorScheme="purple" maxWidth="15vw" onClick={togglePostModal}>
-        거래내역 추가하기
-      </Button>
+      <Box>
+        <Button colorScheme="purple" onClick={togglePostModal} margin="10px">
+          거래내역 추가하기
+        </Button>
+      </Box>
+
       {showPostModal && (
         <PostModal togglePostModal={togglePostModal} memberId={member_id} />
       )}

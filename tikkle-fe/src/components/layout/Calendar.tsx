@@ -35,6 +35,11 @@ const Container = styled.div`
       margin-bottom: 10px;
     }
   }
+  td:hover {
+    border-radius: 10px;
+    background-color: #ede1f0;
+    cursor: pointer;
+  }
 `;
 
 /**
