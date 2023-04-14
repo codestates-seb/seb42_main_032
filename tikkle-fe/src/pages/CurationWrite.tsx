@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 import { TagDropdown } from '../components/layout/TagDropdown';
 
 export function CurationWrite() {
@@ -27,14 +30,7 @@ export function CurationWrite() {
             <span className="invalid-label">
               내용은 10글자 이상 적어주세요.
             </span>
-            <input
-              type="textarea"
-              placeholder="내용을 입력해주세요."
-              value={content}
-              onChange={(e: React.ChangeEvent) =>
-                setContent((e.target as HTMLInputElement).value)
-              }
-            />
+            <ReactQuill theme="snow" value={content} onChange={setContent} />
           </section>
           <section className="tag">
             <h1>태그</h1>
@@ -88,11 +84,10 @@ const WirteContainer = styled.div`
     width: 100%;
   }
 
-  section.content > input {
-    border: 1px solid black;
+  section.content > .quill {
     padding: 8px;
     width: 100%;
-    height: 30vw;
+    height: auto;
   }
 `;
 
