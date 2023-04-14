@@ -73,6 +73,13 @@ public class CurationService {
         return response;
     }
 
+    public Page<Curation> getAllCurations(int page) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize, Sort.by("modifiedAt").descending());
+        Page<Curation> response = repository.findByStateIsNot(CurationState.DELETED, pageRequest);
+
+        return response;
+    }
+
     public void deleteCuration (Long curationId, Long memberId){
         verifyAuthorizedMemberForCuration(memberId);
         Curation obtainCuration = findExistCurationById(curationId);

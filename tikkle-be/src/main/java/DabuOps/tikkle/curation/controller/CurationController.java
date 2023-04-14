@@ -78,6 +78,16 @@ public class CurationController {
                         mapper.curationsToCurationResponses(curations), curationPage), HttpStatus.OK);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity getAllCurations(@RequestParam("page") int page) {
+        Page<Curation> curationPage = curationService.getAllCurations(page - 1);
+        List<Curation> curations = curationPage.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(
+                        mapper.curationsToCurationResponses(curations), curationPage), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{curation-id}")
     public ResponseEntity deleteCuration(@Positive @PathVariable("curation-id") long curationId,
         @LoginMember LogInMemberDto logInMemberDto){
