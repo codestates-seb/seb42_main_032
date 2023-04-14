@@ -1,13 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-import { TagDropdown } from '../components/layout/TagDropdown';
+import { TagDropdown, TagType } from '../components/layout/TagDropdown';
 
 export function CurationWrite() {
   const [title, setTitle] = useState('');
+  const [titleIsValid, setTitleIsValid] = useState(false);
   const [content, setContent] = useState('');
+  const [contentIsValid, setContentIsValid] = useState(false);
+  const [tag, setTag] = useState<TagType>();
+  const [tagIsValid, setTagIsValid] = useState(false);
+
+  const editorRef = useRef(null);
+
+  // 유효성 검사 로직
+  useEffect(() => {
+    // content는 <html> 태그가 포함된 상태로 나오기 때문에 유효성 검사를 위해 별도 변수로 저장
+    const pureContent = (editorRef.current as any).getEditor().getText();
+    
+    // 제목 유효성 검사
+    (title.length < 3) ? setTitleIsValid(false) : setTitleIsValid(true);
+
+    // 내용 유효성 검사
+    // 실제 길이보다 length 값이 1 짧게 나오는 버그가 있으므로 <= 로 비교
+    (pureContent.length <= 10) ? setContentIsValid(false) : setContentIsValid(true);
+
+    // 태그 유효성 검사
+    (!tag) ? setTagIsValid(false) : setTagIsValid(true);
+  }, [title, content, tag]);
 
   return (
     <>
@@ -15,7 +37,13 @@ export function CurationWrite() {
         <div>
           <section className="title">
             <h1>제목</h1>
-            <span className="invalid-label">제목은 3글자 이상 적어주세요.</span>
+            {titleIsValid ? (
+              ''
+            ) : (
+              <span className="invalid-label">
+                제목은 3글자 이상 적어주세요.
+              </span>
+            )}
             <input
               type="text"
               placeholder="제목을 입력해주세요."
@@ -27,15 +55,20 @@ export function CurationWrite() {
           </section>
           <section className="content">
             <h1>내용</h1>
-            <span className="invalid-label">
+            {contentIsValid ? '' : <span className="invalid-label">
               내용은 10글자 이상 적어주세요.
-            </span>
-            <ReactQuill theme="snow" value={content} onChange={setContent} />
+            </span>}
+            <ReactQuill
+              theme="snow"
+              value={content}
+              onChange={setContent}
+              ref={editorRef}
+            />
           </section>
           <section className="tag">
             <h1>태그</h1>
-            <span className="invalid-label">태그를 선택해주세요.</span>
-            <TagDropdown />
+            {tagIsValid ? '' : <span className="invalid-label">태그를 선택해주세요.</span>}
+            <TagDropdown onChange={setTag} />
           </section>
           <div className="button-container">
             <Button>저장하기</Button>
