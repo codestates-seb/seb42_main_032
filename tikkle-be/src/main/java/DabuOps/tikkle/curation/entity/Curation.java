@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.List;
 
 @Entity
 @Builder
@@ -47,19 +48,22 @@ public class Curation extends Auditable {
     private int like = 0;
 
     @Column
+    private List<Member> likedMember;
+
+    @Column
     @Builder.Default
     @Enumerated(value = EnumType.STRING)
     private CurationState state = CurationState.ACTIVE;
 
-
     @Builder
-    public Curation(Long id, String title, String content, Tag tag, Member member, int like, CurationState state) {
+    public Curation(Long id, String title, String content, Tag tag, Member member, int like, List<Member> likedMember, CurationState state) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.tag = tag;
         this.member = member;
         this.like = like;
+        this.likedMember = likedMember;
         this.state = state;
     }
 
