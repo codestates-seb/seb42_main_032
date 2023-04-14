@@ -53,13 +53,13 @@ public class CurationController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{curation-id}/{member-id}")
-    public ResponseEntity likeCuration(@PathVariable("curation-id") Long curationId,
-                                       @PathVariable("member-id") Long memberId) {
-        curationService.likeCuration(curationId, memberId);
-
-        return ResponseEntity.ok().build();
-    }
+//    @PatchMapping("/{curation-id}/{member-id}")
+//    public ResponseEntity likeCuration(@PathVariable("curation-id") Long curationId,
+//                                       @PathVariable("member-id") Long memberId) {
+//        curationService.likeCuration(curationId, memberId);
+//
+//        return ResponseEntity.ok().build();
+//    }
 
     @GetMapping("/{curation-id}")
     public ResponseEntity getCuration(@Positive @PathVariable("curation-id") long curationId){

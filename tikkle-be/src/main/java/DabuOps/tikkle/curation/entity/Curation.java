@@ -45,25 +45,16 @@ public class Curation extends Auditable {
 
     @Column
     @Builder.Default
-    private int like = 0;
-
-    @Column
-    private List<Member> likedMember;
-
-    @Column
-    @Builder.Default
     @Enumerated(value = EnumType.STRING)
     private CurationState state = CurationState.ACTIVE;
 
     @Builder
-    public Curation(Long id, String title, String content, Tag tag, Member member, int like, List<Member> likedMember, CurationState state) {
+    public Curation(Long id, String title, String content, Tag tag, Member member, CurationState state) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.tag = tag;
         this.member = member;
-        this.like = like;
-        this.likedMember = likedMember;
         this.state = state;
     }
 
