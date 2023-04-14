@@ -1,52 +1,20 @@
-import React, { useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MdKeyboardArrowDown } from 'react-icons/md';
+import Loading from './Loading';
+import axios from 'axios';
 
 export type TagType = {
   id: number;
   name: string;
 };
 
-const dummyTags: TagType[] = [
-  {
-    id: 1,
-    name: '부동산',
-  },
-  {
-    id: 2,
-    name: '주식',
-  },
-  {
-    id: 3,
-    name: '가상화폐',
-  },
-  {
-    id: 4,
-    name: '예/적금',
-  },
-  {
-    id: 5,
-    name: '재무계획',
-  },
-  {
-    id: 6,
-    name: '청약',
-  },
-  {
-    id: 7,
-    name: '대출',
-  },
-  {
-    id: 8,
-    name: '펀드',
-  },
-];
-
 export function TagDropdown({
   onChange,
 }: {
   onChange: React.Dispatch<React.SetStateAction<TagType | undefined>>;
-}) {
+  }) {
+  const [tags, setTags] = useState<TagType[]>();
   const [selectedTag, setSelectedTag] = useState<TagType>();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -55,6 +23,18 @@ export function TagDropdown({
     onChange(tag);
     setIsOpen(false);
   };
+  const fetchTags = async () => {
+      try {
+        const data = (await axios.get(`${import.meta.env.VITE_SERVER}/tags`)).data.data;
+        setTags(data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+  useEffect(() => {
+    fetchTags();
+  }, [])
 
   return (
     <>
@@ -64,16 +44,20 @@ export function TagDropdown({
             {selectedTag && <TagItem>{selectedTag.name}</TagItem>}
           </SelectedTagContainer>
           <TagNotice>추가할 태그를 선택</TagNotice>
-          <TagList>
-            {dummyTags.map((tag: TagType) => (
-              <div
-                className="tag-item-container"
-                onClick={() => handleTag(tag)}
-              >
-                <TagItem key={tag.id}>{tag.name}</TagItem>
-              </div>
-            ))}
-          </TagList>
+          <Suspense fallback={<Loading />}>
+            <TagList>
+              {tags?.map((tag: TagType) => (
+                <div
+                  className="tag-item-container"
+                  onClick={() => handleTag(tag)}
+                  key={tag.id}
+                >
+                  <TagItem>{tag.name}</TagItem>
+                </div>
+              ))}
+            </TagList>
+          </Suspense>
+          
         </TagDropdownContainer>
       ) : (
         <TagDropdownUnopen>
