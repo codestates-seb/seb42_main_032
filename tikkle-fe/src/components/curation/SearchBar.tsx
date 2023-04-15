@@ -1,25 +1,33 @@
 import styled from 'styled-components';
 
-import { MdClear, MdKeyboardArrowDown } from 'react-icons/md';
+import { MdClear } from 'react-icons/md';
 import { useState } from 'react';
+import { useEffect } from 'react';
 
 export default function SearchBar() {
   const [keyword, setKeyword] = useState('');
+  const [searchType, setSearchType] = useState('제목+태그');
 
   return (
     <SearchBarBox>
       <SearchType>
-        <span>제목+태그</span>
-        <div className="dropdown-button">
-          <MdKeyboardArrowDown />
-        </div>
+        <select
+          name="search-type"
+          onChange={(e: React.ChangeEvent) =>
+            setSearchType((e.target as HTMLSelectElement).value)
+          }
+        >
+          <option value="제목+태그">제목+태그</option>
+          <option value="제목">제목</option>
+          <option value="태그">태그</option>
+        </select>
       </SearchType>
       <input
         type="text"
         value={keyword}
-        onChange={(e: React.ChangeEvent) => {
-          setKeyword((e.target as HTMLInputElement).value);
-        }}
+        onChange={(e: React.ChangeEvent) =>
+          setKeyword((e.target as HTMLInputElement).value)
+        }
       />
       <ClearButton>
         <MdClear />
@@ -43,6 +51,7 @@ const SearchBarBox = styled.div`
   input {
     flex-grow: 1;
     height: 100%;
+    padding: 0 0.5rem;
     display: flex;
     align-items: center;
   }
@@ -59,15 +68,11 @@ const SearchType = styled.div`
   gap: 0.5rem;
   margin-left: 0.5rem;
 
-  span {
-    text-align: center;
-    text-decoration: underline;
+  select {
+    height: 90%;
   }
-
-  .dropdown-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  select:hover {
+    cursor: pointer;
   }
 `;
 
