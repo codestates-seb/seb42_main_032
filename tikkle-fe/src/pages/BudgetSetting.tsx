@@ -20,6 +20,7 @@ export interface BudgetType {
   endDate: Date;
   spend: number;
   createdAt: Date;
+  status?: string;
 }
 
 export interface CategoryType {
