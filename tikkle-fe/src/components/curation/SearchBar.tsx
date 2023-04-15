@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { MdClear } from 'react-icons/md';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 export default function SearchBar() {
   const [keyword, setKeyword] = useState('');
@@ -11,6 +12,30 @@ export default function SearchBar() {
   const alretEmptyKeyword = () => {
     if (keyword === '') alert('검색어를 입력해주세요.');
   };
+
+  // ToDo 서버에서 검색 타입을 params로 받도록 수정되면 해당 내용에 맞춰 params 부분 업데이트
+  const requestSearch = async () => {
+    if (keyword !== '') {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_SERVER}/curations`,
+          {
+            params: {
+              keyword: keyword,
+              page: 1,
+              searchType: searchType,
+            },
+          }
+        );
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  useEffect(() => console.log(searchType), [searchType]);
+
   return (
     <SearchBarBox>
       <SearchType>
@@ -20,9 +45,9 @@ export default function SearchBar() {
             setSearchType((e.target as HTMLSelectElement).value)
           }
         >
-          <option value="제목+태그">제목+태그</option>
-          <option value="제목">제목</option>
-          <option value="태그">태그</option>
+          <option value="0">제목+태그</option>
+          <option value="1">제목</option>
+          <option value="2">태그</option>
         </select>
       </SearchType>
       <input
@@ -38,6 +63,7 @@ export default function SearchBar() {
       <SearchButton
         onClick={() => {
           alretEmptyKeyword();
+          requestSearch();
         }}
       >
         검색
