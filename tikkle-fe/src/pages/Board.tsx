@@ -1,3 +1,6 @@
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -64,6 +67,10 @@ const Post = styled.tr`
     text-align: center;
     margin-top: 10px;
   }
+  .post-title-div {
+    text-align: left;
+    padding-left: 20px;
+  }
 `;
 
 const Tag = styled.div`
@@ -76,7 +83,29 @@ const Tag = styled.div`
 
 const PageNation = styled.div``;
 
+interface curationType {
+  id: number;
+  title: string;
+  createdAt: Date;
+}
+
 const Board = () => {
+  const [curations, setCurations] = useState<curationType[]>();
+
+  const getAllCurations = async (page: number) => {
+    const data = await (
+      await axios.get(
+        `${import.meta.env.VITE_SERVER}/curations/all?page=${page}`
+      )
+    ).data;
+    return data;
+  };
+
+  useEffect(() => {
+    getAllCurations(1).then((res) => {
+      setCurations(res.data);
+    });
+  }, []);
   return (
     <Container>
       <HeaderWrap>
@@ -97,22 +126,29 @@ const Board = () => {
           </tr>
           <Post>
             <td>1</td>
-            <td>
-              <div>ㅎㅇ</div>
+            <td className="post-title-div">
+              <Link to="/curationview">
+                <div>ㅎㅇ</div>
+              </Link>
               <Tag>tag</Tag>
             </td>
             <td>1</td>
             <td>2023.04.20</td>
           </Post>
-          <Post>
-            <td>1</td>
-            <td>
-              <div>ㅎㅇ</div>
-              <Tag>tag</Tag>
-            </td>
-            <td>1</td>
-            <td>2023.04.20</td>
-          </Post>
+          {curations &&
+            curations.map((el) => {
+              return (
+                <Post>
+                  <td>{el.id}</td>
+                  <td>
+                    <div>{el.title}</div>
+                    <Tag>tag</Tag>
+                  </td>
+                  <td>1</td>
+                  <td>2023.04.20</td>
+                </Post>
+              );
+            })}
         </PostLists>
       </ContentContainer>
       <PageNation></PageNation>
