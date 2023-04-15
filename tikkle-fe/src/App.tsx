@@ -12,6 +12,7 @@ import BudgetView from './pages/BudgetView';
 import CategoryEdit from './pages/CategoryEdit';
 import UserInfo from './pages/UserInfo';
 import Landing from './pages/Landing';
+import Board from './pages/Board';
 import CurationView from './pages/CurationView';
 import { CurationWrite } from './pages/CurationWrite';
 
@@ -31,6 +32,7 @@ function App() {
         <Route path="/usersetting" element={<UserSetting />} />
         <Route path="/userout" element={<UserOut />} />
         <Route path="/categoryedit" element={<CategoryEdit />} />
+        <Route path="/board" element={<Board />} />
         <Route path="/curationview" element={<CurationView />} />
         <Route path="/curationwrite" element={<CurationWrite />} />
       </Routes>
