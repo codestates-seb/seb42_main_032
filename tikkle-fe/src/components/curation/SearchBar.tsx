@@ -29,7 +29,7 @@ export default function SearchBar() {
           setKeyword((e.target as HTMLInputElement).value)
         }
       />
-      <ClearButton>
+      <ClearButton onClick={() => setKeyword('')}>
         <MdClear />
       </ClearButton>
       <SearchButton>검색</SearchButton>
@@ -78,10 +78,11 @@ const SearchType = styled.div`
 
 const ClearButton = styled.div`
   width: 2.8125rem;
-  height: 100%;
+  height: 2.8125rem;
   border-radius: 100%;
-  background-color: #805ad5
+  background-color: #805ad5;
   color: white;
+  margin-right: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
