@@ -2,8 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import axios from 'axios';
+import { useRecoilValue } from 'recoil';
 
 import { TagDropdown, TagType } from '../components/layout/TagDropdown';
+import { userInfoState } from '../util/store';
 
 export function CurationWrite() {
   const [title, setTitle] = useState('');
@@ -12,6 +15,8 @@ export function CurationWrite() {
   const [contentIsValid, setContentIsValid] = useState(false);
   const [tag, setTag] = useState<TagType>();
   const [tagIsValid, setTagIsValid] = useState(false);
+
+  const userInfo = useRecoilValue(userInfoState);
 
   const editorRef = useRef(null);
 
@@ -71,7 +76,16 @@ export function CurationWrite() {
             <TagDropdown onChange={setTag} />
           </section>
           <div className="button-container">
-            <Button>저장하기</Button>
+            <Button onClick={() => {
+              // 모든 항목이 유효할 때만 post 요청 가능
+              if (titleIsValid && contentIsValid && tagIsValid) {
+                axios.post(`${import.meta.env.VITE_SERVER}/curations/${userInfo?.id}`, {
+                  title: title,
+                  content: content,
+                  tagId: tag?.id,
+                });
+              }
+            }}>저장하기</Button>
           </div>
         </div>
       </WirteContainer>
