@@ -13,6 +13,7 @@ import CategoryEdit from './pages/CategoryEdit';
 import UserInfo from './pages/UserInfo';
 import Landing from './pages/Landing';
 import Board from './pages/Board';
+import CurationView from './pages/CurationView';
 
 function App() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -31,6 +32,7 @@ function App() {
         <Route path="/userout" element={<UserOut />} />
         <Route path="/categoryedit" element={<CategoryEdit />} />
         <Route path="/board" element={<Board />} />
+        <Route path="/curationview" element={<CurationView />} />
       </Routes>
       <Footer />
     </div>

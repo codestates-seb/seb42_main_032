@@ -49,7 +49,7 @@ public class Member extends Auditable {
     private Integer payAmount;
 
     @Column
-    private Integer totalBudget; //
+    private Integer totalBudget;
 
     @Column
     @Builder.Default
@@ -84,8 +84,8 @@ public class Member extends Auditable {
     }
 
     public static enum Gender{
-        MALE("남성"),
-        FEMALE("여성");
+        male("남성"),
+        female("여성");
 
         @Getter
         private String gender;
