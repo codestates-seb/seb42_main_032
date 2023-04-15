@@ -24,19 +24,38 @@ const ModalContent = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 5px;
+  font-family: GmarketSansMedium;
+  display: flex;
+  flex-direction: column;
 
-  .memo-input {
+  .modal-info-message {
+    height: 15vh;
     display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .modal-content-ul {
-    padding: 10px;
-    list-style: disc;
-    list-style-position: inside;
+  .modal-button-box {
+    display: flex;
+    justify-content: space-between;
   }
-
-  .modal-content-ul li {
-    margin-top: 10px;
+  button {
+    padding: 0.5rem;
+    border-radius: 5px;
+  }
+  .modal-close-button {
+    background-color: #e2e8f0;
+    color: black;
+  }
+  .modal-close-button:hover {
+    background-color: #d5d9dd;
+  }
+  .modal-href-button {
+    background-color: #805ad5;
+    color: white;
+  }
+  .modal-href-button:hover {
+    background-color: #6a49b1;
   }
 `;
 
@@ -87,8 +106,11 @@ export function HrefModal({
       <ModalContent>
         <div className="modal-info-message">{infoMessage}</div>
         <div className="modal-button-box">
-          <button onClick={onClose}>닫기</button>
+          <button className="modal-close-button" onClick={onClose}>
+            닫기
+          </button>
           <button
+            className="modal-href-button"
             onClick={() => {
               handleMemberState();
               window.location.href = targetPage;

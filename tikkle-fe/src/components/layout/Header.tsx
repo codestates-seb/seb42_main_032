@@ -74,13 +74,14 @@ const HeaderContainer = styled.header`
 `;
 const LoginButton = styled.button`
   cursor: pointer;
-  padding: 5px 10px;
+  padding: 10px 20px;
   color: #6b46c1;
   background-color: transparent;
   border: 1px solid #6b46c1;
   border-radius: 6px;
   font-size: 15px;
   margin-left: 20px;
+  box-shadow: 1px 1px 2px black;
   :hover {
     background-color: #6b46c1;
     color: white;
@@ -135,6 +136,25 @@ const UserButton = styled.button`
 const SelectMonthContainer = styled.div`
   .header-monthbutton {
     cursor: pointer;
+  }
+`;
+
+const TikkleTalkButton = styled.button`
+  padding: 10px 20px;
+  color: white;
+  background-color: transparent;
+  border-radius: 6px;
+  background-color: #b794f4;
+  box-shadow: 1px 1px 2px black;
+  :hover {
+    background-color: #6b46c1;
+    color: white;
+    border-color: transparent;
+  }
+  :active {
+    background-color: #b794f4;
+    color: white;
+    border-color: transparent;
   }
 `;
 
@@ -222,6 +242,9 @@ const Header: React.FunctionComponent<HeaderProps> = ({
       <HeaderContentWrap>
         {isLogin ? (
           <AfterLogin>
+            <Link to="/board">
+              <TikkleTalkButton>티클 Talk</TikkleTalkButton>
+            </Link>
             <BellIcon boxSize={25} />
             <Menu>
               <MenuButton className="header-menubutton" as={UserButton}>
@@ -253,7 +276,9 @@ const Header: React.FunctionComponent<HeaderProps> = ({
           </AfterLogin>
         ) : (
           <BeforeLogin>
-            <BellIcon boxSize={25} />
+            <Link to="/board">
+              <TikkleTalkButton>티클 Talk</TikkleTalkButton>
+            </Link>
             <Link to="/login">
               <LoginButton>Log In</LoginButton>
             </Link>

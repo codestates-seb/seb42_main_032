@@ -10,6 +10,9 @@ import Modal from '../transaction/Modal';
 import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../../util/store';
+import { Button } from '@chakra-ui/react';
+import PostModal from '../transaction/PostModal';
+import CategoryIcon, { CategoryIdMap } from '../category/CategoryIcon';
 
 // axios GET 요청으로 불러온 데이터 타입 정의
 export interface TransactionType {
@@ -27,42 +30,10 @@ export interface TransactionType {
   bankName: string;
 }
 
-// export interface Props {
-//   transactions: TransactionType[];
-//   date: Date;
-// }
-
-// 카테고리별 아이콘 설정하기 <카테고리명: 아이콘이름>
-const categoryIcons: Record<string, any> = {
-  식비: MdFastfood,
-  음료: BiCoffeeTogo,
-  오락: IoLogoGameControllerA,
-};
-
-// 카테고리별 아이콘 색상 설정하기
-const CategoryIconWrapper = styled.div<{ category: string }>`
-  max-width: fit-content;
-  margin-left: 20px;
-  padding: 10px;
-  border-radius: 100%;
-  color: white;
-  font-size: 20px;
-  background-color: ${(props) => {
-    switch (props.category) {
-      case '식비':
-        return '#FFC107'; // yellow
-      case '음료':
-        return '#4CAF50'; // green
-      case '오락':
-        return '#9C27B0'; // purple
-      default:
-        return 'inherit';
-    }
-  }};
-`;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  margin-left: 5vw;
 `;
 
 const TransactionContainer = styled.div`
@@ -129,13 +100,13 @@ const Transaction = ({ date }: { date: Date }) => {
     },
   ]);
 
-  // 거래내역 네트워크 요청
-
   // GET 요청 URI parameter 용 memberID, date (month) 받아오기
   let member_id = useRecoilValue(userInfoState)?.id;
   let headerMonth =
     date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0');
 
+  // 월별 거래내역 GET 요청
+  //TODO API 거래내역 잘 받아오는지 확인하기
   useEffect(() => {
     const getTransactionHistories = async () => {
       axios
@@ -190,11 +161,23 @@ const Transaction = ({ date }: { date: Date }) => {
     return () => observer && observer.disconnect();
   }, []);
 
+  // 거래내역 추가 모달 관련 상태관리
+  const [showPostModal, setShowPostModal] = useState<boolean>(false);
+  // 거래내역 임의 추가 버튼 핸들러
+  const togglePostModal = () => {
+    setShowPostModal(!showPostModal);
+    console.log(showPostModal);
+  };
   //TODO 아이콘 처리
   return (
     <Container className="transaction-history-box" ref={target}>
+      <Button colorScheme="purple" maxWidth="15vw" onClick={togglePostModal}>
+        거래내역 추가하기
+      </Button>
+      {showPostModal && (
+        <PostModal togglePostModal={togglePostModal} memberId={member_id} />
+      )}
       {transactionHistories.map((transaction, idx) => {
-        const IconComponent = categoryIcons[transaction.memberCategoryId];
         return (
           <TransactionContainer key={transaction.id} onClick={toggleModal}>
             <div>
@@ -203,9 +186,7 @@ const Transaction = ({ date }: { date: Date }) => {
                 {daysOfWeek[transaction.date.getDay()]}요일
               </div>
               <ContentContainer>
-                {/* <CategoryIconWrapper category={transaction.memberCategoryId}>
-                  <IconComponent className="transaciton-icon" />
-                </CategoryIconWrapper> */}
+                <CategoryIcon icon={String(transaction.memberCategoryId)} />
                 <div
                   className="transaction-content-box"
                   onClick={() => setSelectedTransaction(transaction)}
