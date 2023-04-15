@@ -8,6 +8,9 @@ export default function SearchBar() {
   const [keyword, setKeyword] = useState('');
   const [searchType, setSearchType] = useState('제목+태그');
 
+  const alretEmptyKeyword = () => {
+    if (keyword === '') alert('검색어를 입력해주세요.');
+  };
   return (
     <SearchBarBox>
       <SearchType>
@@ -32,7 +35,13 @@ export default function SearchBar() {
       <ClearButton onClick={() => setKeyword('')}>
         <MdClear />
       </ClearButton>
-      <SearchButton>검색</SearchButton>
+      <SearchButton
+        onClick={() => {
+          alretEmptyKeyword();
+        }}
+      >
+        검색
+      </SearchButton>
     </SearchBarBox>
   );
 }
