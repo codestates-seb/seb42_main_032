@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import SearchBar from '../components/curation/SearchBar';
 
 const Container = styled.div`
   font-family: 'GmarketSansMedium';
@@ -147,7 +148,9 @@ const Board = () => {
         </div>
         <div>금융 큐레이팅 게시판</div>
       </HeaderWrap>
-      <ControlContainer></ControlContainer>
+      <ControlContainer>
+        <SearchBar />
+      </ControlContainer>
       <ContentContainer>
         <PostLists>
           <tr>
