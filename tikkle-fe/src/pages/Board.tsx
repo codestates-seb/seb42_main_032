@@ -70,6 +70,11 @@ const Post = styled.tr`
   .post-title-div {
     text-align: left;
     padding-left: 20px;
+    span:first-child {
+      :hover {
+        font-weight: bold;
+      }
+    }
   }
 `;
 
@@ -101,6 +106,33 @@ const Board = () => {
     return data;
   };
 
+  const dummyDatas = [
+    {
+      id: 1,
+      title: 'test',
+      content: 'asdasd',
+      createdAt: new Date(),
+    },
+    {
+      id: 2,
+      title: 'test',
+      content: 'asdasd',
+      createdAt: new Date(),
+    },
+    {
+      id: 3,
+      title: 'test',
+      content: 'asdasd',
+      createdAt: new Date(),
+    },
+    {
+      id: 4,
+      title: 'test',
+      content: 'asdasd',
+      createdAt: new Date(),
+    },
+  ];
+
   useEffect(() => {
     getAllCurations(1).then((res) => {
       setCurations(res.data);
@@ -124,28 +156,21 @@ const Board = () => {
             <th className="post-table__th3">좋아요</th>
             <th className="post-table__th4">작성일시</th>
           </tr>
-          <Post>
-            <td>1</td>
-            <td className="post-title-div">
-              <Link to="/curationview">
-                <div>ㅎㅇ</div>
-              </Link>
-              <Tag>tag</Tag>
-            </td>
-            <td>1</td>
-            <td>2023.04.20</td>
-          </Post>
-          {curations &&
-            curations.map((el) => {
+          {dummyDatas &&
+            dummyDatas.map((el) => {
               return (
                 <Post>
                   <td>{el.id}</td>
-                  <td>
-                    <div>{el.title}</div>
+                  <td className="post-title-div">
+                    <Link to={`/curationview/${el.id}`}>
+                      <span>{el.title}</span>
+                    </Link>
                     <Tag>tag</Tag>
                   </td>
                   <td>1</td>
-                  <td>2023.04.20</td>
+                  <td>{`${el.createdAt.getFullYear()}-${
+                    el.createdAt.getMonth() + 1
+                  }-${el.createdAt.getDate()}`}</td>
                 </Post>
               );
             })}
