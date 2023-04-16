@@ -40,7 +40,7 @@ const BudgetSetting = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<CategoryType[]>();
   const [budgets, setBudgets] = useState<BudgetType[]>();
-  const [totalActiveBudget, setTotalActiveBudget] = useState(0);
+  const [sumBudgets, setSumBudgets] = useState(0);
 
   const modal = useHrefModal(
     '튜토리얼을 마쳤습니다. 자유롭게 Tikkle을 사용해주세요.',
@@ -102,11 +102,17 @@ const BudgetSetting = () => {
       total += budget.amount;
     });
     console.log(total);
-    setTotalActiveBudget(total);
+    setSumBudgets(total);
   };
 
+  // 예산 항목이 비어있지 않을 때만 예산들의 총합을 구함
   useEffect(() => {
-    getTotalActiveBudget();
+    if (budgets && budgets.length > 0) {
+      console.log(budgets?.reduce((sum: number, budget) => (sum += budget.amount), 0));
+      setSumBudgets(
+        budgets?.reduce((sum: number, budget) => (sum += budget.amount), 0)
+      );
+    }
   }, [budgets]);
 
   return (
@@ -156,7 +162,10 @@ const BudgetSetting = () => {
                 totalAmount={userInfo?.totalBudget || 0}
                 getBudgets={getBudgets}
               />
-              <button onClick={modal.onOpen}>저장하기</button>
+              <button onClick={() => {
+                // 사용자가 최초 설정 중일 때만 모달 표시
+                if (userInfo?.state !== 'ACTIVE') modal.onOpen()
+              }}>저장하기</button>
             </Box>
           </Box>
           <Box display="flex" flexDir="column" w="100%" gap="40px" mb="40px">
