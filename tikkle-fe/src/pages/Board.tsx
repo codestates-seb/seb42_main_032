@@ -138,10 +138,9 @@ const Board = () => {
   };
 
   useEffect(() => {
-    // getTotalPage().then((res) => {
-    //   setTotalPages(res.totalPages);
-    // });
-    setTotalPages(7);
+    getTotalPage().then((res) => {
+      setTotalPages(res.totalPages);
+    });
   }, []);
 
   useEffect(() => {
