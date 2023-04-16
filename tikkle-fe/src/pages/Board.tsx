@@ -114,12 +114,19 @@ interface curationType {
   title: string;
   createdAt: Date;
   like: number;
+  tagId: number;
+}
+
+interface tagsType {
+  id: number;
+  name: string;
 }
 
 const Board = () => {
   const [curations, setCurations] = useState<curationType[]>();
   const [selectedPage, setSelectedPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [tags, setTags] = useState<tagsType[]>([]);
 
   const getAllCurations = async (page: number) => {
     const data = await (
@@ -137,9 +144,19 @@ const Board = () => {
     return totalPage;
   };
 
+  const getTags = async () => {
+    const tagLists = await (
+      await axios.get(`${import.meta.env.VITE_SERVER}/tags`)
+    ).data.data;
+    return tagLists;
+  };
+
   useEffect(() => {
     getTotalPage().then((res) => {
       setTotalPages(res.totalPages);
+    });
+    getTags().then((res) => {
+      setTags(res);
     });
   }, []);
 
@@ -206,7 +223,9 @@ const Board = () => {
                       <Link to={`/curationview/${el.id}`}>
                         <span>{el.title}</span>
                       </Link>
-                      <Tag>tag</Tag>
+                      <Tag>
+                        {tags.filter((tag) => tag.id === el.tagId)[0].name}
+                      </Tag>
                     </td>
                     <td>{el.like}</td>
                     <td>
