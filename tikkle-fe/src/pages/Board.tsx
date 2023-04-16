@@ -90,12 +90,22 @@ const Tag = styled.div`
 const PageNation = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px;
+  font-size: 17px;
+  color: #a2a0fb;
   svg {
+    cursor: pointer;
     color: #a2a0fb;
+  }
+  span {
     cursor: pointer;
   }
   .page-selected__span {
     font-size: 20px;
+    font-weight: bold;
+    color: #6764ff;
   }
 `;
 
@@ -127,45 +137,11 @@ const Board = () => {
     return totalPage;
   };
 
-  const dummyDatas = {
-    data: [
-      {
-        id: 1,
-        title: 'test',
-        content: 'asdasd',
-        createdAt: new Date(),
-      },
-      {
-        id: 2,
-        title: 'test',
-        content: 'asdasd',
-        createdAt: new Date(),
-      },
-      {
-        id: 3,
-        title: 'test',
-        content: 'asdasd',
-        createdAt: new Date(),
-      },
-      {
-        id: 4,
-        title: 'test',
-        content: 'asdasd',
-        createdAt: new Date(),
-      },
-    ],
-    pageInfo: {
-      page: 1,
-      size: 10,
-      totalElements: 1,
-      totalPages: 1,
-    },
-  };
-
   useEffect(() => {
-    getTotalPage().then((res) => {
-      setTotalPages(res.totalPages);
-    });
+    // getTotalPage().then((res) => {
+    //   setTotalPages(res.totalPages);
+    // });
+    setTotalPages(7);
   }, []);
 
   useEffect(() => {
@@ -254,6 +230,9 @@ const Board = () => {
             <span
               key={el}
               className={el === selectedPage ? 'page-selected__span' : ''}
+              onClick={() => {
+                setSelectedPage(el);
+              }}
             >
               {el}
             </span>
