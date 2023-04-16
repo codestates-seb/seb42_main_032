@@ -20,6 +20,7 @@ export interface BudgetType {
   endDate: Date;
   spend: number;
   createdAt: Date;
+  status?: string;
 }
 
 export interface CategoryType {
@@ -39,6 +40,7 @@ const BudgetSetting = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<CategoryType[]>();
   const [budgets, setBudgets] = useState<BudgetType[]>();
+  const [totalActiveBudget, setTotalActiveBudget] = useState(0);
 
   const modal = useHrefModal(
     '튜토리얼을 마쳤습니다. 자유롭게 Tikkle을 사용해주세요.',
@@ -91,6 +93,20 @@ const BudgetSetting = () => {
     getBudgets();
     getCategories();
   }, []);
+
+  // 불러온 예산 정보를 바탕으로 활성화된 카테고리의 총합을 구함
+  const getTotalActiveBudget = async () => {
+    let total = 0;
+    budgets?.forEach((budget: BudgetType) => {
+      total += budget.amount;
+    });
+    console.log(total);
+    setTotalActiveBudget(total);
+  };
+
+  useEffect(() => {
+    getTotalActiveBudget();
+  }, [budgets]);
 
   return (
     <Box

@@ -321,7 +321,7 @@ function UserSetting() {
           ml="40px"
           onClick={() => {
             handleSubmit();
-            modalPage.onOpen();
+            if (userInfo?.state !== 'active') modalPage.onOpen();
           }}
           disabled={
             isNameValid &&
