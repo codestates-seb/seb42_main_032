@@ -81,7 +81,8 @@ const BudgetSetting = () => {
         return b.amount - a.amount;
       });
 
-      console.log(res);
+      // 활성화된 예산만 불러옴
+      res = res.filter((budget: BudgetType) => budget.status === 'ACTIVE');
 
       setBudgets(res);
     } catch (err) {
