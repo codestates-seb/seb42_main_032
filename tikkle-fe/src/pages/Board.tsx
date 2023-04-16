@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const Container = styled.div`
   font-family: 'GmarketSansMedium';
@@ -86,16 +87,29 @@ const Tag = styled.div`
   background-color: #c29cedd7;
 `;
 
-const PageNation = styled.div``;
+const PageNation = styled.div`
+  display: flex;
+  justify-content: center;
+  svg {
+    color: #a2a0fb;
+    cursor: pointer;
+  }
+  .page-selected__span {
+    font-size: 20px;
+  }
+`;
 
 interface curationType {
   id: number;
   title: string;
   createdAt: Date;
+  like: number;
 }
 
 const Board = () => {
   const [curations, setCurations] = useState<curationType[]>();
+  const [selectedPage, setSelectedPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const getAllCurations = async (page: number) => {
     const data = await (
@@ -106,38 +120,87 @@ const Board = () => {
     return data;
   };
 
-  const dummyDatas = [
-    {
-      id: 1,
-      title: 'test',
-      content: 'asdasd',
-      createdAt: new Date(),
+  const getTotalPage = async () => {
+    const totalPage = await (
+      await axios.get(`${import.meta.env.VITE_SERVER}/curations/all?page=1`)
+    ).data.pageInfo;
+    return totalPage;
+  };
+
+  const dummyDatas = {
+    data: [
+      {
+        id: 1,
+        title: 'test',
+        content: 'asdasd',
+        createdAt: new Date(),
+      },
+      {
+        id: 2,
+        title: 'test',
+        content: 'asdasd',
+        createdAt: new Date(),
+      },
+      {
+        id: 3,
+        title: 'test',
+        content: 'asdasd',
+        createdAt: new Date(),
+      },
+      {
+        id: 4,
+        title: 'test',
+        content: 'asdasd',
+        createdAt: new Date(),
+      },
+    ],
+    pageInfo: {
+      page: 1,
+      size: 10,
+      totalElements: 1,
+      totalPages: 1,
     },
-    {
-      id: 2,
-      title: 'test',
-      content: 'asdasd',
-      createdAt: new Date(),
-    },
-    {
-      id: 3,
-      title: 'test',
-      content: 'asdasd',
-      createdAt: new Date(),
-    },
-    {
-      id: 4,
-      title: 'test',
-      content: 'asdasd',
-      createdAt: new Date(),
-    },
-  ];
+  };
 
   useEffect(() => {
-    getAllCurations(1).then((res) => {
-      setCurations(res.data);
+    getTotalPage().then((res) => {
+      setTotalPages(res.totalPages);
     });
   }, []);
+
+  useEffect(() => {
+    getAllCurations(selectedPage).then((res) => {
+      setCurations(res.data);
+    });
+  }, [selectedPage]);
+
+  let pageArr = [];
+  for (
+    let i = Math.floor((selectedPage - 1) / 5) * 5 + 1;
+    i < Math.floor((selectedPage - 1) / 5) * 5 + 6;
+    i++
+  ) {
+    if (totalPages >= i) {
+      pageArr.push(i);
+    }
+  }
+
+  const prevPage = () => {
+    if (selectedPage === 1) {
+      alert('첫번째 페이지입니다.');
+    } else {
+      setSelectedPage(selectedPage - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (selectedPage === totalPages) {
+      alert('마지막 페이지입니다.');
+    } else {
+      setSelectedPage(selectedPage + 1);
+    }
+  };
+
   return (
     <Container>
       <HeaderWrap>
@@ -150,33 +213,54 @@ const Board = () => {
       <ControlContainer></ControlContainer>
       <ContentContainer>
         <PostLists>
-          <tr>
-            <th className="post-table__th1">글번호</th>
-            <th className="post-table__th2">제목</th>
-            <th className="post-table__th3">좋아요</th>
-            <th className="post-table__th4">작성일시</th>
-          </tr>
-          {dummyDatas &&
-            dummyDatas.map((el) => {
-              return (
-                <Post>
-                  <td>{el.id}</td>
-                  <td className="post-title-div">
-                    <Link to={`/curationview/${el.id}`}>
-                      <span>{el.title}</span>
-                    </Link>
-                    <Tag>tag</Tag>
-                  </td>
-                  <td>1</td>
-                  <td>{`${el.createdAt.getFullYear()}-${
-                    el.createdAt.getMonth() + 1
-                  }-${el.createdAt.getDate()}`}</td>
-                </Post>
-              );
-            })}
+          <thead>
+            <tr>
+              <th className="post-table__th1">글번호</th>
+              <th className="post-table__th2">제목</th>
+              <th className="post-table__th3">좋아요</th>
+              <th className="post-table__th4">작성일시</th>
+            </tr>
+          </thead>
+          <tbody>
+            {curations &&
+              curations.map((el) => {
+                return (
+                  <Post key={el.id}>
+                    <td>{el.id}</td>
+                    <td className="post-title-div">
+                      <Link to={`/curationview/${el.id}`}>
+                        <span>{el.title}</span>
+                      </Link>
+                      <Tag>tag</Tag>
+                    </td>
+                    <td>{el.like}</td>
+                    <td>
+                      {el.createdAt
+                        ? `${el.createdAt.getFullYear()}-${
+                            el.createdAt.getMonth() + 1
+                          }-${el.createdAt.getDate()}`
+                        : ''}
+                    </td>
+                  </Post>
+                );
+              })}
+          </tbody>
         </PostLists>
       </ContentContainer>
-      <PageNation></PageNation>
+      <PageNation>
+        <FaChevronLeft size={30} onClick={prevPage} />
+        {pageArr.map((el) => {
+          return (
+            <span
+              key={el}
+              className={el === selectedPage ? 'page-selected__span' : ''}
+            >
+              {el}
+            </span>
+          );
+        })}
+        <FaChevronRight size={30} onClick={nextPage} />
+      </PageNation>
     </Container>
   );
 };
