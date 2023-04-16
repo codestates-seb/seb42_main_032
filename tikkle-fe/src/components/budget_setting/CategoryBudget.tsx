@@ -54,14 +54,7 @@ const CategoryBudget = ({
   useEffect(() => {
     getBudgetAmount();
     getCategory();
-    console.log(categoryName);
   }, []);
-
-  useEffect(() => {
-    axios.patch(`${import.meta.env.VITE_SERVER}/budgets/${budgetId}`, {
-      amount: budgetAmount,
-    });
-  }, [budgetAmount]);
 
   return (
     <Box
