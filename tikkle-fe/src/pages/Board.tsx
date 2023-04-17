@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../util/store';
 
 const Container = styled.div`
   font-family: 'GmarketSansMedium';
@@ -31,7 +33,9 @@ const HeaderWrap = styled.div`
   }
 `;
 
-const ControlContainer = styled.div``;
+const ControlContainer = styled.div`
+  margin: 10px;
+`;
 
 const ContentContainer = styled.div``;
 
@@ -106,6 +110,18 @@ const PageNation = styled.div`
     font-size: 20px;
     font-weight: bold;
     color: #6764ff;
+  }
+`;
+
+const WirteButton = styled.button`
+  background-color: #a2a0fb;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px black;
+  font-weight: bold;
+  :hover {
+    background-color: #7c7ac3;
   }
 `;
 
@@ -193,6 +209,16 @@ const Board = () => {
     }
   };
 
+  const user = useRecoilValue(userInfoState);
+
+  const handleWriteButton = () => {
+    if (user?.role === 'REGULAR') {
+      alert('글쓰기 권한이 없습니다.');
+    } else {
+      window.location.href = `${import.meta.env.VITE_CLIENT}/curationwrite`;
+    }
+  };
+
   return (
     <Container>
       <HeaderWrap>
@@ -202,7 +228,9 @@ const Board = () => {
         </div>
         <div>금융 큐레이팅 게시판</div>
       </HeaderWrap>
-      <ControlContainer></ControlContainer>
+      <ControlContainer>
+        <WirteButton onClick={handleWriteButton}>글쓰기</WirteButton>
+      </ControlContainer>
       <ContentContainer>
         <PostLists>
           <thead>
