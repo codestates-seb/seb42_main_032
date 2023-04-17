@@ -2,6 +2,7 @@ package DabuOps.tikkle.member.dto;
 
 import DabuOps.tikkle.global.audit.Auditable;
 import DabuOps.tikkle.member.entity.Member.Gender;
+import DabuOps.tikkle.member.entity.Member.MemberRole;
 import DabuOps.tikkle.member.entity.Member.MemberState;
 import lombok.Builder;
 import lombok.Getter;
@@ -84,11 +85,12 @@ public class MemberDto {
         private Integer totalBudget;
         private Integer initDate;
         private String picture;
+        private MemberRole role;
 
         @Builder
         public Response(Long id, String email, String name, String location, MemberState state,
             Gender gender, Integer payDay, Integer payAmount, Integer totalBudget, Integer initDate,
-            String picture) {
+            String picture, MemberRole role) {
             this.id = id;
             this.email = email;
             this.name = name;
@@ -100,6 +102,7 @@ public class MemberDto {
             this.totalBudget = totalBudget;
             this.initDate = initDate;
             this.picture = picture;
+            this.role = role;
         }
     }
 
