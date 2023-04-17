@@ -83,19 +83,6 @@ public class CurationService {
         repository.save(obtainCuration);
     }
 
-//    public void likeCuration(Long curationId, Long memberId) {
-//        Curation curation = findExistCurationById(curationId);
-//        Member member = memberService.findExistMemberById(memberId);
-//
-//        if (curation.getLikedMember().contains(member)) {
-//            throw new BusinessLogicException(ExceptionCode.MEMBER_ALREADY_LIKED);
-//        }
-//        else {
-//            curation.setLike(curation.getLike() + 1);
-//            curation.getLikedMember().add(member);
-//            repository.save(curation);
-//        }
-//    }
 
     /**
      * Curation이 존재하는지 검증하는 method
