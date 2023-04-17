@@ -39,17 +39,6 @@ public class CurationDto {
 
     @Getter
     @NoArgsConstructor
-    public static class Search{
-        private int searchType;
-
-        @Builder
-        public Search(int searchType) {
-            this.searchType = searchType;
-        }
-    }
-
-    @Getter
-    @NoArgsConstructor
     public static class Response extends Auditable {
         private Long id;
         private String title;

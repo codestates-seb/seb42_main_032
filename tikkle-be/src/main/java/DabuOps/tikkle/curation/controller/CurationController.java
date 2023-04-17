@@ -71,8 +71,7 @@ public class CurationController {
     @GetMapping
     public ResponseEntity getCurations(@RequestParam("page") int page,
                                        @RequestParam("keyword") String keyword,
-                                       @RequestBody CurationDto.Search requestBody) {
-        int searchType = requestBody.getSearchType();
+                                       @RequestParam("searchType") int searchType) {
         Page<Curation> curationPage = curationService.findCurations(keyword, page, searchType);
         List<Curation> curations = curationPage.getContent();
 
