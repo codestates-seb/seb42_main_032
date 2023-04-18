@@ -1,12 +1,11 @@
-package DabuOps.tikkle.curation_like_up.service;
+package DabuOps.tikkle.curation_likes.service;
 
 import DabuOps.tikkle.curation.entity.Curation;
 import DabuOps.tikkle.curation.repository.CurationRepository;
 import DabuOps.tikkle.curation.service.CurationService;
-import DabuOps.tikkle.curation_like_up.entity.CurationLikeUp;
-import DabuOps.tikkle.curation_like_up.repository.CurationLikeUpRepository;
+import DabuOps.tikkle.curation_likes.entity.CurationLikes;
+import DabuOps.tikkle.curation_likes.repository.CurationLikesRepository;
 import DabuOps.tikkle.member.entity.Member;
-import DabuOps.tikkle.member.repository.MemberRepository;
 import DabuOps.tikkle.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,8 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CurationLikeUpService {
-    private final CurationLikeUpRepository curationLikeUpRepository;
+public class CurationLikesService {
+    private final CurationLikesRepository curationLikesRepository;
+    private final CurationRepository curationRepository;
     private final MemberService memberService;
     private final CurationService curationService;
 
@@ -24,15 +24,19 @@ public class CurationLikeUpService {
         Member member = memberService.findExistMemberById(memberId);
         Curation curation = curationService.getCuration(curationId);
 
-        if(curationLikeUpRepository.findByMemberIdAndCurationId(memberId, curationId).isPresent()) {
-            curationLikeUpRepository.delete(curationLikeUpRepository.findByMemberIdAndCurationId(memberId, curationId).get());
+        if(curationLikesRepository.findByMemberIdAndCurationId(memberId, curationId).isPresent()) {
+            curationLikesRepository.delete(curationLikesRepository.findByMemberIdAndCurationId(memberId, curationId).get());
+            curation.setLikeCount(curation.getLikeCount() - 1);
         }
         else {
-            CurationLikeUp likeUp = CurationLikeUp.builder()
+            CurationLikes likeUp = CurationLikes.builder()
                     .member(member)
                     .curation(curation)
                     .build();
-            curationLikeUpRepository.save(likeUp);
+            curationLikesRepository.save(likeUp);
+            curation.setLikeCount(curation.getLikeCount() + 1);
         }
+
+        curationRepository.save(curation);
     }
 }

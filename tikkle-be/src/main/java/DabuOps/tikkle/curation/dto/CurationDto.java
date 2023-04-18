@@ -45,15 +45,13 @@ public class CurationDto {
         private String content;
         private Long tagId;
         private CurationState state;
-        private int like;
         @Builder
-        public Response(Long id, String title, String content, Long tagId, CurationState state, int like) {
+        public Response(Long id, String title, String content, Long tagId, CurationState state) {
             this.id = id;
             this.title = title;
             this.content = content;
             this.tagId = tagId;
             this.state = state;
-            this.like = like;
         }
     }
 
