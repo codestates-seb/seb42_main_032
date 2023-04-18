@@ -1,4 +1,4 @@
-package DabuOps.tikkle.curation_like_up.entity;
+package DabuOps.tikkle.curation_likes.entity;
 
 import DabuOps.tikkle.curation.entity.Curation;
 import DabuOps.tikkle.member.entity.Member;
@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CurationLikeUp {
+public class CurationLikes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,7 +29,7 @@ public class CurationLikeUp {
     private Curation curation;
 
     @Builder
-    public CurationLikeUp(Long id, Member member, Curation curation) {
+    public CurationLikes(Long id, Member member, Curation curation) {
         this.id = id;
         this.member = member;
         this.curation = curation;
