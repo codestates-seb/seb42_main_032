@@ -1,17 +1,13 @@
 package DabuOps.tikkle.curation.entity;
 
+import DabuOps.tikkle.curation_likes.entity.CurationLikes;
 import DabuOps.tikkle.curation_tag.entity.Tag;
 import DabuOps.tikkle.global.audit.Auditable;
 import DabuOps.tikkle.member.entity.Member;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,7 +41,7 @@ public class Curation extends Auditable {
 
     @Column
     @Builder.Default
-    private Integer likeCount = 0;
+    private Integer likesCount = 0;
 
     @Column
     @Builder.Default
@@ -53,13 +49,13 @@ public class Curation extends Auditable {
     private CurationState state = CurationState.ACTIVE;
 
     @Builder
-    public Curation(Long id, String title, String content, Tag tag, Member member, Integer likeCount, CurationState state) {
+    public Curation(Long id, String title, String content, Tag tag, Member member, Integer likesCount, CurationState state) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.tag = tag;
         this.member = member;
-        this.likeCount = likeCount;
+        this.likesCount = likesCount;
         this.state = state;
     }
 
