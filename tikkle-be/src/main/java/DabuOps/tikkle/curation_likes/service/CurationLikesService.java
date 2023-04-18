@@ -26,7 +26,7 @@ public class CurationLikesService {
 
         if(curationLikesRepository.findByMemberIdAndCurationId(memberId, curationId).isPresent()) {
             curationLikesRepository.delete(curationLikesRepository.findByMemberIdAndCurationId(memberId, curationId).get());
-            curation.setLikeCount(curation.getLikeCount() - 1);
+            curation.setLikesCount(curation.getLikesCount() - 1);
         }
         else {
             CurationLikes likeUp = CurationLikes.builder()
@@ -34,7 +34,7 @@ public class CurationLikesService {
                     .curation(curation)
                     .build();
             curationLikesRepository.save(likeUp);
-            curation.setLikeCount(curation.getLikeCount() + 1);
+            curation.setLikesCount(curation.getLikesCount() + 1);
         }
 
         curationRepository.save(curation);
