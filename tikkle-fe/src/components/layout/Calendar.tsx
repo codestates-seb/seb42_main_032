@@ -7,9 +7,14 @@ import { Text } from '@chakra-ui/react';
 import { Box } from '@chakra-ui/react';
 import axios from 'axios';
 import Loading from './Loading';
-import { userInfoState } from '../../util/store';
-import { useRecoilValue } from 'recoil';
+import {
+  clickedDateState,
+  locationState,
+  userInfoState,
+} from '../../util/store';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import { useLinkClickHandler } from 'react-router-dom';
 
 const PageContainer = styled.div`
   display: flex;
@@ -129,11 +134,28 @@ const Calendar = ({ date }: { date: Date }) => {
   // dailySummary = [[0,0], [1000, 123000]]
   // 일자를 나타내는 칸 렌더링
 
+  // 날짜 클릭 시 핸들러 -> 클릭된 날짜 받아오기 -> 해당 날짜의 거래내역으로 스크롤 이동
+  // const [clickedDate, setClickedDate] = useRecoilState(clickedDateState);
+  // const location = useRecoilValue(locationState);
+  // const clickHandler = () => {
+  //   if (location) {
+  //     window.scrollTo(0, location);
+  //   }
+  // };
   const renderDate = dailySummary.map((daily, idx) => {
     return (
       // w-52 === 13rem
       // h-24 === 6rem
-      <Box key={idx} as="td" w={52} h={24}>
+      <Box
+        key={idx}
+        as="td"
+        w={52}
+        h={24}
+        onClick={() => {
+          setClickedDate(idx + 1);
+          clickHandler();
+        }}
+      >
         <Box
           fontSize={[12, 16, 18]}
           h="50%"
