@@ -72,11 +72,24 @@ export function HrefModal({
 }) {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
+  // 멤버 카테고리 생성 함수
+  const createMemberCategory = () => {
+    axios
+      .patch(
+        `${import.meta.env.VITE_SERVER}/members/${userInfo?.id}/init`,
+        userInfo
+      )
+      .catch((err) => console.log(err));
+  };
+
   const handleMemberState = () => {
     // 이동할 페이지에 따라 사용자 상태도 변경
     let nextState = '';
     switch (targetPage) {
       case 'categoryedit':
+        // 상태가 'usersetting'일 때 categoryedit으로 이동하는 시나리오는 최초 상태를 의미
+        // 따라서 멤버 카테고리 생성
+        if (userInfo?.state === 'usersetting') createMemberCategory();
         nextState = 'categoryEdit';
       case 'budgetsetting':
         nextState = 'budgetSetting';

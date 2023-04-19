@@ -1,10 +1,6 @@
 import Calendar from '../components/layout/Calendar';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import Transaction, { TransactionType } from '../components/layout/Transaction';
-import { userInfoState } from '../util/store';
-import { useRecoilValue } from 'recoil';
-import axios from 'axios';
+import Transaction from '../components/layout/Transaction';
 
 const HomeContainer = styled.div`
   font-family: 'GmarketSansMedium';
