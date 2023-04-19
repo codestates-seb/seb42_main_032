@@ -43,8 +43,8 @@ interface NewTransactionType {
 }
 
 const PostModal = (
-  { togglePostModal }: { togglePostModal: () => void },
-  { memberId }: { memberId: number }
+  { togglePostModal, memberId }: { togglePostModal: any, memberId: number|undefined},
+  
 ) => {
   // 유저가 입력한 정보 상태 관리
   const [transaction, setTransaction] = useState<NewTransactionType>({
