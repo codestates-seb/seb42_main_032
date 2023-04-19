@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import { useState } from 'react';
 import styled from 'styled-components';
-import Article from '../../pages/CurationView';
+import {Article} from '../../pages/CurationView';
 
 const Container = styled.div`
   font-family: 'GmarketSansMedium';
@@ -24,7 +24,7 @@ const Tag = styled.div`
 // 동일한 화면에서 title, content, tag 부분만 에디터로 전환하기
 // 저장하기 버튼 -> 클릭 시, PATCH 요청 및 저장 완료 시 alert
 
-function Editing({ article } = { article: Article }) {
+function Editing({article}: {article: Article} ) {
   // 제목, 본문, 태그 상태관리
   const [editingArticle, setEditingArticle] = useState(article);
 
