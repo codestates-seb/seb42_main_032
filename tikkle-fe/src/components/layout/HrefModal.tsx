@@ -75,10 +75,10 @@ export function HrefModal({
   // 멤버 카테고리 생성 함수
   const createMemberCategory = () => {
     axios
-      .patch(
-        `${import.meta.env.VITE_SERVER}/members/${userInfo?.id}/init`,
-        userInfo
-      )
+      .patch(`${import.meta.env.VITE_SERVER}/members/${userInfo?.id}/init`, {
+        ...userInfo,
+        state: 'CATEGORYEDIT',
+      })
       .catch((err) => console.log(err));
   };
 
@@ -89,13 +89,16 @@ export function HrefModal({
       case 'categoryedit':
         // 상태가 'usersetting'일 때 categoryedit으로 이동하는 시나리오는 최초 상태를 의미
         // 따라서 멤버 카테고리 생성
-        if (userInfo?.state === 'usersetting') createMemberCategory();
-        nextState = 'categoryEdit';
-      case 'budgetsetting':
-        nextState = 'budgetSetting';
+        if (userInfo?.state === 'USERSETTING') createMemberCategory();
+        nextState = targetPage.toUpperCase();
+        break;
+      // 홈페이지로 이동하는 경우 targetpage가 다음 상태와 동일한 단어가 아니기 때문에 별도 조건으로 처리
       case 'home':
-        nextState = 'active';
+        nextState = 'ACTIVE';
+        break;
+      // 그 외 모든 경우는 이동 대상 페이지로 상태 갱신
       default:
+        nextState = targetPage.toUpperCase();
         break;
     }
 
