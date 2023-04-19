@@ -8,9 +8,13 @@ import { BiCoffeeTogo } from 'react-icons/bi';
 import { IoLogoGameControllerA } from 'react-icons/io';
 import Modal from '../transaction/Modal';
 import axios from 'axios';
-import { useRecoilValue } from 'recoil';
-import { userInfoState } from '../../util/store';
-import { Button } from '@chakra-ui/react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  clickedDateState,
+  locationState,
+  userInfoState,
+} from '../../util/store';
+import { Box, Button } from '@chakra-ui/react';
 import PostModal from '../transaction/PostModal';
 import CategoryIcon, { CategoryIdMap } from '../category/CategoryIcon';
 
@@ -34,10 +38,22 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 5vw;
+
+  button {
+    margin-right: 95vw;
+    margin-top: 5vh;
+  }
 `;
 
 const TransactionContainer = styled.div`
+  margin: 1vw;
   padding: 10px;
+  border-radius: 10px;
+  width: 70%;
+  :hover {
+    background-color: #ede1f0;
+    cursor: pointer;
+  }
   .transaction-date-box {
     text-align: left;
     margin-top: 10px;
@@ -168,46 +184,67 @@ const Transaction = ({ date }: { date: Date }) => {
     setShowPostModal(!showPostModal);
     console.log(showPostModal);
   };
+
+  // const [location, setLocation] = useRecoilState(locationState);
+  // // [날짜, y좌표] 구하기 - location
+  // const childElement = document.querySelector('.transaction-date-box');
+  // if (childElement) {
+  //   const location = [];
+  //   location.push([transactionDate, childElement.getBoundingClientRect().y]);
+  //   setLocation(location);
+  // }
+
+  // console.log(location);
+
   //TODO 아이콘 처리
   return (
     <Container className="transaction-history-box" ref={target}>
-      <Button colorScheme="purple" maxWidth="15vw" onClick={togglePostModal}>
-        거래내역 추가하기
-      </Button>
+      <Box>
+        <Button colorScheme="purple" onClick={togglePostModal} margin="10px">
+          거래내역 추가하기
+        </Button>
+      </Box>
+
       {showPostModal && (
         <PostModal togglePostModal={togglePostModal} memberId={member_id} />
       )}
-      {transactionHistories.map((transaction, idx) => {
-        return (
-          <TransactionContainer key={transaction.id} onClick={toggleModal}>
-            <div>
-              <div className="transaction-date-box">
-                {transaction.date.getDate()}일{' '}
-                {daysOfWeek[transaction.date.getDay()]}요일
-              </div>
-              <ContentContainer>
-                <CategoryIcon icon={String(transaction.memberCategoryId)} />
-                <div
-                  className="transaction-content-box"
-                  onClick={() => setSelectedTransaction(transaction)}
-                >
-                  <div className="transaction-amount-box">
-                    <strong>
-                      {new Intl.NumberFormat('ko-KR').format(
-                        transaction.amount
-                      )}
-                      원
-                    </strong>
-                  </div>
-                  <div className="transaciton-bank-box">
-                    {transaction.bankName} &#8594; {transaction.branchName}
-                  </div>
+      {transactionHistories.length !== 0 &&
+        transactionHistories.map((transaction, idx) => {
+          const transactionDate = transaction.date.getDate();
+          return (
+            <TransactionContainer
+              className="transaction_container"
+              key={transaction.id}
+              onClick={toggleModal}
+            >
+              <div>
+                <div className="transaction-date-box">
+                  {transactionDate}일 {daysOfWeek[transaction.date.getDay()]}
+                  요일
                 </div>
-              </ContentContainer>
-            </div>
-          </TransactionContainer>
-        );
-      })}
+                <ContentContainer>
+                  <CategoryIcon icon={String(transaction.memberCategoryId)} />
+                  <div
+                    className="transaction-content-box"
+                    onClick={() => setSelectedTransaction(transaction)}
+                  >
+                    <div className="transaction-amount-box">
+                      <strong>
+                        {new Intl.NumberFormat('ko-KR').format(
+                          transaction.amount
+                        )}
+                        원
+                      </strong>
+                    </div>
+                    <div className="transaciton-bank-box">
+                      {transaction.bankName} &#8594; {transaction.branchName}
+                    </div>
+                  </div>
+                </ContentContainer>
+              </div>
+            </TransactionContainer>
+          );
+        })}
       {selectedTransaction && showModal && (
         <Modal
           transaction={selectedTransaction}

@@ -7,10 +7,22 @@ import { Text } from '@chakra-ui/react';
 import { Box } from '@chakra-ui/react';
 import axios from 'axios';
 import Loading from './Loading';
-import { userInfoState } from '../../util/store';
-import { useRecoilValue } from 'recoil';
+import {
+  clickedDateState,
+  locationState,
+  userInfoState,
+} from '../../util/store';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import { useLinkClickHandler } from 'react-router-dom';
 
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  p {
+    margin-top: 2vh;
+  }
+`;
 const Container = styled.div`
   border: 1px solid black;
   box-shadow: 1px 1px 4px;
@@ -34,6 +46,11 @@ const Container = styled.div`
       padding: 10px;
       margin-bottom: 10px;
     }
+  }
+  td:hover {
+    border-radius: 10px;
+    background-color: #ede1f0;
+    cursor: pointer;
   }
 `;
 
@@ -117,11 +134,28 @@ const Calendar = ({ date }: { date: Date }) => {
   // dailySummary = [[0,0], [1000, 123000]]
   // 일자를 나타내는 칸 렌더링
 
+  // 날짜 클릭 시 핸들러 -> 클릭된 날짜 받아오기 -> 해당 날짜의 거래내역으로 스크롤 이동
+  // const [clickedDate, setClickedDate] = useRecoilState(clickedDateState);
+  // const location = useRecoilValue(locationState);
+  // const clickHandler = () => {
+  //   if (location) {
+  //     window.scrollTo(0, location);
+  //   }
+  // };
   const renderDate = dailySummary.map((daily, idx) => {
     return (
       // w-52 === 13rem
       // h-24 === 6rem
-      <Box key={idx} as="td" w={52} h={24}>
+      <Box
+        key={idx}
+        as="td"
+        w={52}
+        h={24}
+        onClick={() => {
+          setClickedDate(idx + 1);
+          clickHandler();
+        }}
+      >
         <Box
           fontSize={[12, 16, 18]}
           h="50%"
@@ -156,16 +190,19 @@ const Calendar = ({ date }: { date: Date }) => {
   }
 
   return !loading ? (
-    <Container>
-      <TableContainer>
-        <Table>
-          <Thead>
-            <Tr>{renderDaysOfWeek}</Tr>
-          </Thead>
-          <Tbody>{renderRow}</Tbody>
-        </Table>
-      </TableContainer>
-    </Container>
+    <PageContainer>
+      <Container>
+        <TableContainer>
+          <Table>
+            <Thead>
+              <Tr>{renderDaysOfWeek}</Tr>
+            </Thead>
+            <Tbody>{renderRow}</Tbody>
+          </Table>
+        </TableContainer>
+      </Container>
+      <p>날짜 클릭 시, 해당 날짜의 거래내역으로 이동합니다.</p>
+    </PageContainer>
   ) : (
     <Loading />
   );

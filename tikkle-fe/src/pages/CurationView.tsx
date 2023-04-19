@@ -11,7 +11,7 @@ import {
 import { Box, Button, Icon } from '@chakra-ui/react';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../util/store';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 const Container = styled.div`
   font-family: 'GmarketSansMedium';
@@ -61,19 +61,24 @@ const ButtonContainer = styled.div`
     margin-left: 10px;
   }
 `;
+
+export interface Article {
+  name: string;
+  id: number;
+  title: string;
+  content: string;
+  tagId: number;
+  state: string;
+  createdAt: Date;
+  modifiedAt: Date;  
+}
+
 function CurationView() {
   const navigate = useNavigate();
-  interface Article {
-    id: number;
-    title: string;
-    content: string;
-    tagId: number;
-    state: string;
-    createdAt: Date;
-    modifiedAt: Date;
-  }
+
   // 게시글 정보 상태 관리
   const [article, setArticle] = useState<Article>({
+    name: '',
     id: 0,
     title: '',
     content: '',
@@ -84,16 +89,19 @@ function CurationView() {
   });
 
   // TODO curationID 받아오기
+  let { curationId } = useParams();
+ 
   // 게시글 GET 요청 (단일 게시글 조회)
   useEffect(() => {
     const getArticle = async () => {
       await axios
         .get(`${import.meta.env.VITE_SERVER}/curations/${curationId}`)
-        .then((res) => setArticle(res.data))
+        .then((res) => setArticle(res.data.data))
         .catch((err) => console.log(err));
     };
     getArticle();
   }, []);
+
 
   // 좋아요 기능 (한번만 클릭 가능, 해제 불가능)
   // TODO 좋아요 클릭 시, PATCH요청으로 개수 ++
@@ -109,7 +117,8 @@ function CurationView() {
   // 조회하는 사용자가 게시글 작성자인지 확인
   // 로그인한 사용자 정보 (useRecoilState) 와 article.name 비교
   const userName = useRecoilValue(userInfoState)?.name;
-  const isConsistent = true;
+  // 테스트용
+  const isConsistent = true
   // const isConsistent = userName === article.name;
 
   // 수정하기 버튼 핸들러
@@ -139,6 +148,7 @@ function CurationView() {
     navigate('/');
   };
 
+  console.log(article)
   if (isEditing) {
     return <Editing article={article} />;
   } else {

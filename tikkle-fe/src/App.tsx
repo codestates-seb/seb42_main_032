@@ -33,7 +33,7 @@ function App() {
         <Route path="/userout" element={<UserOut />} />
         <Route path="/categoryedit" element={<CategoryEdit />} />
         <Route path="/board" element={<Board />} />
-        <Route path="/curationview" element={<CurationView />} />
+        <Route path="/curationview/:curationId" element={<CurationView />} />
         <Route path="/curationwrite" element={<CurationWrite />} />
       </Routes>
       <Footer />
