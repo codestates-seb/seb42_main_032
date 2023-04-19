@@ -17,6 +17,7 @@ public interface CurationMapper {
     Curation patchDtoToCuration(CurationDto.Patch patch);
     @Named("CTR")
     @Mapping(source = "tag.id", target = "tagId")
+    @Mapping(source = "member.name", target = "memberName")
     CurationDto.Response curationToResponseDto(Curation curation);
     @IterableMapping(qualifiedByName = "CTR")
     List<CurationDto.Response> curationsToCurationResponses(List<Curation> curations);
