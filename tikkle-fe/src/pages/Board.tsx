@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import SearchBar from '../components/curation/SearchBar';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../util/store';
 
 const Container = styled.div`
   font-family: 'GmarketSansMedium';
@@ -31,7 +34,9 @@ const HeaderWrap = styled.div`
   }
 `;
 
-const ControlContainer = styled.div``;
+const ControlContainer = styled.div`
+  margin: 10px;
+`;
 
 const ContentContainer = styled.div``;
 
@@ -87,16 +92,58 @@ const Tag = styled.div`
   background-color: #c29cedd7;
 `;
 
-const PageNation = styled.div``;
+const PageNation = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px;
+  font-size: 17px;
+  color: #a2a0fb;
+  svg {
+    cursor: pointer;
+    color: #a2a0fb;
+  }
+  span {
+    cursor: pointer;
+  }
+  .page-selected__span {
+    font-size: 20px;
+    font-weight: bold;
+    color: #6764ff;
+  }
+`;
+
+const WirteButton = styled.button`
+  background-color: #a2a0fb;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px black;
+  font-weight: bold;
+  :hover {
+    background-color: #7c7ac3;
+  }
+`;
 
 interface curationType {
   id: number;
   title: string;
   createdAt: Date;
+  like: number;
+  tagId: number;
+}
+
+interface tagsType {
+  id: number;
+  name: string;
 }
 
 const Board = () => {
   const [curations, setCurations] = useState<curationType[]>();
+  const [selectedPage, setSelectedPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [tags, setTags] = useState<tagsType[]>([]);
 
   const getAllCurations = async (page: number) => {
     const data = await (
@@ -107,38 +154,72 @@ const Board = () => {
     return data;
   };
 
-  const dummyDatas = [
-    {
-      id: 1,
-      title: 'test',
-      content: 'asdasd',
-      createdAt: new Date(),
-    },
-    {
-      id: 2,
-      title: 'test',
-      content: 'asdasd',
-      createdAt: new Date(),
-    },
-    {
-      id: 3,
-      title: 'test',
-      content: 'asdasd',
-      createdAt: new Date(),
-    },
-    {
-      id: 4,
-      title: 'test',
-      content: 'asdasd',
-      createdAt: new Date(),
-    },
-  ];
+  const getTotalPage = async () => {
+    const totalPage = await (
+      await axios.get(`${import.meta.env.VITE_SERVER}/curations/all?page=1`)
+    ).data.pageInfo;
+    return totalPage;
+  };
+
+  const getTags = async () => {
+    const tagLists = await (
+      await axios.get(`${import.meta.env.VITE_SERVER}/tags`)
+    ).data.data;
+    return tagLists;
+  };
 
   useEffect(() => {
-    getAllCurations(1).then((res) => {
-      setCurations(res.data);
+    getTotalPage().then((res) => {
+      setTotalPages(res.totalPages);
+    });
+    getTags().then((res) => {
+      setTags(res);
     });
   }, []);
+
+  useEffect(() => {
+    getAllCurations(selectedPage).then((res) => {
+      setCurations(res.data);
+    });
+  }, [selectedPage]);
+
+  let pageArr = [];
+  for (
+    let i = Math.floor((selectedPage - 1) / 5) * 5 + 1;
+    i < Math.floor((selectedPage - 1) / 5) * 5 + 6;
+    i++
+  ) {
+    if (totalPages >= i) {
+      pageArr.push(i);
+    }
+  }
+
+  const prevPage = () => {
+    if (selectedPage === 1) {
+      alert('첫번째 페이지입니다.');
+    } else {
+      setSelectedPage(selectedPage - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (selectedPage === totalPages) {
+      alert('마지막 페이지입니다.');
+    } else {
+      setSelectedPage(selectedPage + 1);
+    }
+  };
+
+  const user = useRecoilValue(userInfoState);
+
+  const handleWriteButton = () => {
+    if (user?.role === 'REGULAR') {
+      alert('글쓰기 권한이 없습니다.');
+    } else {
+      window.location.href = `${import.meta.env.VITE_CLIENT}/curationwrite`;
+    }
+  };
+
   return (
     <Container>
       <HeaderWrap>
@@ -150,36 +231,63 @@ const Board = () => {
       </HeaderWrap>
       <ControlContainer>
         <SearchBar />
+        <WirteButton onClick={handleWriteButton}>글쓰기</WirteButton>
       </ControlContainer>
       <ContentContainer>
         <PostLists>
-          <tr>
-            <th className="post-table__th1">글번호</th>
-            <th className="post-table__th2">제목</th>
-            <th className="post-table__th3">좋아요</th>
-            <th className="post-table__th4">작성일시</th>
-          </tr>
-          {dummyDatas &&
-            dummyDatas.map((el) => {
-              return (
-                <Post>
-                  <td>{el.id}</td>
-                  <td className="post-title-div">
-                    <Link to={`/curationview/${el.id}`}>
-                      <span>{el.title}</span>
-                    </Link>
-                    <Tag>tag</Tag>
-                  </td>
-                  <td>1</td>
-                  <td>{`${el.createdAt.getFullYear()}-${
-                    el.createdAt.getMonth() + 1
-                  }-${el.createdAt.getDate()}`}</td>
-                </Post>
-              );
-            })}
+          <thead>
+            <tr>
+              <th className="post-table__th1">글번호</th>
+              <th className="post-table__th2">제목</th>
+              <th className="post-table__th3">좋아요</th>
+              <th className="post-table__th4">작성일시</th>
+            </tr>
+          </thead>
+          <tbody>
+            {curations &&
+              curations.map((el) => {
+                return (
+                  <Post key={el.id}>
+                    <td>{el.id}</td>
+                    <td className="post-title-div">
+                      <Link to={`/curationview/${el.id}`}>
+                        <span>{el.title}</span>
+                      </Link>
+                      <Tag>
+                        {tags.filter((tag) => tag.id === el.tagId)[0].name}
+                      </Tag>
+                    </td>
+                    <td>{el.like}</td>
+                    <td>
+                      {el.createdAt
+                        ? `${el.createdAt.getFullYear()}-${
+                            el.createdAt.getMonth() + 1
+                          }-${el.createdAt.getDate()}`
+                        : ''}
+                    </td>
+                  </Post>
+                );
+              })}
+          </tbody>
         </PostLists>
       </ContentContainer>
-      <PageNation></PageNation>
+      <PageNation>
+        <FaChevronLeft size={30} onClick={prevPage} />
+        {pageArr.map((el) => {
+          return (
+            <span
+              key={el}
+              className={el === selectedPage ? 'page-selected__span' : ''}
+              onClick={() => {
+                setSelectedPage(el);
+              }}
+            >
+              {el}
+            </span>
+          );
+        })}
+        <FaChevronRight size={30} onClick={nextPage} />
+      </PageNation>
     </Container>
   );
 };

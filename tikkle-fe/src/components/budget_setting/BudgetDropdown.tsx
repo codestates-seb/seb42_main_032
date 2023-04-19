@@ -106,7 +106,7 @@ const BudgetDropdown = ({
 
   // 선택된 카테고리가 멤버 카테고리에 없을 때 카테고리 설정 페이지로 이동 시키는 모달
   const modal = useHrefModal(
-    `${consumptionType} 카테고리가 활성화된 카테고리에 없습니다. 사용하려면 설정해주세요.`,
+    `${consumptionType} 카테고리가 활성화 되지 않았습니다. 사용하려면 활성화해주세요.`,
     '카테고리 설정으로 이동',
     'categoryedit'
   );
@@ -119,14 +119,11 @@ const BudgetDropdown = ({
           `${import.meta.env.VITE_SERVER}/categories/${userInfo?.id}`
         )
       ).data.data;
-      console.log(memberCategories);
       const filteredMemberCategories = memberCategories.filter(
         (category: CategoryType) => consumptionType === category.name
       );
-      console.log(filteredMemberCategories);
       // 받아온 카테고리 데이터에서 소비 유형 데이터를 검색했을 때 일치하는 이름이 없는 경우
       if (filteredMemberCategories.length === 0) {
-        setConsumptionType('소비유형을 선택하세요.');
         // 위에서 생성한 모달 열기
         modal.onOpen();
       }
@@ -138,7 +135,7 @@ const BudgetDropdown = ({
   // ToDo 위에서 작성한 로직 실행하도록 수정
   useEffect(() => {
     updateMainBudgetAmount();
-    checkHasCategory();
+    if (consumptionType !== '소비유형을 선택하세요.') checkHasCategory();
   }, [consumptionType]);
 
   return (
