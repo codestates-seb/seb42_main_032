@@ -140,6 +140,7 @@ export interface curationType {
   createdAt: Date;
   like: number;
   tagId: number;
+  memberName: string;
 }
 
 interface tagsType {
@@ -286,7 +287,8 @@ const Board = () => {
               <th className="post-table__th1">글번호</th>
               <th className="post-table__th2">제목</th>
               <th className="post-table__th3">좋아요</th>
-              <th className="post-table__th4">작성일시</th>
+              <th className="post-table__th4">작성자</th>
+              <th className="post-table__th5">작성일시</th>
             </tr>
           </thead>
           <tbody>
@@ -304,6 +306,7 @@ const Board = () => {
                       </Tag>
                     </td>
                     <td>{el.like}</td>
+                    <td>{el.memberName}</td>
                     <td>
                       {el.createdAt
                         ? `${el.createdAt.getFullYear()}-${
