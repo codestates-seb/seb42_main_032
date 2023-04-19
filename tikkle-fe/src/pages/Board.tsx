@@ -41,7 +41,12 @@ const ControlContainer = styled.div`
   justify-content: space-between;
 `;
 
-const ContentContainer = styled.div``;
+const ContentContainer = styled.div`
+  .post-noresult__div {
+    margin-top: 20px;
+    font-size: 20px;
+  }
+`;
 
 const PostLists = styled.table`
   width: 100%;
@@ -147,18 +152,50 @@ const Board = () => {
   const [selectedPage, setSelectedPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [tags, setTags] = useState<tagsType[]>([]);
-  const [isSearch, setIsSearch] = useState(false);
+  const [searchParams, setSearchParams] = useState(window.location.search);
 
-  const getAllCurations = async (page: number) => {
+  const getAllCurations = async () => {
+    if (searchParams) {
+      const params = searchParams.split('&');
+      const searchPage = selectedPage - 1;
+      const keyword = params[1].split('=')[1];
+      const searchType = params[2].split('=')[1];
+      const data = await (
+        await axios.get(`${import.meta.env.VITE_SERVER}/curations`, {
+          params: {
+            keyword: decodeURI(keyword),
+            page: searchPage,
+            searchType: searchType,
+          },
+        })
+      ).data;
+      return data;
+    }
     const data = await (
       await axios.get(
-        `${import.meta.env.VITE_SERVER}/curations/all?page=${page}`
+        `${import.meta.env.VITE_SERVER}/curations/all?page=${selectedPage}`
       )
     ).data;
     return data;
   };
 
   const getTotalPage = async () => {
+    if (searchParams) {
+      const params = searchParams.split('&');
+      const searchPage = 0;
+      const keyword = params[1].split('=')[1];
+      const searchType = params[2].split('=')[1];
+      const totalPage = await (
+        await axios.get(`${import.meta.env.VITE_SERVER}/curations`, {
+          params: {
+            keyword: decodeURI(keyword),
+            page: searchPage,
+            searchType: searchType,
+          },
+        })
+      ).data.pageInfo;
+      return totalPage;
+    }
     const totalPage = await (
       await axios.get(`${import.meta.env.VITE_SERVER}/curations/all?page=1`)
     ).data.pageInfo;
@@ -174,19 +211,23 @@ const Board = () => {
 
   useEffect(() => {
     getTotalPage().then((res) => {
+      console.log(res);
       setTotalPages(res.totalPages);
+    });
+
+    getTags().then((res) => {
+      setTags(res);
+    });
+  }, [window.location.search]);
+
+  useEffect(() => {
+    getAllCurations().then((res) => {
+      setCurations(res.data);
     });
     getTags().then((res) => {
       setTags(res);
     });
-  }, []);
-
-  useEffect(() => {
-    getAllCurations(selectedPage).then((res) => {
-      setCurations(res.data);
-    });
   }, [selectedPage]);
-
 
   let pageArr = [];
   for (
@@ -235,8 +276,7 @@ const Board = () => {
         <div>금융 큐레이팅 게시판</div>
       </HeaderWrap>
       <ControlContainer>
-        <SearchBar setCurations={setCurations} setTotalPages={setTotalPages} setIsSearch={setIsSearch}
-        />
+        <SearchBar />
         <WirteButton onClick={handleWriteButton}>글쓰기</WirteButton>
       </ControlContainer>
       <ContentContainer>
@@ -276,24 +316,33 @@ const Board = () => {
               })}
           </tbody>
         </PostLists>
+        {curations.length === 0 ? (
+          <div className="post-noresult__div">검색결과가 없습니다.</div>
+        ) : (
+          ''
+        )}
       </ContentContainer>
-      <PageNation>
-        <FaChevronLeft size={30} onClick={prevPage} />
-        {pageArr.map((el) => {
-          return (
-            <span
-              key={el}
-              className={el === selectedPage ? 'page-selected__span' : ''}
-              onClick={() => {
-                setSelectedPage(el);
-              }}
-            >
-              {el}
-            </span>
-          );
-        })}
-        <FaChevronRight size={30} onClick={nextPage} />
-      </PageNation>
+      {pageArr.length > 0 ? (
+        <PageNation>
+          <FaChevronLeft size={30} onClick={prevPage} />
+          {pageArr.map((el) => {
+            return (
+              <span
+                key={el}
+                className={el === selectedPage ? 'page-selected__span' : ''}
+                onClick={() => {
+                  setSelectedPage(el);
+                }}
+              >
+                {el}
+              </span>
+            );
+          })}
+          <FaChevronRight size={30} onClick={nextPage} />
+        </PageNation>
+      ) : (
+        ''
+      )}
     </Container>
   );
 };

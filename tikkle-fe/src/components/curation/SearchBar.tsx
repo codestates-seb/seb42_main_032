@@ -6,16 +6,12 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { curationType } from '../../pages/Board';
 
-interface SearchBarProps {
-  setCurations: Dispatch<SetStateAction<curationType[]>>;
-  setTotalPages: Dispatch<SetStateAction<number>>;
-  setIsSearch : Dispatch<SetStateAction<boolean>>;
-}
-
-const SearchBar:React.FunctionComponent<SearchBarProps> = ({
-  setCurations, setTotalPages, setIsSearch
-}) => {
-  const [keyword, setKeyword] = useState('');
+const SearchBar = () => {
+  const [keyword, setKeyword] = useState(
+    window.location.search
+      ? decodeURI(window.location.search.split('&')[1].split('=')[1])
+      : ''
+  );
   const [searchType, setSearchType] = useState(0);
 
   const alretEmptyKeyword = () => {
@@ -24,25 +20,25 @@ const SearchBar:React.FunctionComponent<SearchBarProps> = ({
 
   // ToDo 서버에서 검색 타입을 params로 받도록 수정되면 해당 내용에 맞춰 params 부분 업데이트
   const requestSearch = async () => {
-    if (keyword !== '') {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_SERVER}/curations`,
-          {
-            params: {
-              keyword: keyword,
-              page: 0,
-              searchType: searchType,
-            },
-          }
-        );
-        setIsSearch(true);
-        setCurations(response.data.data);
-        setTotalPages(response.data.pageInfo.totalPages);
-      } catch (err) {
-        console.log(err);
-      }
-    }
+    // if (keyword !== '') {
+    //   try {
+    //     const response = await axios.get(
+    //       `${import.meta.env.VITE_SERVER}/curations`,
+    //       {
+    //         params: {
+    //           keyword: keyword,
+    //           page: 0,
+    //           searchType: searchType,
+    //         },
+    //       }
+    //     );
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // }
+    window.location.href = `${
+      import.meta.env.VITE_CLIENT
+    }/board?page=0&keyword=${keyword}&searchType=${searchType}`;
   };
 
   const handleOnKeyUpEnter = (e: React.KeyboardEvent) => {
@@ -51,7 +47,12 @@ const SearchBar:React.FunctionComponent<SearchBarProps> = ({
     }
   };
 
-  useEffect(() => console.log(searchType), [searchType]);
+  const handleClearButton = () => {
+    setKeyword('');
+    window.location.href = `${import.meta.env.VITE_CLIENT}/board`;
+  };
+
+  useEffect(() => {}, [searchType]);
 
   return (
     <SearchBarBox>
@@ -75,7 +76,7 @@ const SearchBar:React.FunctionComponent<SearchBarProps> = ({
         }
         onKeyUp={(e) => handleOnKeyUpEnter(e)}
       />
-      <ClearButton onClick={() => setKeyword('')}>
+      <ClearButton onClick={handleClearButton}>
         <MdClear />
       </ClearButton>
       <SearchButton
@@ -88,7 +89,7 @@ const SearchBar:React.FunctionComponent<SearchBarProps> = ({
       </SearchButton>
     </SearchBarBox>
   );
-}
+};
 
 const SearchBarBox = styled.div`
   width: 80%;
