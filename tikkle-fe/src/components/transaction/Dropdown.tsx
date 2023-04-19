@@ -3,8 +3,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 function Dropdown(
-  { memberId }: { memberId: number },
-  { memberCategoryIdHandler }: { memberCategoryIdHandler: (e: any) => void }
+  { memberId, memberCategoryIdHandler }: { memberId: number|undefined, memberCategoryIdHandler: (e: any) => void }
 ) {
   // 받아온 카테고리 리스트 상태 관리
   const [categoryList, setCategoryList] = useState([]);

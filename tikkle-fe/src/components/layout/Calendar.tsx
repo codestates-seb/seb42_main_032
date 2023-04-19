@@ -135,13 +135,13 @@ const Calendar = ({ date }: { date: Date }) => {
   // 일자를 나타내는 칸 렌더링
 
   // 날짜 클릭 시 핸들러 -> 클릭된 날짜 받아오기 -> 해당 날짜의 거래내역으로 스크롤 이동
-  // const [clickedDate, setClickedDate] = useRecoilState(clickedDateState);
-  // const location = useRecoilValue(locationState);
-  // const clickHandler = () => {
-  //   if (location) {
-  //     window.scrollTo(0, location);
-  //   }
-  // };
+  const [clickedDate, setClickedDate] = useRecoilState(clickedDateState);
+  const location = useRecoilValue(locationState);
+  const clickHandler = () => {
+    if (location) {
+      window.scrollTo(0, location);
+    }
+  };
   const renderDate = dailySummary.map((daily, idx) => {
     return (
       // w-52 === 13rem
