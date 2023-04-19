@@ -39,7 +39,8 @@ const BudgetSetting = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [budgets, setBudgets] = useState<BudgetType[]>();
-  const [sumBudgets, setSumBudgets] = useState(0);
+  // 사용자의 전체 예산 - 카테고리별 예산
+  const [diffBudget, setDiffBudget] = useState(0);
 
   const modal = useHrefModal(
     '튜토리얼을 마쳤습니다. 자유롭게 Tikkle을 사용해주세요.',
@@ -100,13 +101,11 @@ const BudgetSetting = () => {
     }
   }
 
-  // 예산 항목이 비어있지 않을 때만 예산들의 총합을 구함
+  // 예산 항목이 비어있지 않을 때만 잔여 예산 구하기
   useEffect(() => {
     if (budgets && budgets.length > 0) {
-      console.log(budgets?.reduce((sum: number, budget) => (sum += budget.amount), 0));
-      setSumBudgets(
-        budgets?.reduce((sum: number, budget) => (sum += budget.amount), 0)
-      );
+      const sumBudgets = budgets?.reduce((sum: number, budget) => (sum += budget.amount), 0);
+      setDiffBudget((userInfo?.totalBudget || 0) - sumBudgets);
     }
   }, [budgets]);
 
@@ -142,8 +141,18 @@ const BudgetSetting = () => {
             w="100%"
           >
             <Box display="flex" justifyContent="space-between" w="100%">
-              <Text as="b">카테고리별 예산</Text>
-              <Text>0원 남음</Text>
+              <Text as="b">잔여 예산</Text>
+
+              {/*
+                잔여 예산이 +인 경우 n원 남음, -인 경우 n원 초과(빨간색)
+                slice(1)은 - 부호를 제거하기 위함  
+              */}
+              <Text color={(diffBudget < 0) ? 'red' : 'black'}>{  
+                (diffBudget >= 0) ?
+                  `${new Intl.NumberFormat('ko-KR').format(diffBudget)}원 남음` : 
+                  `${new Intl.NumberFormat('ko-KR').format(diffBudget).slice(1)}원 초과`
+              }</Text>
+
             </Box>
             <Text align="right" fontSize="0.8rem" color="grey">
               {`전체 예산 ${new Intl.NumberFormat('ko-KR').format(
