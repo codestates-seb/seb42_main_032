@@ -7,32 +7,24 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { BudgetType } from '../../pages/BudgetSetting';
 
 import CategoryIcon from '../category/CategoryIcon';
 import Loading from '../layout/Loading';
 
 const CategoryBudget = ({
-  budgetId,
+  budget,
   categoryId,
+  handleBudgetAmount,
 }: {
-  budgetId: number;
+  budget: BudgetType;
   categoryId: number;
+  handleBudgetAmount: (id: number, amount: number) => void;
 }) => {
-  const [budgetAmount, setBudgetAmount] = useState(0);
+  const [budgetAmount, setBudgetAmount] = useState<number>(budget.amount);
   const [categoryName, setCategoryName] = useState('');
   const [categoryImage, setCategoryImage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-
-  const getBudgetAmount = async () => {
-    try {
-      const res =
-        (await axios.get(`${import.meta.env.VITE_SERVER}/budgets/${budgetId}`))
-          .data.amount || 0;
-      setBudgetAmount(res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const getCategory = async () => {
     try {
@@ -52,9 +44,13 @@ const CategoryBudget = ({
   };
 
   useEffect(() => {
-    getBudgetAmount();
     getCategory();
   }, []);
+
+  // 금액이 변경되면 부모 객체에서도 변경
+  useEffect(() => {
+    handleBudgetAmount(budget.id, budgetAmount);
+  }, [budgetAmount]);
 
   return (
     <Box
@@ -99,9 +95,7 @@ const CategoryBudget = ({
               <Input
                 type="number"
                 value={budgetAmount}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setBudgetAmount(Number(e.target.value));
-                }}
+                onChange={(e: React.ChangeEvent) => setBudgetAmount(Number((e.target as HTMLInputElement).value))} 
                 onKeyUp={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.key === 'Enter') {
                     console.log(e);

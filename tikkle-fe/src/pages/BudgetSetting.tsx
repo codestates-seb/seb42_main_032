@@ -38,7 +38,6 @@ const BudgetSetting = () => {
   const userInfo = useRecoilValue(userInfoState);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [categories, setCategories] = useState<CategoryType[]>();
   const [budgets, setBudgets] = useState<BudgetType[]>();
   const [sumBudgets, setSumBudgets] = useState(0);
 
@@ -47,24 +46,6 @@ const BudgetSetting = () => {
     '홈으로 이동',
     'home'
   );
-
-  const getCategories = async () => {
-    // 컴포넌트 상태를 로딩 중으로 업데이트한 후 카테고리 데이터 요청
-    try {
-      setIsLoading(true);
-      const res = await axios.get(
-        `${import.meta.env.VITE_SERVER}/categories/${userInfo?.id}`
-      );
-      console.log(res.data);
-      setCategories(res.data);
-    } catch (err) {
-      // 요청 실패 시 콘솔에 에러 표시
-      console.log(err);
-    } finally {
-      // 네트워크 요청을 완료하면 성공/실패 여부에 관계 없이 로딩이 멈추도록 업데이트
-      setIsLoading(false);
-    }
-  };
 
   // 네트워크 요청은 getCategories와 같은 방식(주소만 다름)
   const getBudgets = async () => {
@@ -85,6 +66,7 @@ const BudgetSetting = () => {
       res = res.filter((budget: BudgetType) => budget.status === 'ACTIVE');
 
       setBudgets(res);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -92,18 +74,31 @@ const BudgetSetting = () => {
 
   useEffect(() => {
     getBudgets();
-    getCategories();
   }, []);
 
-  // 불러온 예산 정보를 바탕으로 활성화된 카테고리의 총합을 구함
-  const getTotalActiveBudget = async () => {
-    let total = 0;
+  const handleBudgetSave = () => {
     budgets?.forEach((budget: BudgetType) => {
-      total += budget.amount;
-    });
-    console.log(total);
-    setSumBudgets(total);
-  };
+      axios.patch(`${import.meta.env.VITE_SERVER}/budgets/${budget.id}`, budget);
+    })
+    alert('저장했습니다.');
+  }
+
+  // CategoryBudget에서 예산 금액 수정 시 수정된 금액을 전체 객체에 반영하는 핸들러
+  const handleBudgetAmount = (id: number, amount: number) => {
+    try {
+      const newBudgets = budgets?.map((budget: BudgetType) => {
+        // 예산의 id가 변경하려는 예산고 일치하는 경우만 금액을 업데이트
+        if (budget.id === id) {
+          budget.amount = amount;
+          return budget;
+        }
+        else return budget;
+      });
+      setBudgets(newBudgets);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   // 예산 항목이 비어있지 않을 때만 예산들의 총합을 구함
   useEffect(() => {
@@ -164,7 +159,8 @@ const BudgetSetting = () => {
               />
               <button onClick={() => {
                 // 사용자가 최초 설정 중일 때만 모달 표시
-                if (userInfo?.state !== 'ACTIVE') modal.onOpen()
+                if (userInfo?.state !== 'ACTIVE') modal.onOpen();
+                else handleBudgetSave();
               }}>저장하기</button>
             </Box>
           </Box>
@@ -176,8 +172,9 @@ const BudgetSetting = () => {
                 return (
                   <CategoryBudget
                     key={budget.id}
-                    budgetId={budget.id}
+                    budget={budget}
                     categoryId={budget.memberCategoryId}
+                    handleBudgetAmount={handleBudgetAmount}
                   />
                 );
               })
