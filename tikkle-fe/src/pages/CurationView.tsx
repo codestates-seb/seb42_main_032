@@ -117,7 +117,9 @@ function CurationView() {
   // 조회하는 사용자가 게시글 작성자인지 확인
   // 로그인한 사용자 정보 (useRecoilState) 와 article.name 비교
   const userName = useRecoilValue(userInfoState)?.name;
-  const isConsistent = userName === article.name;
+  // 테스트용
+  const isConsistent = true
+  // const isConsistent = userName === article.name;
 
   // 수정하기 버튼 핸들러
   // 버튼 클릭 시, isEditing 상태 변경 및 이에 따른 에디터 조건부 렌더링
