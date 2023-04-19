@@ -221,7 +221,6 @@ function CategoryEdit() {
         ));
 
       memberBudget && setBudget(memberBudget.data);
-      console.log(memberBudget);
 
       // 예산 설정 카테고리(memberCategoryId) - 전체 카테고리 (id) 매핑
       const arr = [];
@@ -250,7 +249,7 @@ function CategoryEdit() {
   );
   useEffect(() => {
     // 처음 카테고리를 선택했을 때를 판별하기 위해 선택된 카테고리가 1개일 때 멤버 상태가 카테고리 설정 단계인지 판별
-    if (selectedCategory.length === 1 && userInfo?.state === 'categoryEdit') {
+    if (selectedCategory.length === 1 && userInfo?.state === 'CATEGORYEDIT') {
       modal.onOpen();
     }
   }, [selectedCategory]);

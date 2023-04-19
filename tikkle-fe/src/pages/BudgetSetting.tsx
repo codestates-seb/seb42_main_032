@@ -20,6 +20,7 @@ export interface BudgetType {
   endDate: Date;
   spend: number;
   createdAt: Date;
+  status?: string;
 }
 
 export interface CategoryType {
@@ -37,32 +38,15 @@ const BudgetSetting = () => {
   const userInfo = useRecoilValue(userInfoState);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [categories, setCategories] = useState<CategoryType[]>();
   const [budgets, setBudgets] = useState<BudgetType[]>();
+  // 사용자의 전체 예산 - 카테고리별 예산
+  const [diffBudget, setDiffBudget] = useState(0);
 
   const modal = useHrefModal(
     '튜토리얼을 마쳤습니다. 자유롭게 Tikkle을 사용해주세요.',
     '홈으로 이동',
     'home'
   );
-
-  const getCategories = async () => {
-    // 컴포넌트 상태를 로딩 중으로 업데이트한 후 카테고리 데이터 요청
-    try {
-      setIsLoading(true);
-      const res = await axios.get(
-        `${import.meta.env.VITE_SERVER}/categories/${userInfo?.id}`
-      );
-      console.log(res.data);
-      setCategories(res.data);
-    } catch (err) {
-      // 요청 실패 시 콘솔에 에러 표시
-      console.log(err);
-    } finally {
-      // 네트워크 요청을 완료하면 성공/실패 여부에 관계 없이 로딩이 멈추도록 업데이트
-      setIsLoading(false);
-    }
-  };
 
   // 네트워크 요청은 getCategories와 같은 방식(주소만 다름)
   const getBudgets = async () => {
@@ -79,9 +63,11 @@ const BudgetSetting = () => {
         return b.amount - a.amount;
       });
 
-      console.log(res);
+      // 활성화된 예산만 불러옴
+      res = res.filter((budget: BudgetType) => budget.status === 'ACTIVE');
 
       setBudgets(res);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -89,8 +75,39 @@ const BudgetSetting = () => {
 
   useEffect(() => {
     getBudgets();
-    getCategories();
   }, []);
+
+  const handleBudgetSave = () => {
+    budgets?.forEach((budget: BudgetType) => {
+      axios.patch(`${import.meta.env.VITE_SERVER}/budgets/${budget.id}`, budget);
+    })
+    alert('저장했습니다.');
+  }
+
+  // CategoryBudget에서 예산 금액 수정 시 수정된 금액을 전체 객체에 반영하는 핸들러
+  const handleBudgetAmount = (id: number, amount: number) => {
+    try {
+      const newBudgets = budgets?.map((budget: BudgetType) => {
+        // 예산의 id가 변경하려는 예산고 일치하는 경우만 금액을 업데이트
+        if (budget.id === id) {
+          budget.amount = amount;
+          return budget;
+        }
+        else return budget;
+      });
+      setBudgets(newBudgets);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  // 예산 항목이 비어있지 않을 때만 잔여 예산 구하기
+  useEffect(() => {
+    if (budgets && budgets.length > 0) {
+      const sumBudgets = budgets?.reduce((sum: number, budget) => (sum += budget.amount), 0);
+      setDiffBudget((userInfo?.totalBudget || 0) - sumBudgets);
+    }
+  }, [budgets]);
 
   return (
     <Box
@@ -124,8 +141,18 @@ const BudgetSetting = () => {
             w="100%"
           >
             <Box display="flex" justifyContent="space-between" w="100%">
-              <Text as="b">카테고리별 예산</Text>
-              <Text>0원 남음</Text>
+              <Text as="b">잔여 예산</Text>
+
+              {/*
+                잔여 예산이 +인 경우 n원 남음, -인 경우 n원 초과(빨간색)
+                slice(1)은 - 부호를 제거하기 위함  
+              */}
+              <Text color={(diffBudget < 0) ? 'red' : 'black'}>{  
+                (diffBudget >= 0) ?
+                  `${new Intl.NumberFormat('ko-KR').format(diffBudget)}원 남음` : 
+                  `${new Intl.NumberFormat('ko-KR').format(diffBudget).slice(1)}원 초과`
+              }</Text>
+
             </Box>
             <Text align="right" fontSize="0.8rem" color="grey">
               {`전체 예산 ${new Intl.NumberFormat('ko-KR').format(
@@ -139,7 +166,11 @@ const BudgetSetting = () => {
                 totalAmount={userInfo?.totalBudget || 0}
                 getBudgets={getBudgets}
               />
-              <button onClick={modal.onOpen}>저장하기</button>
+              <button onClick={() => {
+                // 사용자가 최초 설정 중일 때만 모달 표시
+                if (userInfo?.state !== 'ACTIVE') modal.onOpen();
+                else handleBudgetSave();
+              }}>저장하기</button>
             </Box>
           </Box>
           <Box display="flex" flexDir="column" w="100%" gap="40px" mb="40px">
@@ -150,8 +181,9 @@ const BudgetSetting = () => {
                 return (
                   <CategoryBudget
                     key={budget.id}
-                    budgetId={budget.id}
+                    budget={budget}
                     categoryId={budget.memberCategoryId}
+                    handleBudgetAmount={handleBudgetAmount}
                   />
                 );
               })

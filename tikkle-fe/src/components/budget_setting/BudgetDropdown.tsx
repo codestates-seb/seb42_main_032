@@ -4,6 +4,9 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BudgetType, CategoryType } from '../../pages/BudgetSetting';
+import { useHrefModal } from '../../hooks/useHrefModal';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../../util/store';
 
 const DropdownContainer = styled.div`
   font-family: 'GmarketSansMedium';
@@ -23,11 +26,14 @@ const BudgetDropdown = ({
 }) => {
   const [consumptionType, setConsumptionType] =
     useState('소비유형을 선택하세요.');
+  const userInfo = useRecoilValue(userInfoState);
 
   const handleDropdown = (e: React.MouseEvent<HTMLButtonElement>) => {
     // 선택된 값으로 소비유형 값을 갱신하거나, 초기값으로 표시
+    // 또한 textContent의 값이 'ㅇㅇ 위주' 형태로 작성되어 있기 때문에 slice 메서드를 사용하여 잘라냄
     setConsumptionType(
-      (e.target as HTMLElement).textContent || '소비유형을 선택하세요.'
+      (e.target as HTMLElement).textContent?.slice(0, 2) ||
+        '소비유형을 선택하세요.'
     );
   };
 
@@ -43,9 +49,7 @@ const BudgetDropdown = ({
         await axios.get(`${import.meta.env.VITE_SERVER}/categories`)
       ).data;
       const selectedCategoryId = categories.filter(
-        // consumptionType은 'ㅇㅇ 위주' 형태로 규칙성 있게 소비 유형이 저장되어 있기 때문에, slice 메서드로 앞 2글자만 잘라냄
-        (category: CategoryType) =>
-          category.name === consumptionType.slice(0, 2)
+        (category: CategoryType) => category.name === consumptionType
       )[0].id;
 
       // 예산 목록을 호출한 이후 응답에 map 함수를 사용해 예산금액 수정
@@ -100,16 +104,49 @@ const BudgetDropdown = ({
     }
   };
 
+  // 선택된 카테고리가 멤버 카테고리에 없을 때 카테고리 설정 페이지로 이동 시키는 모달
+  const modal = useHrefModal(
+    `${consumptionType} 카테고리가 활성화 되지 않았습니다. 사용하려면 활성화해주세요.`,
+    '카테고리 설정으로 이동',
+    'categoryedit'
+  );
+
+  // 선택된 카테고리가 사용자에게 있는지 검사하는 함수
+  const checkHasCategory = async () => {
+    try {
+      const memberCategories = (
+        await axios.get(
+          `${import.meta.env.VITE_SERVER}/categories/${userInfo?.id}`
+        )
+      ).data.data;
+      const filteredMemberCategories = memberCategories.filter(
+        (category: CategoryType) => consumptionType === category.name
+      );
+      // 받아온 카테고리 데이터에서 소비 유형 데이터를 검색했을 때 일치하는 이름이 없는 경우
+      if (filteredMemberCategories.length === 0) {
+        // 위에서 생성한 모달 열기
+        modal.onOpen();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // ToDo 위에서 작성한 로직 실행하도록 수정
   useEffect(() => {
     updateMainBudgetAmount();
+    if (consumptionType !== '소비유형을 선택하세요.') checkHasCategory();
   }, [consumptionType]);
 
   return (
     <DropdownContainer>
       <Menu>
         <MenuButton as={Dropdown}>
-          {consumptionType}
+          {/* consumptionType 데이터는 2글자로만 이뤄져 있으므로,
+          드롭다운 항목들과 이름을 맞추기 위해 '위주' 글자 추가 */}
+          {consumptionType === '소비유형을 선택하세요.'
+            ? consumptionType
+            : `${consumptionType} 위주`}
           <ChevronDownIcon boxSize={25} />
         </MenuButton>
         <MenuList>
@@ -120,6 +157,7 @@ const BudgetDropdown = ({
           <MenuItem onClick={handleDropdown}>여행 위주</MenuItem>
         </MenuList>
       </Menu>
+      <modal.ModalWrapper />
     </DropdownContainer>
   );
 };

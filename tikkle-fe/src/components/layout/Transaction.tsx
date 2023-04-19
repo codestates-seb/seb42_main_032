@@ -8,8 +8,15 @@ import { BiCoffeeTogo } from 'react-icons/bi';
 import { IoLogoGameControllerA } from 'react-icons/io';
 import Modal from '../transaction/Modal';
 import axios from 'axios';
-import { useRecoilValue } from 'recoil';
-import { userInfoState } from '../../util/store';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  clickedDateState,
+  locationState,
+  userInfoState,
+} from '../../util/store';
+import { Box, Button } from '@chakra-ui/react';
+import PostModal from '../transaction/PostModal';
+import CategoryIcon, { CategoryIdMap } from '../category/CategoryIcon';
 
 // axios GET 요청으로 불러온 데이터 타입 정의
 export interface TransactionType {
@@ -27,46 +34,26 @@ export interface TransactionType {
   bankName: string;
 }
 
-// export interface Props {
-//   transactions: TransactionType[];
-//   date: Date;
-// }
-
-// 카테고리별 아이콘 설정하기 <카테고리명: 아이콘이름>
-const categoryIcons: Record<string, any> = {
-  식비: MdFastfood,
-  음료: BiCoffeeTogo,
-  오락: IoLogoGameControllerA,
-};
-
-// 카테고리별 아이콘 색상 설정하기
-const CategoryIconWrapper = styled.div<{ category: string }>`
-  max-width: fit-content;
-  margin-left: 20px;
-  padding: 10px;
-  border-radius: 100%;
-  color: white;
-  font-size: 20px;
-  background-color: ${(props) => {
-    switch (props.category) {
-      case '식비':
-        return '#FFC107'; // yellow
-      case '음료':
-        return '#4CAF50'; // green
-      case '오락':
-        return '#9C27B0'; // purple
-      default:
-        return 'inherit';
-    }
-  }};
-`;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  margin-left: 5vw;
+
+  button {
+    margin-right: 95vw;
+    margin-top: 5vh;
+  }
 `;
 
 const TransactionContainer = styled.div`
+  margin: 1vw;
   padding: 10px;
+  border-radius: 10px;
+  width: 70%;
+  :hover {
+    background-color: #ede1f0;
+    cursor: pointer;
+  }
   .transaction-date-box {
     text-align: left;
     margin-top: 10px;
@@ -129,13 +116,13 @@ const Transaction = ({ date }: { date: Date }) => {
     },
   ]);
 
-  // 거래내역 네트워크 요청
-
   // GET 요청 URI parameter 용 memberID, date (month) 받아오기
   let member_id = useRecoilValue(userInfoState)?.id;
   let headerMonth =
     date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0');
 
+  // 월별 거래내역 GET 요청
+  //TODO API 거래내역 잘 받아오는지 확인하기
   useEffect(() => {
     const getTransactionHistories = async () => {
       axios
@@ -190,43 +177,74 @@ const Transaction = ({ date }: { date: Date }) => {
     return () => observer && observer.disconnect();
   }, []);
 
+  // 거래내역 추가 모달 관련 상태관리
+  const [showPostModal, setShowPostModal] = useState<boolean>(false);
+  // 거래내역 임의 추가 버튼 핸들러
+  const togglePostModal = () => {
+    setShowPostModal(!showPostModal);
+    console.log(showPostModal);
+  };
+
+  // const [location, setLocation] = useRecoilState(locationState);
+  // // [날짜, y좌표] 구하기 - location
+  // const childElement = document.querySelector('.transaction-date-box');
+  // if (childElement) {
+  //   const location = [];
+  //   location.push([transactionDate, childElement.getBoundingClientRect().y]);
+  //   setLocation(location);
+  // }
+
+  // console.log(location);
+
   //TODO 아이콘 처리
   return (
     <Container className="transaction-history-box" ref={target}>
-      {transactionHistories.map((transaction, idx) => {
-        const IconComponent = categoryIcons[transaction.memberCategoryId];
-        return (
-          <TransactionContainer key={transaction.id} onClick={toggleModal}>
-            <div>
-              <div className="transaction-date-box">
-                {transaction.date.getDate()}일{' '}
-                {daysOfWeek[transaction.date.getDay()]}요일
-              </div>
-              <ContentContainer>
-                {/* <CategoryIconWrapper category={transaction.memberCategoryId}>
-                  <IconComponent className="transaciton-icon" />
-                </CategoryIconWrapper> */}
-                <div
-                  className="transaction-content-box"
-                  onClick={() => setSelectedTransaction(transaction)}
-                >
-                  <div className="transaction-amount-box">
-                    <strong>
-                      {new Intl.NumberFormat('ko-KR').format(
-                        transaction.amount
-                      )}
-                      원
-                    </strong>
-                  </div>
-                  <div className="transaciton-bank-box">
-                    {transaction.bankName} &#8594; {transaction.branchName}
-                  </div>
+      <Box>
+        <Button colorScheme="purple" onClick={togglePostModal} margin="10px">
+          거래내역 추가하기
+        </Button>
+      </Box>
+
+      {showPostModal && (
+        <PostModal togglePostModal={togglePostModal} memberId={member_id} />
+      )}
+      {transactionHistories.length !== 0 &&
+        transactionHistories.map((transaction, idx) => {
+          const transactionDate = transaction.date.getDate();
+          return (
+            <TransactionContainer
+              className="transaction_container"
+              key={transaction.id}
+              onClick={toggleModal}
+            >
+              <div>
+                <div className="transaction-date-box">
+                  {transactionDate}일 {daysOfWeek[transaction.date.getDay()]}
+                  요일
                 </div>
-              </ContentContainer>
-            </div>
-          </TransactionContainer>
-        );
-      })}
+                <ContentContainer>
+                  <CategoryIcon icon={String(transaction.memberCategoryId)} />
+                  <div
+                    className="transaction-content-box"
+                    onClick={() => setSelectedTransaction(transaction)}
+                  >
+                    <div className="transaction-amount-box">
+                      <strong>
+                        {new Intl.NumberFormat('ko-KR').format(
+                          transaction.amount
+                        )}
+                        원
+                      </strong>
+                    </div>
+                    <div className="transaciton-bank-box">
+                      {transaction.bankName} &#8594; {transaction.branchName}
+                    </div>
+                  </div>
+                </ContentContainer>
+              </div>
+            </TransactionContainer>
+          );
+        })}
       {selectedTransaction && showModal && (
         <Modal
           transaction={selectedTransaction}

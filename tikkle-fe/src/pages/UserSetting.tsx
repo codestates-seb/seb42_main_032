@@ -320,8 +320,9 @@ function UserSetting() {
           size="md"
           ml="40px"
           onClick={() => {
-            handleSubmit();
-            modalPage.onOpen();
+            // 첫 가입 상태라면 모달을 열고, 평상시에는 정상적인 회원정보 저장 로직 실행
+            if (userInfo?.state !== 'ACTIVE') modalPage.onOpen();
+            else handleSubmit();
           }}
           disabled={
             isNameValid &&
