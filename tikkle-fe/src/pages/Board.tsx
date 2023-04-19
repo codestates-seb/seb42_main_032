@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import SearchBar from '../components/curation/SearchBar';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../util/store';
@@ -229,6 +230,7 @@ const Board = () => {
         <div>금융 큐레이팅 게시판</div>
       </HeaderWrap>
       <ControlContainer>
+        <SearchBar />
         <WirteButton onClick={handleWriteButton}>글쓰기</WirteButton>
       </ControlContainer>
       <ContentContainer>
