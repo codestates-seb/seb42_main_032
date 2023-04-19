@@ -21,11 +21,12 @@ const Container = styled.div`
   align-items: center;
   margin-top: 20vh;
   width: 90%;
-  h1 {
+  .article_title {
     font-size: xx-large;
     margin-bottom: 5vh;
     text-shadow: 3px 3px 3px #ceb1ed;
   }
+
   .writer_information {
     font-size: medium;
     margin-top: 5vh;
@@ -71,6 +72,7 @@ export interface Article {
   state: string;
   createdAt: Date;
   modifiedAt: Date;  
+  likesCount: number;
 }
 
 function CurationView() {
@@ -86,6 +88,7 @@ function CurationView() {
     state: '',
     createdAt: new Date(),
     modifiedAt: new Date(),
+    likesCount: 0
   });
 
   // TODO curationID 받아오기
@@ -102,18 +105,38 @@ function CurationView() {
     getArticle();
   }, []);
 
-
-  // 좋아요 기능 (한번만 클릭 가능, 해제 불가능)
-  // TODO 좋아요 클릭 시, PATCH요청으로 개수 ++
+  const memberId = useRecoilValue(userInfoState);
+  // 좋아요 기능 핸들러
   const [isLiked, setIsLiked] = useState<boolean>(false);
+ // 좋아요 추가
   const likeHandler = () => {
     setIsLiked(true);
-    alert('좋아요가 반영되었습니다.');
+    const addLikes = async () => {
+      await axios
+        .patch(`${import.meta.env.VITE_SERVER}/curations/likes/${memberId}/${curationId}`)
+        .then((res) => {
+          if (res.status === 200) alert('좋아요가 반영되었습니다.')
+        })
+        .catch((err) => console.log(err));
+    };
+    addLikes();
   };
+// 좋아요 취소
   const undoHandler = () => {
-    alert('반영된 좋아요는 취소가 불가합니다.');
+    setIsLiked(false)
+    const deleteLikes = async () => {
+      await axios
+        .patch(`${import.meta.env.VITE_SERVER}/curations/likes/${memberId}/${curationId}`)
+        .then((res) => {
+          if (res.status === 200) alert('좋아요가 취소되었습니다.')
+        })
+        .catch((err) => console.log(err));
+    };
+    deleteLikes();
+   
   };
 
+  console.log(article)
   // 조회하는 사용자가 게시글 작성자인지 확인
   // 로그인한 사용자 정보 (useRecoilState) 와 article.name 비교
   const userName = useRecoilValue(userInfoState)?.name;
@@ -144,26 +167,61 @@ function CurationView() {
       };
       deleteArticle();
     }
-    //TODO 게시글 리스트 화면으로 이동
-    navigate('/');
+    navigate('/board');
   };
 
-  console.log(article)
+// TODO tagId에 따른 태그 렌더링
+
+let tagName = ''
+if (article.tagId === 1) {
+   tagName = '부동산'
+}
+
+if (article.tagId === 2) {
+   tagName = '주식'
+}
+
+if (article.tagId === 3) {
+   tagName = '가상화폐'
+}
+
+if (article.tagId === 4) {
+   tagName = '예/적금'
+}
+
+if (article.tagId === 5) {
+   tagName = '재무계획'
+}
+
+if (article.tagId === 6) {
+   tagName = '청약'
+}
+
+if (article.tagId === 7) {
+   tagName = '대출'
+}
+
+if (article.tagId === 8) {
+   tagName = '펀드'
+}
   if (isEditing) {
     return <Editing article={article} />;
   } else {
     return (
       <Container>
-        <h1>article.title</h1>
-        <Tag>article.tag</Tag>
-
+        <h1 className='article_title'>{article?.title}</h1>
+        <Tag>{tagName}</Tag>
         <p className="writer_information">
-          <Icon as={AiOutlineUser} /> by article.name <br />
-          <Icon as={AiOutlineEdit} /> article.createdAt 에 작성되었어요. <br />
-          <Icon as={AiOutlineHeart} /> article.likes 명이 좋아했어요.
+        <Icon as={AiOutlineUser} />by {article?.name}
         </p>
-
-        <p className="curation_content">article.content</p>
+        <p className="writer_information">
+          <>
+          <Icon as={AiOutlineEdit} /> {article.createdAt?.getMonth} 에 작성되었어요. 
+          </>
+        </p>
+       <p className="writer_information">
+       <Icon as={AiOutlineHeart} /> {article.likesCount} 명이 좋아했어요.</p>
+      <div dangerouslySetInnerHTML={{ __html: article.content }} />
         <ButtonContainer>
           {isLiked ? (
             <Icon
