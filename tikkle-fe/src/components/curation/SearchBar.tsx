@@ -7,7 +7,7 @@ import axios from 'axios';
 
 export default function SearchBar() {
   const [keyword, setKeyword] = useState('');
-  const [searchType, setSearchType] = useState('제목+태그');
+  const [searchType, setSearchType] = useState(0);
 
   const alretEmptyKeyword = () => {
     if (keyword === '') alert('검색어를 입력해주세요.');
@@ -22,7 +22,7 @@ export default function SearchBar() {
           {
             params: {
               keyword: keyword,
-              page: 1,
+              page: 0,
               searchType: searchType,
             },
           }
@@ -42,7 +42,7 @@ export default function SearchBar() {
         <select
           name="search-type"
           onChange={(e: React.ChangeEvent) =>
-            setSearchType((e.target as HTMLSelectElement).value)
+            setSearchType(Number((e.target as HTMLSelectElement).value))
           }
         >
           <option value="0">제목+태그</option>
