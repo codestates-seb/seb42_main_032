@@ -214,7 +214,7 @@ function BudgetView() {
   // budget 조회
   const getBudget = async () => {
     const memberBudget =
-      userInfo?.id && (await useFetchActiveCategory(userInfo.id));
+      userInfo?.id && (await useFetchActiveCategory());
 
     // 예산 설정된 카테고리 총 소비금액
     let memberTotalSpend = 0;
