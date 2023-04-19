@@ -39,7 +39,7 @@ export const clickedDateState = atom<number | null>({
   default: null,
 });
 
-export const locationState = atom<number[][] | null>({
+export const locationState = atom<number | null>({
   key: 'locationState',
   default: null,
 });

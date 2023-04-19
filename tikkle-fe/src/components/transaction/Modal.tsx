@@ -80,6 +80,9 @@ const Modal = ({ transaction, toggleModal }: ModalProps) => {
   // memo 수정 POST 요청
 
   // TODO 카테고리 드롭다운 수정 컴포넌트 만들기
+  const memberCategoryHandler = () => {
+    
+  }
   // TODO 카테고리 수정 시, TODO axios PATCH 요청으로 변경 사항 보내기
   return (
     <ModalContainer onClick={toggleModal}>
@@ -107,7 +110,7 @@ const Modal = ({ transaction, toggleModal }: ModalProps) => {
           </li>
           <li>
             카테고리:
-            <Dropdown memberId={transaction.id}></Dropdown>
+            <Dropdown memberId={transaction.id} memberCategoryIdHandler={memberCategoryHandler}></Dropdown>
           </li>
         </ul>
       </ModalContent>
