@@ -1,11 +1,20 @@
 import styled from 'styled-components';
 
 import { MdClear } from 'react-icons/md';
-import { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
+import { curationType } from '../../pages/Board';
 
-export default function SearchBar() {
+interface SearchBarProps {
+  setCurations: Dispatch<SetStateAction<curationType[]>>;
+  setTotalPages: Dispatch<SetStateAction<number>>;
+  setIsSearch : Dispatch<SetStateAction<boolean>>;
+}
+
+const SearchBar:React.FunctionComponent<SearchBarProps> = ({
+  setCurations, setTotalPages, setIsSearch
+}) => {
   const [keyword, setKeyword] = useState('');
   const [searchType, setSearchType] = useState(0);
 
@@ -27,10 +36,18 @@ export default function SearchBar() {
             },
           }
         );
-        console.log(response);
+        setIsSearch(true);
+        setCurations(response.data.data);
+        setTotalPages(response.data.pageInfo.totalPages);
       } catch (err) {
         console.log(err);
       }
+    }
+  };
+
+  const handleOnKeyUpEnter = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      requestSearch();
     }
   };
 
@@ -56,6 +73,7 @@ export default function SearchBar() {
         onChange={(e: React.ChangeEvent) =>
           setKeyword((e.target as HTMLInputElement).value)
         }
+        onKeyUp={(e) => handleOnKeyUpEnter(e)}
       />
       <ClearButton onClick={() => setKeyword('')}>
         <MdClear />
@@ -133,3 +151,5 @@ const SearchButton = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export default SearchBar;

@@ -36,6 +36,9 @@ const HeaderWrap = styled.div`
 
 const ControlContainer = styled.div`
   margin: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
 `;
 
 const ContentContainer = styled.div``;
@@ -126,7 +129,7 @@ const WirteButton = styled.button`
   }
 `;
 
-interface curationType {
+export interface curationType {
   id: number;
   title: string;
   createdAt: Date;
@@ -140,10 +143,11 @@ interface tagsType {
 }
 
 const Board = () => {
-  const [curations, setCurations] = useState<curationType[]>();
+  const [curations, setCurations] = useState<curationType[]>([]);
   const [selectedPage, setSelectedPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [tags, setTags] = useState<tagsType[]>([]);
+  const [isSearch, setIsSearch] = useState(false);
 
   const getAllCurations = async (page: number) => {
     const data = await (
@@ -182,6 +186,7 @@ const Board = () => {
       setCurations(res.data);
     });
   }, [selectedPage]);
+
 
   let pageArr = [];
   for (
@@ -230,7 +235,8 @@ const Board = () => {
         <div>금융 큐레이팅 게시판</div>
       </HeaderWrap>
       <ControlContainer>
-        <SearchBar />
+        <SearchBar setCurations={setCurations} setTotalPages={setTotalPages} setIsSearch={setIsSearch}
+        />
         <WirteButton onClick={handleWriteButton}>글쓰기</WirteButton>
       </ControlContainer>
       <ContentContainer>
