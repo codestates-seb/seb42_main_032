@@ -214,19 +214,38 @@ function BudgetView() {
   // budget 조회
   const getBudget = async () => {
     const memberBudget =
-      userInfo?.id && (await useFetchActiveCategory());
+     userInfo &&
+     (
+       await axios.get(
+         `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo.id}`
+       )
+     ).data;
 
-    // 예산 설정된 카테고리 총 소비금액
-    let memberTotalSpend = 0;
-    if (memberBudget) {
-      for (const el of memberBudget) {
-        memberTotalSpend = memberTotalSpend + el.spend;
-      }
-    }
-    setTotalSpend(memberTotalSpend);
 
-    memberBudget && setBudgetCategory(memberBudget);
-    setIsLoading(false);
+   // 예산 설정된 카테고리 총 소비금액
+   let memberTotalSpend = 0;
+   if (memberBudget) {
+     for (const el of memberBudget) {
+       memberTotalSpend = memberTotalSpend + el.spend;
+     }
+   }
+   setTotalSpend(memberTotalSpend);
+   const all =
+     userInfo &&
+     (await axios.get(
+       `${import.meta.env.VITE_SERVER}/categories/${userInfo.id}`
+     ));
+   const budgetCategories = [];
+   for (const i of memberBudget) {
+     for (const j of all?.data.data) {
+       if (i.memberCategoryId === j.id && i.status === 'ACTIVE') {
+         budgetCategories.push({ ...j, ...i });
+         break;
+       }
+     }
+   }
+   setBudgetCategory(budgetCategories);
+   setIsLoading(false)
   };
 
   const initDate = new Date();
