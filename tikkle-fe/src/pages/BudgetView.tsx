@@ -204,48 +204,58 @@ function BudgetView() {
 
   // 유저 총 예산 금액 get
   const getTotalBudget = async () => {
-    const userTotalBudget =
-      userInfo &&
-      (await axios.get(`${import.meta.env.VITE_SERVER}/members/${userInfo.id}`))
-        .data.data.totalBudget;
-    setTotalBudget(userTotalBudget);
+    try {
+      const userTotalBudget =
+        userInfo &&
+        (
+          await axios.get(
+            `${import.meta.env.VITE_SERVER}/members/${userInfo.id}`
+          )
+        ).data.data.totalBudget;
+      setTotalBudget(userTotalBudget);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // budget 조회
   const getBudget = async () => {
-    const memberBudget =
-     userInfo &&
-     (
-       await axios.get(
-         `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo.id}`
-       )
-     ).data;
+    try {
+      const memberBudget =
+        userInfo &&
+        (
+          await axios.get(
+            `${import.meta.env.VITE_SERVER}/budgets/members/${userInfo.id}`
+          )
+        ).data;
 
-
-   // 예산 설정된 카테고리 총 소비금액
-   let memberTotalSpend = 0;
-   if (memberBudget) {
-     for (const el of memberBudget) {
-       memberTotalSpend = memberTotalSpend + el.spend;
-     }
-   }
-   setTotalSpend(memberTotalSpend);
-   const all =
-     userInfo &&
-     (await axios.get(
-       `${import.meta.env.VITE_SERVER}/categories/${userInfo.id}`
-     ));
-   const budgetCategories = [];
-   for (const i of memberBudget) {
-     for (const j of all?.data.data) {
-       if (i.memberCategoryId === j.id && i.status === 'ACTIVE') {
-         budgetCategories.push({ ...j, ...i });
-         break;
-       }
-     }
-   }
-   setBudgetCategory(budgetCategories);
-   setIsLoading(false)
+      // 예산 설정된 카테고리 총 소비금액
+      let memberTotalSpend = 0;
+      if (memberBudget) {
+        for (const el of memberBudget) {
+          memberTotalSpend = memberTotalSpend + el.spend;
+        }
+      }
+      setTotalSpend(memberTotalSpend);
+      const all =
+        userInfo &&
+        (await axios.get(
+          `${import.meta.env.VITE_SERVER}/categories/${userInfo.id}`
+        ));
+      const budgetCategories = [];
+      for (const i of memberBudget) {
+        for (const j of all?.data.data) {
+          if (i.memberCategoryId === j.id && i.status === 'ACTIVE') {
+            budgetCategories.push({ ...j, ...i });
+            break;
+          }
+        }
+      }
+      setBudgetCategory(budgetCategories);
+      setIsLoading(false);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const initDate = new Date();
